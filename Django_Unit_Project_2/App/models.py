@@ -9,6 +9,7 @@ class OrganizationUsers(models.Model):
     password = models.IntegerField()
     is_admin = models.BooleanField(default=True)
     organization_name = models.CharField(max_length=150)
+    email = models.EmailField(blank=True, null=True)
 
 class Event(models.Model):
     organizer = models.ForeignKey(User, on_delete=models.CASCADE)
