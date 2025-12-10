@@ -4,57 +4,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{% static 'common.css' %}"> 
+    <title>Event Page</title>
+    <script>
+        const CSRF_TOKEN = "{{ csrf_token }}";
+    </script>
+    <link rel="stylesheet" href="{% static 'common.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body id="body"> 
-<div id='navbar'>
-    <div id='searchbar'>
-        <form method="get">
-            <input type='text' name='query' class="searchbarsizing" value=""{{ query }} placeholder='Search'>
-            <button hidden>Search</button>
-        </form>
+<body id="body">
+
+<nav id='navbar'>
+    <div id='navbar-content'>
+        <header id="navbar-header">
+            <!-- add in href="[% url 'homepage' %] the navbar-logo item -->
+            <a class='navbar-logo'>Event Finder</a>
+            <!-- add in action=[% url 'search_view' %] to the form -->
+            <div id='searchbar-container'>
+                <form method="get">
+                    <input type='text' name='query' placeholder='Search Events...' value="{{ query }}">
+                    <button type="submit" class="search-btn" aria-label="Search">
+                         <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>    
+        </header>
+
+        <ul class="nav-links">
+            <li class="nav-item">
+                <!-- add in href=[% url 'home_view' %] to the a tag -->
+                <a >Home</a>
+            </li>
+            {% if request.user.is_authenticated %}
+                <!-- add in href=[% url 'logout_view' %] to the li -->
+                <li class="nav-item logout-item"><a>Logout</a></li>
+            {% else %}
+                <!-- add in href=[% url 'login_view' %] to the li -->
+                <li class="nav-item login-item"><a>Login</a></li>
+                <!-- add in href=[% url 'signup_view' %} to the li -->
+                <li class="nav-item signup-item"><a>Sign Up</a></li>
+            {% endif %}
+            <li class="nav-item category-filter-item">
+                <!-- add in action=[% url 'home_view' %] to the form -->
+                <form method="get">
+                    <select name="category" onchange="this.form.submit()">
+                        <option value="">Filter Country</option>
+                        {% for category in global_categories %}
+                            <option value="{{ category.id }}"
+                                {% if global_selected_category and global_selected_category.id == category.id %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </li>
+
+            <li class="nav-item category-filter-item">
+                <!-- add in action=[% url 'home_view' %] to the form -->
+                <form method="get">
+                    <select name="category" onchange="this.form.submit()">
+                        <option value="">Filter State</option>
+                        {% for category in global_categories %}
+                            <option value="{{ category.id }}"
+                                {% if global_selected_category and global_selected_category.id == category.id %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </li>
+        </ul>
+
+        <details id='options-details'>
+            <summary class='options-button'>Information</summary>
+            <div id='options-dropdown'>
+                <div class="info-group">
+                    <h4>Legal Matters</h4>
+                    <p>Privacy Policy</p>
+                    <p>Terms of Service</p>
+                    <p>Cookie Settings</p>
+                    <p>Return/Refund Policies</p>
+                </div>
+                <div class="info-group">
+                    <h4>Contact</h4>
+                    <p>Phone: 662-327-459</p>
+                    <p>Email: fakestop@gmail.com</p>
+                    <p>Address: Water Valley, MS</p>
+                </div>
+                <div class="info-group">
+                    <h4>Navigation</h4>
+                    <p>About Us</p>
+                    <p>FAQ</p>
+                    <p>Customer Service</p>
+                </div>
+            </div>
+        </details>
     </div>
-    <div id="category-filter">
-        <form method="get">
-            <select name="category" onchange="this.form.submit()">
-                <option value="">All Categories</option>
-            </select>
-        </form>
-    </div>
- 
-    <div id='options'>
-        <button class='options-button'>Information</button>
-        <div id='options-dropdown'>
-            <ul id='options-list'>
-                <li class='options-list-e'>
-                    <button>Legal Matters</button>
-                    <div class='extra-contents'>
-                        <p class="footertxt">Privacy Policy</p>
-                        <p class="footertxt">Terms of Service</p>
-                        <p class="footertxt">Cookie Settings</p>
-                        <p class="footertxt">Return/Refund Policies</p>
-                    </div>
-                </li>
-                <li class='options-list-e'>
-                    <button>Contact</button>
-                    <div class='extra-contents'>
-                        <p class="footertxt">Phone Number: 662-327-459</p>
-                        <p class="footertxt">Email: fakestop@gmail.com</p>
-                        <p class="footertxt">Address: Water Valley, MS</p>
-                    </div>
-                </li>
-                <li class='options-list-e'>
-                    <button>Navigation Links</button>
-                    <div class='extra-contents'>
-                        <p class="footertxt">About Us</p>
-                        <p class="footertxt">FAQ</p>
-                        <p class="footertxt">Customer Service</p>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </div> 
-</div>
-    {% block content %} {% endblock content %}
+</nav>
+
+{% block content %} {% endblock content %}
 </body>
 </html>
