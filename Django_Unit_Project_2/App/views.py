@@ -6,8 +6,9 @@ from django.contrib.auth.decorators import login_required
 from .filters import *
 
 def home_view(request): 
-    f = TicketFilter(request.GET, queryset=Ticket.objects.all())
-    return render(request, 'home.html', {'filter' : f})
+    f = TicketFilter(request.GET, queryset=Event.objects.all())
+    filter_active = any(param in request.GET for param in request.GET.keys())
+    return render(request, 'home.html', {'filter' : f, 'filter_active' : filter_active})
 
 def signup_view(request):
     if request.method == 'POST':

@@ -1,4 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+{% if filter_active %}
+    {% for event in filter.qs %}
+        {{ event.title }}
+    {% endfor %}
+{% endif %}
 {% endblock content %}
