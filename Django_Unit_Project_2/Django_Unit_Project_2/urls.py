@@ -25,5 +25,6 @@ urlpatterns = [
     path('login/', v.login_view, name='login'),
     path('logout/', v.logout_view, name='logout'),
     path('organization-login/', v.organization_login_view, name='org-login'),
-    path('organization-signup/', v.organization_signup_view, name='org-signup')
+    path('organization-signup/', v.organization_signup_view, name='org-signup'),
+    path('addevent/', v.AddEvent, name="addevent"),
 ]

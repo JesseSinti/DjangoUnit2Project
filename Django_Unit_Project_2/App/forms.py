@@ -31,3 +31,25 @@ class CustomOrganizationUserCreationForm(forms.Form):
         class Meta:
             model = OrganizationUsers
             fields = ['username', 'email', 'first_name', 'last_name', 'password', 'organization_name', 'is_admin']
+
+
+class AddEventForm(forms.Form):
+    organizer = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'placeholder': "Enter Your Organization's Name"}),
+        required=True
+    )
+    title = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': "Name of Your Event"}))
+    description = forms.CharField(widget=forms.Textarea(attrs={'placeholder': "Your Event's Description"}),required=True)
+    banner_image = forms.FileField(required=True)
+    location = forms.CharField(widget=forms.TextInput(attrs={'placeholder': "Enter Your Event's Location"}), required=True)
+    start_time = forms.TimeField(widget=forms.TimeInput(attrs={'placeholder': "Enter Your Event's Starting Time"}), required=True)
+    end_time = forms.TimeField(widget=forms.TimeInput(attrs={'placeholder': "Enter Your Event's Ending Time"}), required=True)
+    capacity = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': "Enter Your Event's Capacity"}), required=True)
+
+    class Meta:
+        model = Event
+        fields = ('organizer','title','description','banner_image','location','start_time','end_time','capacity')
+
+class TickerTierForm(forms.Form):
+    ticket_type = forms.CharField(widget=forms.TextInput(attrs={}))

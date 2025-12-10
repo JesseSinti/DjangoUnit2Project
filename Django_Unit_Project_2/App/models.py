@@ -6,7 +6,7 @@ class OrganizationUsers(models.Model):
     username = models.CharField(max_length=100)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    password = models.IntegerField()
+    password = models.CharField(max_length=20)
     is_admin = models.BooleanField(default=True)
     organization_name = models.CharField(max_length=150)
     email = models.EmailField(blank=True, null=True)

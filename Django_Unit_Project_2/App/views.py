@@ -80,3 +80,13 @@ def logout_view(request):
     logout(request)
     messages.success(request, "You were logged out.")
     return redirect('home_page')
+
+def AddEvent(request):
+    if request.method == "POST":
+        form = AddEventForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request, 'home.html')
+    else: 
+        form = AddEventForm()
+    return render(request, 'addEvent.html', {'form' : form})
