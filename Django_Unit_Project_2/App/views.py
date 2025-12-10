@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from .filters import *
 
 def home_view(request): 
-    f = TicketFilter(request.GET, queryset=TicketTier.objects.all())
+    f = TicketFilter(request.GET, queryset=Ticket.objects.all())
     return render(request, 'home.html', {'filter' : f})
 
 def signup_view(request):
