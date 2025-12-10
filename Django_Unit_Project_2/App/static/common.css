@@ -1,196 +1,384 @@
-#body {
-    background-color:#2b2b2b;
-    text-decoration: none !important;
+/* =========================================
+   1. GLOBAL VARIABLES & RESET
+   ========================================= */
+:root {
+    /* Apple/Glass Palette */
+    --glass-bg: rgba(255, 255, 255, 0.85); /* Frosted background */
+    --glass-border: 1px solid rgba(0, 0, 0, 0.1);
+    --primary-blue: #007aff;
+    --primary-text: #1d1d1f;
+    --secondary-text: #86868b;
+    --pill-bg: #f5f5f7;
+    
+    /* Navbar Dimensions */
+    --peek-height: 70px;  /* Closed height */
+    --open-height: 215px; /* Base height for links/filters (Level 1 Peak) */
+    --info-open-height: 480px; /* Height when the information tab is also open (Level 2 Peak) */
+    
+    /* Animations */
+    --anim-speed: 0.3s;
+    --anim-curve: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
+body {
+    margin: 0;
+    padding-top: var(--peek-height); /* Push content down */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--primary-text);
+    background-color: #fff;
+}
+
+/* =========================================
+   2. NAVBAR STRUCTURE (The "Peaking" Effect)
+   ========================================= */
 #navbar {
     position: fixed;
     top: 0;
-    width: 100vw;
-    height:65px;
-    background-color:black;
-    padding: 0px;
-    margin: 0px;
-    display: flex; 
-    overflow:visible;
+    left: 0;
+    width: 100%;
+    height: var(--peek-height); /* Default: closed */
     z-index: 1000;
-    border-radius: 0.313rem;
+    
+    /* Glassmorphism Styling */
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: var(--glass-border);
+    
+    /* Animation Properties */
+    overflow: hidden; 
+    transition: height var(--anim-speed) var(--anim-curve), box-shadow 0.3s ease;
 }
 
-.searchbarsizing {
-    width: 24vw;
-    height: 25px;
+/* 1st Level Hover: expands to show main links/filters */
+#navbar:hover {
+    height: var(--open-height);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
 }
 
-#searchbar {
-    margin-top: 0.938rem; 
-    margin-bottom: 0.938rem;
-    margin-left: 1.875rem;
+/* 2nd Level Hover/Details Open: expands further for the Information menu */
+/* FIX: This state now requires BOTH :hover AND [open] to apply. 
+   When the mouse leaves, the height smoothly reverts to the --peek-height. */
+#navbar:hover:has(#options-details[open]) {
+    height: var(--info-open-height); 
 }
 
-#options {
-    margin-top: 0.938rem; 
-    margin-bottom: 0.938rem;
-    display: flex;
-    flex-direction: column;
-    margin-left: auto;
-    transform: translateX(-25px);
-}
-
-#options-dropdown {
-    display: none;
-    background-color: rgb(219, 219, 219);
-}
-
-#options:hover #options-dropdown {
-    display: block;
-}
-
-#options-list {
-    list-style: none;
-    margin: 0px;
-    padding: 0px;
+#navbar-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 100%;
     display: flex;
     flex-direction: column;
 }
 
-.options-list-e {
-    margin-left: 1.25rem;
+/* =========================================
+   3. NAVBAR HEADER (Always Visible)
+   ========================================= */
+#navbar-header {
+    height: var(--peek-height);
+    flex-shrink: 0;
+    display: flex;
     align-items: center;
-    padding: 10px;
+    justify-content: space-between;
+    gap: 20px;
 }
 
-.options-button {
-    height: 30.6px;
+.navbar-logo {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--primary-text);
+    text-decoration: none;
+    cursor: pointer;
+    letter-spacing: -0.5px;
 }
 
-.extra-contents {
-    display: none;
-    background-color: rgb(206, 206, 206);
-    margin-top: 0.313rem;
+/* Search Bar (Pill Shape) */
+#searchbar-container {
+    flex-grow: 1;
+    max-width: 450px;
 }
 
-.options-list-e:hover .extra-contents {
-    display: block;
-}
-
-.footer {
-    position:fixed;
-    left:0;
-    width:100vw;
-    height:20vh;
-    background-color: rgb(219, 219, 219);
-    display:flex;
-    justify-content: space-evenly;
-}
-
-.legalInfo{
-    display:flex;
-    flex-direction:column;
-    width:33%;
-}
-
-.nav-bar-button {
-    background-color:black;
-}
-
-#category-filter select {
-    width:7.5vw;
-    height:30.6px;
-    font-size:.8rem;
-    margin-left: 0px;
-    margin-right: 2rem;
-    margin-top:0.938rem;
-}
-
-.register-container {
+#searchbar-container form {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
-    height: 100vh;
-    width: 100vw;
-    background-color: rgb(54, 52, 52);
+    background-color: var(--pill-bg);
+    border-radius: 50px;
+    padding: 6px 16px;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
 }
 
-.register-text {
-    color: rgb(245, 245, 244);
+#searchbar-container form:focus-within {
+    background-color: #fff;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
 }
 
-.submit-btn{
-    background-color: rgb(59, 7, 214);
-    color: azure;
+#searchbar-container input {
     border: none;
+    background: transparent;
+    flex-grow: 1;
+    font-size: 0.95rem;
+    outline: none;
+    color: var(--primary-text);
 }
 
-.btn-close{
-    float: right;
+.search-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--secondary-text);
+    padding: 4px;
+    transition: color 0.2s;
 }
 
-.login-form-wrapper {
-    max-width: 400px;
-    margin: 40px auto;
-    padding: 25px;
-    background: rgb(6, 6, 6);
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    color: aliceblue;
+.search-btn:hover {
+    color: var(--primary-blue);
 }
 
-.register-form-wrapper {
-    max-width: 50%;
-    margin: 40px auto;
-    padding: 25px;
-    background: rgb(6, 6, 6);
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    color: aliceblue;
-}
-
-.register-form p {
-    display: flex;
-    flex-direction: column;
-    width: 45%;
-}
-
-.register-form {
+/* =========================================
+   4. HIDDEN LINKS (Revealed on Hover)
+   ========================================= */
+.nav-links {
+    list-style: none;
+    padding: 20px 0 0 0;
+    margin: 0;
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
+    border-top: var(--glass-border);
+    
+    /* Fade In Animation */
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease 0.1s, transform 0.3s ease 0.1s;
+}
+
+#navbar:hover .nav-links {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+}
+
+.nav-item a {
+    text-decoration: none;
+    color: var(--secondary-text);
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.nav-item a:hover {
+    color: var(--primary-blue);
+    background-color: rgba(0, 122, 255, 0.08);
+}
+
+/* Dropdowns in Navbar (Country/State Filter) */
+.category-filter-item select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: var(--pill-bg);
+    border: 1px solid transparent;
+    padding: 8px 30px 8px 12px;
+    border-radius: 12px;
+    font-family: inherit;
+    color: var(--primary-text);
+    font-weight: 500;
+    cursor: pointer;
+    /* Custom arrow for select fields */
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007AFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px top 50%;
+    background-size: 10px auto;
+    transition: all 0.2s;
+}
+
+.category-filter-item select:hover {
+    background-color: #e8e8ed;
+}
+
+.category-filter-item select:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+}
+
+/* =========================================
+   5. FOOTER INFO (Reverted & Glass Menus Applied)
+   ========================================= */
+#options-details {
+    margin-top: 20px; /* Reduces dead space */
+    padding-bottom: 10px;
+    opacity: 0;
+    transition: opacity 0.4s ease 0.2s;
+}
+
+#navbar:hover #options-details {
+    opacity: 1;
+}
+
+.options-button {
+    /* --- STYLING APPLIED HERE --- */
+    display: inline-flex; /* Allows padding and background */
+    align-items: center;
+    gap: 8px; /* Space for a potential icon */
+    
+    list-style: none;
+    color: var(--primary-text);
+    font-weight: 600;
+    font-size: 0.95rem; /* Slightly larger text */
+    
+    cursor: pointer;
+    margin-bottom: 15px;
+    
+    /* Look and Feel */
+    padding: 6px 14px;
+    border-radius: 12px; /* Rounded pill shape */
+    background-color: var(--pill-bg); /* Use the subtle background color */
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+/* Add an arrow/icon to look more clickable */
+.options-button::after {
+    content: '\25BC'; /* Down arrow (Unicode) */
+    font-size: 0.5rem;
+    margin-left: 4px;
+    transition: transform 0.2s;
+}
+
+/* Style when hovered */
+.options-button:hover {
+    background-color: #e8e8ed; 
+}
+
+/* Style when open */
+#options-details[open] .options-button {
+    color: var(--primary-blue);
+    background-color: rgba(0, 122, 255, 0.1);
+}
+
+/* Rotate arrow when the details are open */
+#options-details[open] .options-button::after {
+    transform: rotate(180deg);
+}
+
+.options-button::-webkit-details-marker { display: none; }
+
+#options-dropdown {
+    /* Use flex to lay groups horizontally */
+    display: flex; 
+    gap: 40px;
+    padding: 0;
+}
+
+/* Applying the glass look to the internal menus */
+.info-group {
+    /* Styles for the "glass menu" blocks */
+    margin-bottom: 20px;
+    width: 250px; 
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(15px);
+    border-radius: 12px;
+    border: var(--glass-border);
+    padding: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.info-group h4 {
+    color: var(--primary-text);
+    margin: 0 0 8px 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+.info-group p { 
+    margin: 4px 0; 
+    cursor: pointer; 
+    font-size: 0.9rem;
+    color: var(--secondary-text);
+    padding: 4px 0;
+}
+.info-group p:hover { 
+    color: var(--primary-blue);
+    text-decoration: underline; 
+}
+
+/* =========================================================
+   6. VERSATILE ASSET SET (Reusable Classes)
+   ========================================================= */
+
+/* --- Glass Button (.glass-btn) --- */
+.glass-btn {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-radius: 50px;
+    border: var(--glass-border);
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    color: var(--primary-text);
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.glass-btn:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.glass-btn.primary {
+    background-color: var(--primary-blue);
+    color: white;
+    border: none;
+}
+.glass-btn.primary:hover {
+    background-color: #0062cc;
+}
+
+/* --- Glass Card (.glass-card) --- */
+.glass-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: var(--glass-border);
+    padding: 24px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+}
+
+/* --- Uniform Glass List (.glass-list) --- */
+.glass-list {
+    list-style: none;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(15px);
+    border-radius: 16px;
+    border: var(--glass-border);
+    overflow: hidden;
+}
+
+.glass-list li {
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    display: flex;
     justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
+    cursor: pointer;
 }
 
-.register-form {
-    text-align: center;
-}
-
-.register-form button {
-    margin-top: 15px;
-}
-
-.register-form-wrapper {
-    text-align: center;
-}
-
-.register-text {
-    text-align: center;
-}
-
-.alert {
-    background-color: aliceblue;
-    color: red;
-}
-
-.navbar-brand {
-    color: aliceblue;
-}
-
-.welcome-text {
-    color: aliceblue;
-}
-
-.login-container {
-    background-color: rgb(54, 52, 52);
-    height: 100vh;
-    width: 100vw;
-}
+.glass-list li:last-child { border-bottom: none; }
+.glass-list li:hover { background-color: rgba(255, 255, 255, 0.9); }
