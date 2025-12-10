@@ -1,0 +1,15 @@
+{%extends 'base.html'%}
+{%load static%}
+    {%block content%}
+        <div class="register-container">
+            <div class="register-form-wrapper">
+                <h1 class="register-text">Register</h1>
+                <form method="POST" class="register-form">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="submit-btn" type="submit" >Submit</button>
+                </form>
+                <h5 class="register-text">Already have an account? <a class="nav-link" href="{% url 'login' %}">Login</a></h5>
+            </div>
+        </div>
+    {% endblock content %}
