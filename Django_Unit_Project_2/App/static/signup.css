@@ -1,0 +1,187 @@
+/* Import core variables from common.css for consistency */
+:root {
+    --primary-text: #1d1d1f;
+    --secondary-text: #232323;
+    --glass-border: 1px solid rgba(0, 0, 0, 0.1);
+    --primary-blue: #007aff;
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --pill-bg: #f5f5f7;
+}
+
+/* =========================================
+   1. LAYOUT & CONTAINER STYLING
+   ========================================= */
+.register-container {
+    /* Full screen alignment */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; 
+    padding-top: 120px; 
+    min-height: calc(100vh - 70px); 
+    background: linear-gradient(135deg, rgba(230, 230, 255, 0.5) 0%, rgba(255, 255, 255, 0.2) 100%);
+}
+
+.register-form-wrapper {
+    /* Apply the central Glass Card look */
+    width: 100%;
+    max-width: 450px; /* Slightly wider to accommodate complex forms */
+    padding: 40px;
+    
+    /* Inherit/mimic the .glass-card style */
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+}
+
+.register-text {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-text);
+    margin-bottom: 30px;
+    letter-spacing: -0.5px;
+}
+
+/* =========================================
+   2. FORM ELEMENTS (Inputs, Labels, Errors)
+   ========================================= */
+
+/* Django form rendering uses <p> tags for field wrapper */
+.register-form p {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+/* General form labels (for text fields, etc.) */
+.register-form label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--secondary-text);
+    margin-bottom: 6px;
+}
+
+/* Standard input fields (text, password, etc.) */
+.register-form input:not([type="checkbox"]),
+.register-form select,
+.register-form textarea {
+    /* Input field styling (Pill shape and focus effect) */
+    width: 100%;
+    padding: 12px 15px;
+    background-color: var(--pill-bg);
+    border: var(--glass-border);
+    border-radius: 12px;
+    font-size: 1rem;
+    color: var(--primary-text);
+    box-sizing: border-box; 
+    transition: all 0.2s ease;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.register-form input:not([type="checkbox"]):focus,
+.register-form select:focus,
+.register-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    background-color: #fff;
+    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
+}
+
+/* Error Message Styling */
+.register-form ul.errorlist {
+    list-style: none;
+    padding: 0;
+    margin-top: 5px;
+    font-size: 0.85rem;
+    color: #ff3b30; /* Red color for errors */
+}
+
+/* =========================================
+   2.1 CHECKBOX CLEANUP STYLING (The Fix)
+   ========================================= */
+
+/* 1. Ensure the container <p> tag is set up for alignment */
+.register-form p:has(input[type="checkbox"]) {
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Vertically center items */
+    gap: 10px; /* Space between the label and the checkbox */
+}
+
+/* 2. Style the label for the checkbox */
+.register-form input[type="checkbox"] + label, 
+.register-form label[for^="id_"][class=""] {
+    /* Set the label to align nicely with the checkbox */
+    order: 1; /* Place the label before the input in this flex container */
+    margin-bottom: 0;
+    font-weight: 400; /* Use the same font weight as custom fields */
+    color: var(--primary-text);
+    /* Remove unnecessary padding from previous attempts */
+    padding-left: 0; 
+}
+
+/* 3. Style the default input to look cleaner and align it */
+.register-form input[type="checkbox"] {
+    display: inline-block; /* Ensure it is visible */
+    order: 2; /* Place the checkbox after the label */
+    
+    /* Optional: Style the native checkbox slightly for a cleaner look */
+    width: 18px; 
+    height: 18px;
+    margin: 0; /* Remove default margins */
+    
+    /* Use the same border/background as the pills for consistency */
+    background-color: var(--pill-bg);
+    border: 1px solid var(--secondary-text); 
+    border-radius: 4px; /* Soft corners */
+    
+    /* Remove the conflicting properties for text/password inputs */
+    padding: 0; 
+    -webkit-appearance: checkbox; /* Ensure browser renders it as a checkbox */
+    appearance: checkbox;
+}
+
+/* 4. Focus state for interaction feedback */
+.register-form input[type="checkbox"]:focus {
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
+    border-color: var(--primary-blue);
+}
+
+/* =========================================
+   3. SUBMIT BUTTON
+   ========================================= */
+.submit-btn {
+    /* Replicate the primary glass button style */
+    appearance: none;
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    
+    padding: 14px 24px;
+    margin-top: 20px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 1rem;
+    
+    background-color: var(--primary-blue);
+    color: white;
+    border: none;
+    border-radius: 14px; 
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+    transition: all 0.2s ease;
+}
+
+.submit-btn:hover {
+    background-color: #0062cc;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 122, 255, 0.4);
+}
+
+.submit-btn:active {
+    transform: scale(0.98);
+}

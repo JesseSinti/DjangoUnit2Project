@@ -3,9 +3,12 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import *
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
+from .filters import *
 
 def home_view(request): 
-    return render(request, 'home.html', None)
+    f = TicketFilter(request.GET, queryset=Event.objects.all())
+    filter_active = any(param in request.GET for param in request.GET.keys())
+    return render(request, 'home.html', {'filter' : f, 'filter_active' : filter_active})
 
 def signup_view(request):
     if request.method == 'POST':
@@ -79,3 +82,13 @@ def logout_view(request):
     logout(request)
     messages.success(request, "You were logged out.")
     return redirect('home_page')
+
+def AddEvent(request):
+    if request.method == "POST":
+        form = AddEventForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request, 'home.html')
+    else: 
+        form = AddEventForm()
+    return render(request, 'addEvent.html', {'form' : form})
