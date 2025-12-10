@@ -43,32 +43,6 @@
                 <li class="nav-item login-item"><a href='{% url "org-login" %}'>Join Organiztion</a></li>
                 <li class="nav-item signup-item"><a href='{% url "org-signup" %}'>Register Organization</a></li>
             {% endif %}
-            <li class="nav-item category-filter-item">
-                <!-- add in action=[% url 'home_view' %] to the form -->
-                <form method="get" id="locationsubmission">
-                    <label for="location" class="location">City/State</label>
-                    <input type="text" name="event__location" id="location" onchange="this.form.submit()">
-                </form>
-            </li>
-
-            <li class="nav-item category-filter-item">
-                <!-- add in action=[% url 'home_view' %] to the form -->
-                <form method="get">
-                    <label for="minprice" class="minprice">Minimum Price:</label>
-                    <input type="number" name="tickettier__min_price" min="0" default="0" id="minprice" onchange="this.form.submit()"><br/>
-
-                    <label for="maxprice" class="maxprice">Maximum Price:</label>
-                    <input type="number" name="tickettier__max_price" max="999999" default="0" id="maxprice" onchange="this.form.submit()">
-                </form>
-            </li>
-
-            <li class="nav-item category-filter-item">
-                <!-- add in action=[% url 'home_view' %] to the form -->
-                <form method="get">
-                    <label for="starttime" class="starttime">Start Time:</label>
-                    <input type="text" name="event__start_time" id="starttime" onchange="this.form.submit()">
-                </form>
-            </li>
         </ul>
 
         <details id='options-details'>
@@ -97,6 +71,38 @@
         </details>
     </div>
 </nav>
+
+<details id='filter-sidebar'>
+    <summary class='filter-tab-button'>
+        <i class="fas fa-sliders-h"></i> 
+        <span>Filters</span>
+    </summary>
+    <div id='filter-dropdown'>
+        <form method="get" id="locationsubmission" class="filter-form-group">
+            <h4>Location</h4>
+            <label for="location" class="location">City/State</label>
+            <input type="text" name="event__location" id="location" onchange="this.form.submit()">
+        </form>
+
+        <form method="get" class="filter-form-group price-form">
+            <h4>Price Range</h4>
+            <div class="price-inputs">
+                <label for="minprice" class="minprice">Min:</label>
+                <input type="number" name="tickettier__min_price" min="0" default="0" id="minprice" onchange="this.form.submit()">
+            </div>
+            <div class="price-inputs">
+                <label for="maxprice" class="maxprice">Max:</label>
+                <input type="number" name="tickettier__max_price" max="999999" default="0" id="maxprice" onchange="this.form.submit()">
+            </div>
+        </form>
+
+        <form method="get" class="filter-form-group">
+            <h4>Time</h4>
+            <label for="starttime" class="starttime">Start Time:</label>
+            <input type="text" name="event__start_time" id="starttime" onchange="this.form.submit()">
+        </form>
+    </div>
+</details>
 
 {% block content %} {% endblock content %}
 </body>

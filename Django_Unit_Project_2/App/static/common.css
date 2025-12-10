@@ -7,16 +7,20 @@
     --glass-border: 1px solid rgba(0, 0, 0, 0.1);
     --primary-blue: #007aff;
     --primary-text: #1d1d1f;
-    --secondary-text: #86868b;
+    --secondary-text: #000000; /* CUSTOM: Changed to black */
     --pill-bg: #f5f5f7;
     
     /* Navbar Dimensions */
     --peek-height: 70px;  /* Closed height */
-    --open-height: 235px; /* Base height for links/filters (Level 1 Peak) */
-    --info-open-height: 480px; /* Height when the information tab is also open (Level 2 Peak) */
+    --open-height: 200px; /* CUSTOM: Base height increased */
+    --info-open-height: 400px; /* CUSTOM: Height increased */
+    
+    /* Sidebar Dimensions (FIXED) */
+    --sidebar-peek: 30px; /* How much of the sidebar tab button shows */
+    --sidebar-open-width: 250px;
     
     /* Animations */
-    --anim-speed: 0.3s;
+    --anim-speed: 0.5s; /* CUSTOM: Speed changed */
     --anim-curve: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
@@ -25,7 +29,8 @@ body {
     padding-top: var(--peek-height); /* Push content down */
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     color: var(--primary-text);
-    background-color: #fff;
+    /* CUSTOM: New body background */
+    background: linear-gradient(135deg, rgba(230, 230, 255, 0.5) 0%, rgba(255, 255, 255, 0.2) 100%); 
 }
 
 /* =========================================
@@ -50,15 +55,13 @@ body {
     transition: height var(--anim-speed) var(--anim-curve), box-shadow 0.3s ease;
 }
 
-/* 1st Level Hover: expands to show main links/filters */
+/* 1st Level Hover: expands to show main links */
 #navbar:hover {
     height: var(--open-height);
     box-shadow: 0 15px 40px rgba(0,0,0,0.12);
 }
 
 /* 2nd Level Hover/Details Open: expands further for the Information menu */
-/* FIX: This state now requires BOTH :hover AND [open] to apply. 
-   When the mouse leaves, the height smoothly reverts to the --peek-height. */
 #navbar:hover:has(#options-details[open]) {
     height: var(--info-open-height); 
 }
@@ -165,6 +168,7 @@ body {
     align-items: center;
 }
 
+/* Basic Text Links */
 .nav-item a {
     text-decoration: none;
     color: var(--secondary-text);
@@ -180,41 +184,185 @@ body {
     background-color: rgba(0, 122, 255, 0.08);
 }
 
-/* Dropdowns in Navbar (Country/State Filter) */
-.category-filter-item select {
-    appearance: none;
-    -webkit-appearance: none;
-    background-color: var(--pill-bg);
-    border: 1px solid transparent;
-    padding: 8px 30px 8px 12px;
-    border-radius: 12px;
-    font-family: inherit;
-    color: var(--primary-text);
-    font-weight: 500;
+
+/* =========================================
+   5. VERTICAL FILTER SIDEBAR (#filter-sidebar) - FIXES APPLIED
+   ========================================= */
+#filter-sidebar {
+    position: fixed;
+    /* DEFAULT POSITION: Aligned with the closed navbar height */
+    top: var(--peek-height); 
+    right: 0;
+    z-index: 999;
+    
+    width: var(--sidebar-open-width);
+    
+    /* Start position: Push element off-screen */
+    transform: translateX(calc(var(--sidebar-open-width) - var(--sidebar-peek))); 
+    /* FIX: Ensure 'top' transition uses the new --anim-speed */
+    transition: transform var(--anim-speed) var(--anim-curve), box-shadow 0.3s ease, top var(--anim-speed) var(--anim-curve); 
+}
+
+/* NEW: When the navbar is hovered (open), push the sidebar down */
+/* IMPORTANT: The `~` selector requires the sidebar to immediately follow the navbar in the HTML. */
+#navbar:hover ~ #filter-sidebar {
+    top: var(--open-height);
+}
+
+/* Open state on click (details open) - Only way to open */
+#filter-sidebar[open] {
+    transform: translateX(0);
+}
+
+/* Sidebar Button/Summary Style */
+.filter-tab-button {
+    position: absolute;
+    /* CUSTOM: Added margin-top: 15px */
+    top: 25px; 
+    /* FIX: Position the button relative to the sidebar's starting point (the peek amount) plus the desired padding/margin */
+    left: calc(var(--sidebar-peek) * -1); 
+    
+    /* FIX: Corrected width calculation to use calc() instead of illegal CSS addition.
+       The width is sidebar-peek (30px) + the padding inside the button. */
+    width: calc(var(--sidebar-peek) + 20px);
+    height: 100px; /* Tall button */
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* CUSTOM: Changed gap to 6px */
+    gap: 6px;
+
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-left: var(--glass-border);
+    
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+    
+    color: var(--secondary-text);
+    font-size: 0.8rem;
+    font-weight: 600;
     cursor: pointer;
-    /* Custom arrow for select fields */
-    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007AFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"); 
-    background-repeat: no-repeat;
-    background-position: right 10px top 50%;
-    background-size: 10px auto;
     transition: all 0.2s;
+    padding-right: 40px;
+    /* CUSTOM: Removed margin-top (moved to top property) and padding-left (handled by width) to keep alignment clean */
 }
 
-.category-filter-item select:hover {
-    background-color: #e8e8ed;
+.filter-tab-button:hover {
+    background-color: rgba(255, 255, 255, 0.95);
+    color: var(--primary-blue);
 }
 
-.category-filter-item select:focus {
+.filter-tab-button i {
+    font-size: 1.2rem;
+}
+
+.filter-tab-button::-webkit-details-marker { display: none; }
+
+
+/* Sidebar Dropdown Content (The filter list) */
+#filter-dropdown {
+    width: var(--sidebar-open-width);
+    margin-top: 15px;
+    height: auto;
+    min-height: 250px;
+    padding: 20px;
+    margin-left: 19px;
+    box-sizing: border-box; 
+    
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    border-left: var(--glass-border);
+    border-bottom-left-radius: 12px;
+    border-top-left-radius: 12px;
+    
+    display: flex;
+    flex-direction: column; 
+    gap: 20px;
+}
+
+/* Filter Group Styling */
+.filter-form-group {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    border: var(--glass-border);
+    padding: 12px; 
+    display: flex;
+    flex-direction: column; 
+    gap: 8px;
+}
+
+.filter-form-group h4 {
+    color: var(--primary-text);
+    margin: 0 0 5px 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.filter-form-group label {
+    color: var(--secondary-text);
+    font-weight: 500;
+    display: block;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Input Styles */
+.filter-form-group input[type="text"],
+.filter-form-group input[type="number"] {
+    border: none;
+    background-color: var(--pill-bg);
+    padding: 6px 10px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    color: var(--primary-text);
+    transition: all 0.2s;
     outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    text-overflow: ellipsis; 
+}
+
+.filter-form-group input[type="text"]:focus,
+.filter-form-group input[type="number"]:focus {
+    background-color: #fff;
+    border: 1px solid var(--primary-blue);
     box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
 }
 
+/* Price specific layout */
+.price-inputs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.price-inputs label {
+    flex-shrink: 0;
+    width: 40px; 
+    text-align: right;
+    margin-bottom: 0;
+    white-space: nowrap; /* Keep Min/Max from wrapping */
+}
+
+.price-inputs input {
+    flex-grow: 1;
+    margin-bottom: 0;
+}
+
+
 /* =========================================
-   5. FOOTER INFO (Reverted & Glass Menus Applied)
+   6. INFORMATION DROPDOWN
    ========================================= */
 #options-details {
-    margin-top: 20px; /* Reduces dead space */
-    padding-bottom: 10px;
+    margin-top: 20px;
+    padding-bottom: 20px;
     opacity: 0;
     transition: opacity 0.4s ease 0.2s;
 }
@@ -223,48 +371,43 @@ body {
     opacity: 1;
 }
 
+/* --- Shared Button Styling (.options-button) --- */
 .options-button {
-    /* --- STYLING APPLIED HERE --- */
-    display: inline-flex; /* Allows padding and background */
+    display: inline-flex;
     align-items: center;
-    gap: 8px; /* Space for a potential icon */
+    gap: 8px;
     
     list-style: none;
     color: var(--primary-text);
     font-weight: 600;
-    font-size: 0.95rem; /* Slightly larger text */
+    font-size: 0.95rem;
     
     cursor: pointer;
     margin-bottom: 15px;
     
-    /* Look and Feel */
     padding: 6px 14px;
-    border-radius: 12px; /* Rounded pill shape */
-    background-color: var(--pill-bg); /* Use the subtle background color */
+    border-radius: 12px;
+    background-color: var(--pill-bg);
     border: 1px solid transparent;
     transition: all 0.2s ease;
 }
 
-/* Add an arrow/icon to look more clickable */
 .options-button::after {
-    content: '\25BC'; /* Down arrow (Unicode) */
+    content: '\25BC';
     font-size: 0.5rem;
     margin-left: 4px;
     transition: transform 0.2s;
 }
 
-/* Style when hovered */
 .options-button:hover {
     background-color: #e8e8ed; 
 }
 
-/* Style when open */
 #options-details[open] .options-button {
     color: var(--primary-blue);
     background-color: rgba(0, 122, 255, 0.1);
 }
 
-/* Rotate arrow when the details are open */
 #options-details[open] .options-button::after {
     transform: rotate(180deg);
 }
@@ -272,15 +415,13 @@ body {
 .options-button::-webkit-details-marker { display: none; }
 
 #options-dropdown {
-    /* Use flex to lay groups horizontally */
     display: flex; 
     gap: 40px;
     padding: 0;
 }
 
-/* Applying the glass look to the internal menus */
+/* Info Group Styling */
 .info-group {
-    /* Styles for the "glass menu" blocks */
     margin-bottom: 20px;
     width: 250px; 
     background: rgba(255, 255, 255, 0.7);
@@ -311,81 +452,75 @@ body {
 
 
 /* =========================================================
-   6. VERSATILE ASSET SET (Reusable Classes) - ADDITION
+   7. VERSATILE ASSET SET (Reusable Classes)
    ========================================================= */
 
-/* --- Custom Dropdown Menu (.custom-dropdown-menu) --- */
-/* Use this class on a container (e.g., a <div>) to wrap your clickable trigger and the menu list. */
-.custom-dropdown-menu {
-    position: relative;
-    display: inline-block;
-}
-
-/* The Trigger button (the element you click to open the menu) */
-.custom-dropdown-menu .dropdown-trigger {
-    /* Base styles matching the filter selects */
-    background-color: var(--pill-bg);
-    border: 1px solid transparent;
-    padding: 8px 30px 8px 12px;
-    border-radius: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    color: var(--primary-text);
-    transition: all 0.2s;
-    
-    display: flex;
+/* --- Glass Button (.glass-btn) --- */
+.glass-btn {
+    appearance: none;
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 10px;
+    justify-content: center;
+    padding: 10px 20px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-radius: 50px;
+    border: var(--glass-border);
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    color: var(--primary-text);
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: all 0.2s;
+    text-decoration: none;
 }
 
-.custom-dropdown-menu .dropdown-trigger:hover {
-    background-color: #e8e8ed;
+.glass-btn:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* The actual Glass Menu (list) */
-.custom-dropdown-menu .dropdown-list {
-    /* Inherits the look of .glass-list */
-    position: absolute;
-    top: 100%; /* Position below the trigger */
-    left: 0;
-    min-width: 200px;
-    max-height: 0; /* Hidden by default */
-    overflow: hidden;
-    margin-top: 8px; /* Small gap */
-    z-index: 100;
-    
+.glass-btn.primary {
+    background-color: var(--primary-blue);
+    color: white;
+    border: none;
+}
+.glass-btn.primary:hover {
+    background-color: #0062cc;
+}
+
+/* --- Glass Card (.glass-card) --- */
+.glass-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: var(--glass-border);
+    padding: 24px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+}
+
+/* --- Uniform Glass List (.glass-list) --- */
+.glass-list {
     list-style: none;
     padding: 0;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(15px);
     border-radius: 16px;
     border: var(--glass-border);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    
-    transition: max-height 0.3s ease-out; /* Animation for open/close */
+    overflow: hidden;
 }
 
-/* List Item Styling */
-.custom-dropdown-menu .dropdown-list li {
-    padding: 10px 15px;
+.glass-list li {
+    padding: 15px 20px;
     border-bottom: 1px solid rgba(0,0,0,0.05);
-    transition: background 0.15s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
     cursor: pointer;
-    font-size: 0.95rem;
-    color: var(--primary-text);
 }
 
-.custom-dropdown-menu .dropdown-list li:last-child {
-    border-bottom: none;
-}
-
-.custom-dropdown-menu .dropdown-list li:hover {
-    background-color: rgba(0, 122, 255, 0.1);
-    color: var(--primary-blue);
-}
-
-/* State for Open Menu (Requires JS to toggle an 'open' class on the container) */
-.custom-dropdown-menu.open .dropdown-list {
-    max-height: 400px; /* Set to a value larger than the menu content */
-}
+.glass-list li:last-child { border-bottom: none; }
+.glass-list li:hover { background-color: rgba(255, 255, 255, 0.9); }
