@@ -309,81 +309,83 @@ body {
     text-decoration: underline; 
 }
 
+
 /* =========================================================
-   6. VERSATILE ASSET SET (Reusable Classes)
+   6. VERSATILE ASSET SET (Reusable Classes) - ADDITION
    ========================================================= */
 
-/* --- Glass Button (.glass-btn) --- */
-.glass-btn {
-    appearance: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 20px;
-    font-family: inherit;
-    font-weight: 600;
-    font-size: 0.95rem;
-    border-radius: 50px;
-    border: var(--glass-border);
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(10px);
-    color: var(--primary-text);
+/* --- Custom Dropdown Menu (.custom-dropdown-menu) --- */
+/* Use this class on a container (e.g., a <div>) to wrap your clickable trigger and the menu list. */
+.custom-dropdown-menu {
+    position: relative;
+    display: inline-block;
+}
+
+/* The Trigger button (the element you click to open the menu) */
+.custom-dropdown-menu .dropdown-trigger {
+    /* Base styles matching the filter selects */
+    background-color: var(--pill-bg);
+    border: 1px solid transparent;
+    padding: 8px 30px 8px 12px;
+    border-radius: 12px;
+    font-weight: 500;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    color: var(--primary-text);
     transition: all 0.2s;
-    text-decoration: none;
+    
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
 }
 
-.glass-btn:hover {
-    background: rgba(255, 255, 255, 0.9);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+.custom-dropdown-menu .dropdown-trigger:hover {
+    background-color: #e8e8ed;
 }
 
-.glass-btn.primary {
-    background-color: var(--primary-blue);
-    color: white;
-    border: none;
-}
-.glass-btn.primary:hover {
-    background-color: #0062cc;
-}
-
-/* --- Glass Card (.glass-card) --- */
-.glass-card {
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    border: var(--glass-border);
-    padding: 24px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-}
-
-/* --- Uniform Glass List (.glass-list) --- */
-.glass-list {
+/* The actual Glass Menu (list) */
+.custom-dropdown-menu .dropdown-list {
+    /* Inherits the look of .glass-list */
+    position: absolute;
+    top: 100%; /* Position below the trigger */
+    left: 0;
+    min-width: 200px;
+    max-height: 0; /* Hidden by default */
+    overflow: hidden;
+    margin-top: 8px; /* Small gap */
+    z-index: 100;
+    
     list-style: none;
     padding: 0;
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(15px);
     border-radius: 16px;
     border: var(--glass-border);
-    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    
+    transition: max-height 0.3s ease-out; /* Animation for open/close */
 }
 
-.glass-list li {
-    padding: 15px 20px;
+/* List Item Styling */
+.custom-dropdown-menu .dropdown-list li {
+    padding: 10px 15px;
     border-bottom: 1px solid rgba(0,0,0,0.05);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: background 0.2s;
+    transition: background 0.15s;
     cursor: pointer;
+    font-size: 0.95rem;
+    color: var(--primary-text);
 }
 
-.glass-list li:last-child { border-bottom: none; }
-.glass-list li:hover { background-color: rgba(255, 255, 255, 0.9); }
+.custom-dropdown-menu .dropdown-list li:last-child {
+    border-bottom: none;
+}
 
-.practicetxt {
-    font-size : 20rem;
-    z-index:9999999
+.custom-dropdown-menu .dropdown-list li:hover {
+    background-color: rgba(0, 122, 255, 0.1);
+    color: var(--primary-blue);
+}
+
+/* State for Open Menu (Requires JS to toggle an 'open' class on the container) */
+.custom-dropdown-menu.open .dropdown-list {
+    max-height: 400px; /* Set to a value larger than the menu content */
 }

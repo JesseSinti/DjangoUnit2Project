@@ -13,13 +13,13 @@ def home_view(request):
 def signup_view(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
-        if form.is_valid:
+        if form.is_valid():
             user = form.save()
             login(request, user)
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
             request.session['user_data'] = {'firstname':first_name, 'lastname':last_name}
-            return redirect('home')
+            return redirect('home_page')
     else:
         form = CustomUserCreationForm()
     return render(request, 'signup.html', {'form':form})
@@ -33,7 +33,7 @@ def organization_signup_view(request):
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
             request.session['user_data'] = {'firstname':first_name, 'lastname':last_name}
-            return redirect('home')
+            return redirect('home_page')
     else:
         form = CustomOrganizationUserCreationForm()
     return render(request, 'organization_signup.html', {'form':form})
@@ -51,7 +51,7 @@ def login_view(request):
                 'firstname': first_name,
                 'lastname': last_name
             }
-            return redirect('home')
+            return redirect('home_page')
         else:
             messages.success(request, "There was an error logging in, Please try again...")
             return redirect('login')
@@ -70,7 +70,7 @@ def organization_login_view(request):
                 'firstname': first_name,
                 'lastname': last_name
             }
-            return redirect('home')
+            return redirect('home_page')
         else:
             messages.success(request, "There was an error logging in, Please try again...")
             return redirect('org-login')
@@ -79,4 +79,4 @@ def organization_login_view(request):
 def logout_view(request):
     logout(request)
     messages.success(request, "You were logged out.")
-    return redirect('register')
+    return redirect('home_page')
