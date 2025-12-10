@@ -15,26 +15,23 @@ class Event(models.Model):
     organizer = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     description = models.TextField()
-    banner_image = models.ImageField(upload_to='event_images/', required=True)
+    banner_image = models.ImageField(upload_to='event_images/')
     location = models.CharField(max_length=100)
     start_time = models.TimeField()
     end_time = models.TimeField()
     capacity = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
 
-VIP = "VIP"
-GENERAL = "General"
-BASIC = "Basic"
-
-TIER_CHOICES = (
-    (VIP, "VIP"),
-    (GENERAL, "General"),
-    (BASIC, "Basic"),
-)
 
 class TicketTier(models.Model):
+
+    class Status(models.TextChoices):
+        VIP = "VIP",('VIP')
+        GENERAL = "General",('General')
+        BASIC = "Basic",('Basic')
+
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    type = models.TextChoices(choices=TIER_CHOICES, default="Basic")
+    type = models.CharField(choices=Status.choices, default="Basic")
     price = models.FloatField()
     quantity = models.IntegerField()
 

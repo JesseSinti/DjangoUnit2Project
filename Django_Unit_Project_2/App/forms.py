@@ -30,4 +30,4 @@ class CustomOrganizationUserCreationForm(forms.Form):
     class Meta(forms.ModelForm):
         class Meta:
             model = OrganizationUsers
-            fields = ['Username', 'Email', 'Firstname', 'Lastname', 'Password', 'Organization', 'Admin']
+            fields = ['username', 'email', 'first_name', 'last_name', 'password', 'organization_name', 'is_admin']
