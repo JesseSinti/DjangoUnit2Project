@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
 
-class Customer(models.Model):
+class OrganizationUsers(models.Model):
     username = models.CharField(max_length=100)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -16,4 +16,37 @@ class Event(models.Model):
     description = models.TextField()
     banner_image = models.ImageField(upload_to='event_images/', required=True)
     location = models.CharField(max_length=100)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    capacity = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+VIP = "VIP"
+GENERAL = "General"
+BASIC = "Basic"
+
+TIER_CHOICES = (
+    (VIP, "VIP"),
+    (GENERAL, "General"),
+    (BASIC, "Basic"),
+)
+
+class TicketTier(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    type = models.TextChoices(choices=TIER_CHOICES, default="Basic")
+    price = models.FloatField()
+    quantity = models.IntegerField()
+
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    event =  models.ForeignKey(Event, on_delete=models.CASCADE)
+    total_price = models.FloatField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+class Ticket(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    tier = models.ForeignKey(TicketTier, on_delete=models.CASCADE)
+    ticket_id = models.IntegerField(unique=True)
+    qr_code_image = models.ImageField(upload_to='qr_code_img/', blank=True, null=True)
+    is_used = models.BooleanField(default=False)
     

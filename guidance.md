@@ -1,35 +1,35 @@
-User
- ├── username
- ├── email
- └── is_organizer (Boolean)
-Event
- ├── organizer (FK -> User)
- ├── title
- ├── description
- ├── banner_image
- ├── location
- ├── start_time / end_time
- ├── capacity
- └── created_at
-TicketTier
- ├── event (FK -> Event)
- ├── name (VIP, General, etc.)
- ├── price
- ├── quantity
-Order
- ├── user (FK -> User)
- ├── event (FK -> Event)
- ├── total_price
- └── timestamp
-Ticket
- ├── order (FK -> Order)
- ├── tier (FK -> TicketTier)
- ├── uuid (unique)
- ├── qr_code_image
- └── is_used
+<!-- User -->
+ <!-- ├── username -->
+ <!-- ├── email -->
+ <!-- └── is_organizer (Boolean) -->
+<!-- Event -->
+ <!-- ├── organizer (FK -> User) -->
+ <!-- ├── title -->
+ <!-- ├── description -->
+ <!-- ├── banner_image -->
+ <!-- ├── location -->
+ <!-- ├── start_time / end_time -->
+ <!-- ├── capacity -->
+ <!-- └── created_at -->
+<!-- TicketTier -->
+ <!-- ├── event (FK -> Event) -->
+ <!-- ├── name (VIP, General, etc.) -->
+ <!-- ├── price -->
+ <!-- ├── quantity -->
+<!-- Order -->
+ <!-- ├── user (FK -> User) -->
+ <!-- ├── event (FK -> Event) -->
+ <!-- ├── total_price -->
+ <!-- └── timestamp -->
+<!-- Ticket -->
+ <!-- ├── order (FK -> Order) -->
+ <!-- ├── tier (FK -> TicketTier) -->
+ <!-- ├── uuid (unique) -->
+ <!-- ├── qr_code_image -->
+ <!-- └── is_used -->
 3:46
 Week 1:
-:heavy_check_mark: Models
+<!-- :heavy_check_mark: Models -->
 :heavy_check_mark: User auth
 :heavy_check_mark: Event CRUD
 :heavy_check_mark: Ticket tier system
