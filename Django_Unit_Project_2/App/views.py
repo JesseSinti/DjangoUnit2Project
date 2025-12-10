@@ -87,8 +87,18 @@ def AddEvent(request):
     if request.method == "POST":
         form = AddEventForm(request.POST)
         if form.is_valid():
-            form.save()
-            return render(request, 'home.html')
+            event = form.save()
+            return redirect('ticket_tier', pk=event.id)
     else: 
         form = AddEventForm()
     return render(request, 'addEvent.html', {'form' : form})
+
+def SetTicketTier(request, pk):
+    if request.method == "POST":
+        form = TicketTierForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request,'home_page')
+    else:
+        form = TicketTierForm()
+    return render(request, 'ticketTier.html', {'form' : form})
