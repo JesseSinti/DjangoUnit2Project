@@ -51,5 +51,13 @@ class AddEventForm(forms.Form):
         model = Event
         fields = ('organizer','title','description','banner_image','location','start_time','end_time','capacity')
 
-class TickerTierForm(forms.Form):
-    ticket_type = forms.CharField(widget=forms.TextInput(attrs={}))
+class TicketTierForm(forms.Form):
+    TICKET_CHOICES = [
+        ('vip', 'VIP'),
+        ('general', 'GENERAL'),
+        ('basic', 'BASIC'),
+    ]
+
+    ticket_type = forms.ChoiceField(choices=TICKET_CHOICES, widget=forms.Select(attrs={'class' : 'form-control'}))
+    price = forms.IntegerField(widget=forms.IntegerField())
+    quantity = forms.IntegerField(widget=forms.IntegerField())
