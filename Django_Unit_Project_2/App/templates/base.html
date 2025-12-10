@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'common.css' %}"> 
+</head>
+<body id="body"> 
+<div id='navbar'>
+    <div id='searchbar'>
+        <form method="get">
+            <input type='text' name='query' class="searchbarsizing" value=""{{ query }} placeholder='Search'>
+            <button hidden>Search</button>
+        </form>
+    </div>
+    <div id="category-filter">
+        <form method="get">
+            <select name="category" onchange="this.form.submit()">
+                <option value="">All Categories</option>
+            </select>
+        </form>
+    </div>
+ 
+    <div id='options'>
+        <button class='options-button'>Information</button>
+        <div id='options-dropdown'>
+            <ul id='options-list'>
+                <li class='options-list-e'>
+                    <button>Legal Matters</button>
+                    <div class='extra-contents'>
+                        <p class="footertxt">Privacy Policy</p>
+                        <p class="footertxt">Terms of Service</p>
+                        <p class="footertxt">Cookie Settings</p>
+                        <p class="footertxt">Return/Refund Policies</p>
+                    </div>
+                </li>
+                <li class='options-list-e'>
+                    <button>Contact</button>
+                    <div class='extra-contents'>
+                        <p class="footertxt">Phone Number: 662-327-459</p>
+                        <p class="footertxt">Email: fakestop@gmail.com</p>
+                        <p class="footertxt">Address: Water Valley, MS</p>
+                    </div>
+                </li>
+                <li class='options-list-e'>
+                    <button>Navigation Links</button>
+                    <div class='extra-contents'>
+                        <p class="footertxt">About Us</p>
+                        <p class="footertxt">FAQ</p>
+                        <p class="footertxt">Customer Service</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div> 
+</div>
+    {% block content %} {% endblock content %}
+</body>
+</html>
