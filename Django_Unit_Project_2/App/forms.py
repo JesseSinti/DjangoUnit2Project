@@ -50,3 +50,6 @@ class AddEventForm(forms.Form):
     class Meta:
         model = Event
         fields = ('organizer','title','description','banner_image','location','start_time','end_time','capacity')
+
+class TickerTierForm(forms.Form):
+    ticket_type = forms.CharField(widget=forms.TextInput(attrs={}))
