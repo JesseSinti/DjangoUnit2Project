@@ -18,7 +18,7 @@
 <nav id='navbar'>
     <div id='navbar-content'>
         <header id="navbar-header">
-            <a href={% url "home_page" %} class='navbar-logo'>Event Finder</a>
+            <a href="{% url "home_page" %}" class='navbar-logo'>Event Finder</a>
             <div id='searchbar-container'>
                 <form method="get">
                     <input type='text' name='query' placeholder='Search Events...' value="{{ query }}">
@@ -31,17 +31,17 @@
 
         <ul class="nav-links">
             <li class="nav-item">
-                <a href={% url "home_page" %}>Home</a>
+                <a href="{% url "home_page" %}">Home</a>
             </li>
             {% if request.user.is_authenticated %}
                 <li class="nav-item logout-item"><a href='{% url "logout" %}'>Logout</a></li>
-                <li class="nav-item login-item"><a href='{% url "org-login" %}'>login organiztion</a></li>
-                <li class="nav-item signup-item"><a href='{% url "org-signup" %}'>register organization</a></li>
+                <li class="nav-item login-item"><a href='{% url "org-login" %}'>Join Organiztion</a></li>
+                <li class="nav-item signup-item"><a href='{% url "org-signup" %}'>Register Organization</a></li>
             {% else %}
-                <li class="nav-item login-item"><a href='{% url "login" %}'>login</a></li>
-                <li class="nav-item signup-item"><a href='{% url "signup" %}'>sign up</a></li>
-                <li class="nav-item login-item"><a href='{% url "org-login" %}'>login organiztion</a></li>
-                <li class="nav-item signup-item"><a href='{% url "org-signup" %}'>register organization</a></li>
+                <li class="nav-item login-item"><a href='{% url "login" %}'>Login</a></li>
+                <li class="nav-item signup-item"><a href='{% url "signup" %}'>Sign Up</a></li>
+                <li class="nav-item login-item"><a href='{% url "org-login" %}'>Join Organiztion</a></li>
+                <li class="nav-item signup-item"><a href='{% url "org-signup" %}'>Register Organization</a></li>
             {% endif %}
             <li class="nav-item category-filter-item">
                 <!-- add in action=[% url 'home_view' %] to the form -->
