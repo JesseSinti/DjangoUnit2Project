@@ -19,7 +19,7 @@
     <div id='navbar-content'>
         <header id="navbar-header">
             <!-- add in href="[% url 'homepage' %] the navbar-logo item -->
-            <a class='navbar-logo'>Event Finder</a>
+            <a href={% url "home_page" %} class='navbar-logo'>Event Finder</a>
             <!-- add in action=[% url 'search_view' %] to the form -->
             <div id='searchbar-container'>
                 <form method="get">
@@ -34,20 +34,20 @@
         <ul class="nav-links">
             <li class="nav-item">
                 <!-- add in href=[% url 'home_view' %] to the a tag -->
-                <a >Home</a>
+                <a href={% url "home_page" %}>Home</a>
             </li>
             {% if request.user.is_authenticated %}
                 <!-- add in href=[% url 'logout_view' %] to the li -->
-                <li class="nav-item logout-item"><a>Logout</a></li>
+                <li class="nav-item logout-item"><a href='{% url "logout" %}'>Logout</a></li>
             {% else %}
                 <!-- add in href=[% url 'login_view' %] to the li -->
-                <li class="nav-item login-item"><a>Login</a></li>
+                <li class="nav-item login-item"><a href='{% url "login" %}'>Login</a></li>
                 <!-- add in href=[% url 'signup_view' %} to the li -->
-                <li class="nav-item signup-item"><a>Sign Up</a></li>
+                <li class="nav-item signup-item"><a href='{% url "signup" %}'>Sign Up</a></li>
             {% endif %}
             <li class="nav-item category-filter-item">
                 <!-- add in action=[% url 'home_view' %] to the form -->
-                <form method="get">
+                <form action={% url "home_page" %} method="get">
                     <select name="category" onchange="this.form.submit()">
                         <option value="">Filter Country</option>
                         {% for category in global_categories %}
@@ -62,7 +62,7 @@
 
             <li class="nav-item category-filter-item">
                 <!-- add in action=[% url 'home_view' %] to the form -->
-                <form method="get">
+                <form action={% url "home_page" %}method="get">
                     <select name="category" onchange="this.form.submit()">
                         <option value="">Filter State</option>
                         {% for category in global_categories %}
