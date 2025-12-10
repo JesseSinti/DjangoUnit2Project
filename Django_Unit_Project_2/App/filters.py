@@ -4,5 +4,8 @@ from .models import *
 class TicketFilter(django_filters.FilterSet):
     min_price = django_filters.NumberFilter(field_name='price', lookup_expr='gte')
     max_price = django_filters.NumberFilter(field_name='price', lookup_expr='lte')
-    location = django_filters.CharFilter(lookup_expr='icontains')
-    
+    location = django_filters.CharFilter(field_name="location", lookup_expr='icontains')
+    start_time = django_filters.TimeFIlter(field_name='start_time', lookup_expr='exact')
+
+    class Meta:
+        fields = ['tickettier__price', 'event__start_time', 'event__location' ]

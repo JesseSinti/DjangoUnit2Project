@@ -3,9 +3,11 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import *
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from .filters import *
 
 def home_view(request): 
-    return render(request, 'home.html', None)
+    f = TicketFilter(request.GET, queryset=TicketTier.objects.all())
+    return render(request, 'home.html', {'filter' : f})
 
 def signup_view(request):
     if request.method == 'POST':
