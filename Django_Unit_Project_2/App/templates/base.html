@@ -44,30 +44,29 @@
                 <li class="nav-item signup-item"><a href='{% url "org-signup" %}'>register organization</a></li>
             {% endif %}
             <li class="nav-item category-filter-item">
-                <form action={% url "home_page" %} method="get">
-                    <select name="category" onchange="this.form.submit()">
-                        <option value="">Filter Country</option>
-                        {% for category in global_categories %}
-                            <option value="{{ category.id }}"
-                                {% if global_selected_category and global_selected_category.id == category.id %}selected{% endif %}>
-                                {{ category.name }}
-                            </option>
-                        {% endfor %}
-                    </select>
+                <!-- add in action=[% url 'home_view' %] to the form -->
+                <form method="get" id="locationsubmission">
+                    <label for="location" class="location">City/State</label>
+                    <input type="text" name="event__location" id="location" onchange="this.form.submit()">
                 </form>
             </li>
 
             <li class="nav-item category-filter-item">
-                <form action={% url "home_page" %}method="get">
-                    <select name="category" onchange="this.form.submit()">
-                        <option value="">Filter State</option>
-                        {% for category in global_categories %}
-                            <option value="{{ category.id }}"
-                                {% if global_selected_category and global_selected_category.id == category.id %}selected{% endif %}>
-                                {{ category.name }}
-                            </option>
-                        {% endfor %}
-                    </select>
+                <!-- add in action=[% url 'home_view' %] to the form -->
+                <form method="get">
+                    <label for="minprice" class="minprice">Minimum Price:</label>
+                    <input type="number" name="tickettier__min_price" min="0" default="0" id="minprice" onchange="this.form.submit()"><br/>
+
+                    <label for="maxprice" class="maxprice">Maximum Price:</label>
+                    <input type="number" name="tickettier__max_price" max="999999" default="0" id="maxprice" onchange="this.form.submit()">
+                </form>
+            </li>
+
+            <li class="nav-item category-filter-item">
+                <!-- add in action=[% url 'home_view' %] to the form -->
+                <form method="get">
+                    <label for="starttime" class="starttime">Start Time:</label>
+                    <input type="text" name="event__start_time" id="starttime" onchange="this.form.submit()">
                 </form>
             </li>
         </ul>
