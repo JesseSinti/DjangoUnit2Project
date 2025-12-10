@@ -21,7 +21,9 @@ from App import views as v
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', v.home_view, name='home_page'),
-    path('', v.signup_view, name='register'),
+    path('signup/', v.signup_view, name='signup'),
     path('login/', v.login_view, name='login'),
-    path('logout/', v.logout_view, name='logout')
+    path('logout/', v.logout_view, name='logout'),
+    path('organization-login/', v.organization_login_view, name='org-login'),
+    path('organization-signup/', v.organization_signup_view, name='org-signup')
 ]
