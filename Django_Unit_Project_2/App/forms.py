@@ -19,20 +19,27 @@ class CustomUserCreationForm(UserCreationForm):
         fields = UserCreationForm.Meta.fields + ('email', 'first_name', 'last_name')
 
 class CustomOrganizationUserCreationForm(UserCreationForm):
+    organization_name = forms.CharField(required=True)
+    is_admin = forms.BooleanField(required=False)
 
-    organization_name = forms.CharField(required=True, label='Organization')
-    is_admin = forms.BooleanField(label='Admin')
+    class Meta(UserCreationForm.Meta):
+        model = OrganizationUsers
+        fields = (
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "organization_name",
+            "is_admin",
+            "password1",
+            "password2",
+        )
 
-    
-    class Meta:
-        model = User
-        fields = ['username', 'email', 'first_name', 'last_name', 'organization_name', 'is_admin']
 
-    def save(self, commit=True):
-        user = super().save(commit=commit)
-        OrganizationUsers.objects.create(user=user, organization_name=self.cleaned_data['organization_name'],
-        is_admin=True)
-        return user
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.help_text = ''
     
 class AddEventForm(forms.ModelForm):
     title = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': "Name of Your Event"}))
