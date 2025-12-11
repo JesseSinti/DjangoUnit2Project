@@ -85,9 +85,11 @@ def logout_view(request):
 
 def AddEvent(request):
     if request.method == "POST":
-        form = AddEventForm(request.POST)
+        form = AddEventForm(request.POST, request.FILES)
         if form.is_valid():
-            event = form.save()
+            event = form.save(commit=False)
+            event.organizer = request.user
+            event.save()
             return redirect('ticket_tier', pk=event.id)
     else: 
         form = AddEventForm()

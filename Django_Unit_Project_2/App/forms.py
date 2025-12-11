@@ -20,21 +20,22 @@ class CustomUserCreationForm(UserCreationForm):
         fields = UserCreationForm.Meta.fields + ('email', 'first_name', 'last_name')
 
 class CustomOrganizationUserCreationForm(UserCreationForm):
-    organization_name = forms.CharField(required=True)
-    is_admin = forms.BooleanField(required=False)
 
-    class Meta(forms.ModelForm):
-        class Meta:
-            model = OrganizationUsers
-            fields = ['username', 'email', 'first_name', 'last_name', 'password', 'organization_name', 'is_admin']
+    organization_name = forms.CharField(required=True, label='Organization')
+    is_admin = forms.BooleanField(label='Admin')
 
+    
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name', 'organization_name', 'is_admin']
 
-class AddEventForm(forms.Form):
-    organizer = forms.CharField(
-        max_length=100,
-        widget=forms.TextInput(attrs={'placeholder': "Enter Your Organization's Name"}),
-        required=True
-    )
+    def save(self, commit=True):
+        user = super().save(commit=commit)
+        OrganizationUsers.objects.create(user=user, organization_name=self.cleaned_data['organization_name'],
+        is_admin=True)
+        return user
+    
+class AddEventForm(forms.ModelForm):
     title = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': "Name of Your Event"}))
     description = forms.CharField(widget=forms.Textarea(attrs={'placeholder': "Your Event's Description"}),required=True)
     banner_image = forms.FileField(required=True)
