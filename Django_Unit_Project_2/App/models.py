@@ -4,10 +4,9 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 # Create your models here.
 
-class OrganizationUsers(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    is_admin = models.BooleanField(default=True)
+class OrganizationUsers(AbstractUser):
     organization_name = models.CharField(max_length=150)
+    is_admin = models.BooleanField(default=False)
 
 class Event(models.Model):
     organizer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
