@@ -3,13 +3,9 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class OrganizationUsers(models.Model):
-    username = models.CharField(max_length=100)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    password = models.CharField(max_length=20)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     is_admin = models.BooleanField(default=True)
     organization_name = models.CharField(max_length=150)
-    email = models.EmailField(blank=True, null=True)
 
 class Event(models.Model):
     organizer = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -9,11 +9,9 @@
                     <h5 class="card-title text-primary">General Information</h5>
 
                     <div class="mb-3">
-                        <label for="id_organizer" class="form-label">Organizer Name</label>
-                        {{ form.organizer }}
-                        {% if form.organizer.errors %}
-                            <div class="text-danger small">{{ form.organizer.errors }}</div>
-                        {% endif %}
+                        <h3>Organizer Name:</h3><br/>
+                        {{event.organizer.organizationusers.organization_name}}
+
                     </div>
 
                     <div class="mb-3">

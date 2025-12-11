@@ -27,7 +27,7 @@ def signup_view(request):
 def organization_signup_view(request):
     if request.method == 'POST':
         form = CustomOrganizationUserCreationForm(request.POST)
-        if form.is_valid:
+        if form.is_valid():
             user = form.save()
             login(request, user)
             first_name = form.cleaned_data['first_name']
@@ -83,9 +83,11 @@ def logout_view(request):
 
 def AddEvent(request):
     if request.method == "POST":
-        form = AddEventForm(request.POST)
+        form = AddEventForm(request.POST, request.FILES)
         if form.is_valid():
-            event = form.save()
+            event = form.save(commit=False)
+            event.organizer = request.user
+            event.save()
             return redirect('ticket_tier', pk=event.id)
     else: 
         form = AddEventForm()
