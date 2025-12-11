@@ -37,7 +37,7 @@ class CustomOrganizationUserCreationForm(UserCreationForm):
 class AddEventForm(forms.ModelForm):
     title = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': "Name of Your Event"}))
     description = forms.CharField(widget=forms.Textarea(attrs={'placeholder': "Your Event's Description"}),required=True)
-    banner_image = forms.FileField(required=True)
+    banner_image = forms.FileInput()
     location = forms.CharField(widget=forms.TextInput(attrs={'placeholder': "Enter Your Event's Location"}), required=True)
     start_time = forms.TimeField(widget=forms.TimeInput(attrs={'placeholder': "Enter Your Event's Starting Time"}), required=True)
     end_time = forms.TimeField(widget=forms.TimeInput(attrs={'placeholder': "Enter Your Event's Ending Time"}), required=True)
@@ -47,7 +47,7 @@ class AddEventForm(forms.ModelForm):
         model = Event
         fields = ('organizer','title','description','banner_image','location','start_time','end_time','capacity')
 
-class TicketTierForm(forms.Form):
+class TicketTierForm(forms.ModelForm):
     TICKET_CHOICES = [
         ('vip', 'VIP'),
         ('general', 'GENERAL'),
