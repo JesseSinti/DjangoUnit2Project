@@ -1,0 +1,193 @@
+/* Import variables from common.css/login.css for consistency */
+:root {
+    --primary-text: #1d1d1f;
+    --secondary-text: #000000;
+    --primary-blue: #007aff;
+    --primary-success: #34c759; /* Apple-inspired Green */
+    --pill-bg: #f5f5f7;
+    --glass-border: 1px solid rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* =========================================
+   1. LAYOUT & CONTAINER STYLING
+   ========================================= */
+
+/* The 'container' in the HTML corresponds to the page content area */
+.container {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 900px; /* Wider container for the event form */
+    padding-top: 40px;
+    padding-bottom: 60px;
+}
+
+/* Page Header */
+.text-center {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-text);
+    letter-spacing: -0.5px;
+}
+
+/* Main Form Separator */
+hr {
+    border: none;
+    border-top: var(--glass-border);
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* =========================================
+   2. GLASS CARD STYLING (For Sections)
+   ========================================= */
+
+.card {
+    /* Apply the central Glass Card look */
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Lighter shadow for sections */
+    transition: all 0.3s ease;
+    padding-left: 70px;
+    padding-right: 70px;
+    margin-bottom: 50px;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md); /* Enhance shadow on hover */
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary-blue) !important; /* Use primary blue for section titles */
+    margin-bottom: 15px;
+}
+
+/* =========================================
+   3. FORM ELEMENTS
+   ========================================= */
+.mb-3 {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600; /* Slightly bolder for labels */
+    color: var(--secondary-text);
+    margin-bottom: 8px;
+    letter-spacing: -0.2px;
+}
+
+/* Target all form fields: input, textarea, and select (though select isn't used here) */
+/* The Django template renders form fields using `{{ form.field }}` which produces raw input tags. */
+input:not([type="checkbox"]):not([type="radio"]), 
+textarea, 
+select {
+    /* Base Input field styling (Pill shape and focus effect) */
+    width: 100%;
+    padding: 12px 18px;
+    background-color: var(--pill-bg);
+    border: var(--glass-border);
+    border-radius: 12px;
+    font-size: 1rem;
+    color: var(--primary-text);
+    box-sizing: border-box; 
+    transition: all 0.2s ease;
+    -webkit-appearance: none; /* Reset appearance for better cross-browser consistency */
+}
+
+input:not([type="checkbox"]):not([type="radio"]):focus, 
+textarea:focus, 
+select:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    background-color: #fff;
+    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
+}
+
+/* Custom styling for the description textarea */
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* File Input (which can be hard to style consistently) */
+input[type="file"] {
+    padding: 12px 0; /* Remove horizontal padding since the default browser button doesn't stretch */
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    font-size: 1rem;
+}
+
+/* Small hint text */
+.form-text {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+/* Error Message Styling */
+.text-danger.small {
+    font-size: 0.85rem;
+    color: #ff3b30 !important; /* Apple Red for errors */
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+
+/* =========================================
+   4. SUBMIT BUTTON
+   ========================================= */
+.btn-success {
+    /* Replicate the primary glass button style with success color */
+    appearance: none;
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    
+    padding: 16px 24px; /* Slightly larger button */
+    margin-top: 10px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 1.1rem;
+    
+    background-color: var(--primary-success);
+    color: white;
+    border: none;
+    border-radius: 14px; 
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(52, 199, 89, 0.3); /* Green shadow */
+    transition: all 0.2s ease;
+}
+
+.btn-success:hover {
+    background-color: #27ae60; /* Darker green on hover */
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(52, 199, 89, 0.4);
+}
+
+.btn-success:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 10px rgba(52, 199, 89, 0.3);
+}
+
+.btn-lg i {
+    font-size: 1.2rem;
+}
+
+/* =========================================
+   5. RESPONSIVENESS / BOOTSTRAP OVERRIDES
+   ========================================= */
+
+/* Ensure the row gap works well on smaller screens */
+.row {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 1.5rem; 
+}

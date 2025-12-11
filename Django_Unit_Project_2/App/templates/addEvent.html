@@ -1,76 +1,81 @@
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %} <h2 class="mb-4 text-center">Create New Event</h2>
-                <hr>
+{%extends 'base.html'%}
+{%load static%}
+    {%block content%}
+    <link rel="stylesheet" href="{% static 'addevent.css' %}">
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %} <h2 class="mb-4 text-center">Register New Event</h2>
+                    <hr>
 
-                <div class="card p-4 mb-4 shadow-sm">
-                    <h5 class="card-title text-primary">General Information</h5>
+                    <div class="card p-4 mb-4 shadow-sm">
+                        <h5 class="card-title text-primary">General Information</h5>
 
-                    <div class="mb-3">
-                        <label for="id_organizer" class="form-label">Organizer Name</label>
-                        {{ form.organizer }}
-                        {% if form.organizer.errors %}
-                            <div class="text-danger small">{{ form.organizer.errors }}</div>
-                        {% endif %}
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="id_title" class="form-label">Event Title</label>
-                        {{ form.title }}
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="id_description" class="form-label">Event Description</label>
-                        {{ form.description }}
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="id_banner_image" class="form-label">Event Banner Image</label>
-                        {{ form.banner_image }}
-                        <div class="form-text">Upload a high-quality image for your event.</div>
-                    </div>
-                </div>
-                
-                <div class="card p-4 mb-4 shadow-sm">
-                    <h5 class="card-title text-primary">Location & Capacity</h5>
-                    
-                    <div class="mb-3">
-                        <label for="id_location" class="form-label">Location</label>
-                        {{ form.location }}
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="id_capacity" class="form-label">Max Capacity</label>
-                        {{ form.capacity }}
-                        <div class="form-text">Maximum number of attendees (e.g., Stadium Limit).</div>
-                    </div>
-                </div>
-
-                <div class="card p-4 mb-4 shadow-sm">
-                    <h5 class="card-title text-primary">Time & Schedule</h5>
-                    
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="id_start_time" class="form-label">Start Time</label>
-                            {{ form.start_time }}
+                        <div class="mb-3">
+                            <label for="id_organizer" class="form-label">Organizer Name</label>
+                            {{ form.organizer }}
+                            {% if form.organizer.errors %}
+                                <div class="text-danger small">{{ form.organizer.errors }}</div>
+                            {% endif %}
                         </div>
 
-                        <div class="col-md-6 mb-3">
-                            <label for="id_end_time" class="form-label">End Time</label>
-                            {{ form.end_time }}
+                        <div class="mb-3">
+                            <label for="id_title" class="form-label">Event Title</label>
+                            {{ form.title }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_description" class="form-label">Event Description</label>
+                            {{ form.description }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_banner_image" class="form-label">Event Banner Image</label>
+                            {{ form.banner_image }}
+                            <div class="form-text">Upload a high-quality image for your event.</div>
                         </div>
                     </div>
-                </div>
+                    
+                    <div class="card p-4 mb-4 shadow-sm">
+                        <h5 class="card-title text-primary">Location & Capacity</h5>
+                        
+                        <div class="mb-3">
+                            <label for="id_location" class="form-label">Location</label>
+                            {{ form.location }}
+                        </div>
 
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-success btn-lg">
-                        <i class="fas fa-calendar-plus me-2"></i> Create Event
-                    </button>
-                </div>
+                        <div class="mb-3">
+                            <label for="id_capacity" class="form-label">Max Capacity</label>
+                            {{ form.capacity }}
+                            <div class="form-text">Maximum number of attendees (e.g., Stadium Limit).</div>
+                        </div>
+                    </div>
 
-            </form>
+                    <div class="card p-4 mb-4 shadow-sm">
+                        <h5 class="card-title text-primary">Time & Schedule</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_start_time" class="form-label">Start Time</label>
+                                {{ form.start_time }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="id_end_time" class="form-label">End Time</label>
+                                {{ form.end_time }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="fas fa-calendar-plus me-2"></i> Create Event
+                        </button>
+                    </div>
+
+                </form>
+            </div>
         </div>
     </div>
-</div>
+{% endblock content %}
