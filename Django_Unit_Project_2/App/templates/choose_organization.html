@@ -1,26 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Choose Organization{% endblock %}
-
 {% block content %}
-<h1>Select an Organization</h1>
-
-{% if memberships %}
-    <ul>
-    {% for membership in memberships %}
-        <li>
-            {{ membership.organization.name }} -
-            {% if membership.role == "admin" %}
-                <a href="{% url 'admin_dashboard' membership.organization.id %}">Admin Dashboard</a>
-            {% else %}
-                <a href="{% url 'org_user_dashboard' membership.organization.id %}">User Dashboard</a>
-            {% endif %}
-        </li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>You do not belong to any organizations yet.</p>
-    <a href="{% url 'join_organization' %}">Request to Join Organization</a>
-    <br>
-    <a href="{% url 'org-signup' %}">Create New Organization</a>
-{% endif %}
+<p><a href="{% url 'join_organization' %}">Join Organization</a></p>
+<p><a href="{% url 'org-signup' %}">Register Organization</a></p>
 {% endblock %}
