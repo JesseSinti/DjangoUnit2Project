@@ -47,8 +47,38 @@
                         <label for="id_capacity" class="form-label">Max Capacity</label>
                         {{ form.capacity }}
                         <div class="form-text">Maximum number of attendees (e.g., Stadium Limit).</div>
+                            <script>
+                                const capacity = document.getElementById('id_capacity');
+                                if (capacity) {
+                                    capacity.addEventListener('input', cap);
+                                    capacity.addEventListener('change', cap);
+                                    
+                                    function cap() {
+                                        if (this.value === '') {
+                                            return; 
+                                        }
+
+                                        let value = parseInt(this.value);
+                                        let min = parseInt(this.min) || 0; 
+                                        let max = parseInt(this.max) || 9999999; 
+
+                                        if (isNaN(value)) {
+                                            this.value = min;
+                                            return;
+                                        }
+
+                                        if (value < min) {
+                                            this.value = min;
+                                        }
+
+                                        else if (value > max) {
+                                            this.value = max;
+                                        }
+                                    }
+                                }
+                            </script>
+                        </div>
                     </div>
-                </div>
 
                 <div class="card p-4 mb-4 shadow-sm">
                     <h5 class="card-title text-primary">Time & Schedule</h5>
