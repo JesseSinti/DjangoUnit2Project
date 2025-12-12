@@ -83,6 +83,7 @@ def logout_view(request):
 
 def AddEvent(request):
     if request.method == "POST":
+        
         form = AddEventForm(request.POST, request.FILES)
         if form.is_valid():
             event = form.save(commit=False)

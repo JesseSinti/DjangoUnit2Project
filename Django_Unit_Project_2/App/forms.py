@@ -35,12 +35,13 @@ class CustomOrganizationUserCreationForm(UserCreationForm):
         return user
     
 class AddEventForm(forms.ModelForm):
+    organizer = forms.TextInput()
     title = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': "Name of Your Event"}))
     description = forms.CharField(widget=forms.Textarea(attrs={'placeholder': "Your Event's Description"}),required=True)
     banner_image = forms.FileInput()
     location = forms.CharField(widget=forms.TextInput(attrs={'placeholder': "Enter Your Event's Location"}), required=True)
-    start_time = forms.TimeField(widget=forms.TimeInput(attrs={'placeholder': "Enter Your Event's Starting Time"}), required=True)
-    end_time = forms.TimeField(widget=forms.TimeInput(attrs={'placeholder': "Enter Your Event's Ending Time"}), required=True)
+    start_time = forms.TimeField(widget=forms.TimeInput(attrs={'placeholder': "Enter Your Event's Starting Time", 'type' : 'time'}), required=True)
+    end_time = forms.TimeField(widget=forms.TimeInput(attrs={'placeholder': "Enter Your Event's Ending Time", 'type' : 'time'}), required=True)
     capacity = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': "Enter Your Event's Capacity"}), required=True)
 
     class Meta:
@@ -55,5 +56,9 @@ class TicketTierForm(forms.ModelForm):
     ]
 
     ticket_type = forms.ChoiceField(choices=TICKET_CHOICES, widget=forms.Select(attrs={'class' : 'form-control'}))
-    price = forms.IntegerField(widget=forms.IntegerField())
-    quantity = forms.IntegerField(widget=forms.IntegerField())
+    price = forms.IntegerField()
+    quantity = forms.IntegerField()
+
+    class Meta:
+        model = TicketTier
+        fields = ('ticket_type', 'price', 'quantity')

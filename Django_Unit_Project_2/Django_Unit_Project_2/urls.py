@@ -27,5 +27,5 @@ urlpatterns = [
     path('organization-login/', v.organization_login_view, name='org-login'),
     path('organization-signup/', v.organization_signup_view, name='org-signup'),
     path('addevent/', v.AddEvent, name="addevent"),
-    path('ticketier/', v.SetTicketTier, name="ticket_tier"),
+    path('<int:pk>/ticketier/', v.SetTicketTier, name="ticket_tier"),
 ]
