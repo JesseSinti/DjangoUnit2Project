@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from .forms import *
-from django.contrib import messages
-from django.contrib.auth.hashers import check_password
+hfrom django.contrib.auth.hashers import check_password
 from .filters import *
 
 def home_view(request): 
