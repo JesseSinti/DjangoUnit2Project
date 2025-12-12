@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Organization User Dashboard{% endblock %}
+
+{% block content %}
+<h1>Welcome to {{ organization.name }} User Dashboard</h1>
+
+<p>You have limited permissions here.</p>
+
+<!-- Add event, ticket prices UI could go here -->
+
+<a href="{% url 'choose_organization' %}">Switch Organization</a>
+{% endblock %}

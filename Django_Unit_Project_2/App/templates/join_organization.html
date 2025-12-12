@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Join Organization{% endblock %}
+
+{% block content %}
+<h1>Request to Join an Organization</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Send Request</button>
+</form>
+
+<a href="{% url 'choose_organization' %}">Back to Organization Selection</a>
+{% endblock %}

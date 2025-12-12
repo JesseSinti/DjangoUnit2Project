@@ -1,46 +1,90 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import get_user_model
 from .models import *
+from django.contrib.auth.hashers import make_password
 
-User = get_user_model()
+class OrganizationSignupForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    first_name = forms.CharField(max_length=30)
+    last_name = forms.CharField(max_length=30)
+    phone = forms.CharField(max_length=20, required=False)
+    address = forms.CharField(max_length=255, required=False)
 
-class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField(required=True, label='Email')
-    first_name = forms.CharField(required=True, label='First Name', max_length=20)
-    last_name = forms.CharField(required=True, label='Last Name', max_length=25)
+    organization_name = forms.CharField(max_length=255)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.help_text = ''
 
-    class Meta(UserCreationForm.Meta):
-        model = User
-        fields = UserCreationForm.Meta.fields + ('email', 'first_name', 'last_name')
-
-class CustomOrganizationUserCreationForm(UserCreationForm):
-
-    organization_name = forms.CharField(required=True, label='Organization')
-    is_admin = forms.BooleanField(label='Admin')
-
-    
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name', 'organization_name', 'is_admin']
+        fields = ('username', 'email', 'first_name', 'last_name', 'phone', 'address', 'password1', 'password2', 'organization_name')
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.is_customer = False
+        if commit:
+            user.save()
+        return user
+    
+class OrganizationJoinRequestForm(UserCreationForm):
+    organization = forms.ModelChoiceField(queryset=Organization.objects.all())
+    role = forms.ChoiceField(choices=OrganizationMembership.ROLE_CHOICES, initial='user')
 
     def save(self, commit=True):
         user = super().save(commit=commit)
-        OrganizationUsers.objects.create(user=user, organization_name=self.cleaned_data['organization_name'],
-        is_admin=True)
+        OrganizationMembership.objects.create(
+            user=user,
+            organization=self.cleaned_data['organization'],
+            role=self.cleaned_data['role'],
+            status='pending'
+        )
+        return user
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.help_text = ''
+
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'first_name', 'last_name', 'phone', 'address', 'password1', 'password2', 'organization', 'role')
+
+
+    
+class CustomerSignupForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    first_name = forms.CharField(max_length=30)
+    last_name = forms.CharField(max_length=30)
+    phone = forms.CharField(max_length=20, required=False)
+    address = forms.CharField(max_length=255, required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.help_text = ''
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'first_name', 'last_name', 'phone', 'address', 'password1', 'password2')
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.is_customer = True
+        if commit:
+            user.save()
         return user
     
 class AddEventForm(forms.ModelForm):
+    organizer = forms.TextInput()
     title = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': "Name of Your Event"}))
     description = forms.CharField(widget=forms.Textarea(attrs={'placeholder': "Your Event's Description"}),required=True)
     banner_image = forms.FileInput()
     location = forms.CharField(widget=forms.TextInput(attrs={'placeholder': "Enter Your Event's Location"}), required=True)
-    start_time = forms.TimeField(widget=forms.TimeInput(attrs={'placeholder': "Enter Your Event's Starting Time"}), required=True)
-    end_time = forms.TimeField(widget=forms.TimeInput(attrs={'placeholder': "Enter Your Event's Ending Time"}), required=True)
+    start_time = forms.TimeField(widget=forms.TimeInput(attrs={'placeholder': "Enter Your Event's Starting Time", 'type' : 'time'}), required=True)
+    end_time = forms.TimeField(widget=forms.TimeInput(attrs={'placeholder': "Enter Your Event's Ending Time", 'type' : 'time'}), required=True)
     capacity = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': "Enter Your Event's Capacity"}), required=True)
 
     class Meta:
@@ -55,5 +99,9 @@ class TicketTierForm(forms.ModelForm):
     ]
 
     ticket_type = forms.ChoiceField(choices=TICKET_CHOICES, widget=forms.Select(attrs={'class' : 'form-control'}))
-    price = forms.IntegerField(widget=forms.IntegerField())
-    quantity = forms.IntegerField(widget=forms.IntegerField())
+    price = forms.IntegerField()
+    quantity = forms.IntegerField()
+
+    class Meta:
+        model = TicketTier
+        fields = ('ticket_type', 'price', 'quantity')

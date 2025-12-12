@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Organization Admin Dashboard{% endblock %}
+
+{% block content %}
+<h1>Admin Dashboard for Organization {{ organization_id }}</h1>
+
+<h2>Pending Membership Requests</h2>
+{% if pending_memberships %}
+    <ul>
+    {% for membership in pending_memberships %}
+        <li>
+            {{ membership.user.username }} ({{ membership.role }})
+            <a href="{% url 'update_membership_status' membership.id 'approve' %}">Approve</a> |
+            <a href="{% url 'update_membership_status' membership.id 'kick' %}">Kick</a>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No pending membership requests.</p>
+{% endif %}
+
+<a href="{% url 'choose_organization' %}">Back to Organization Selection</a>
+{% endblock %}
