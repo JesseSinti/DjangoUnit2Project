@@ -51,7 +51,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-AUTH_USER_MODEL = 'App.OrganizationUsers'
+AUTH_USER_MODEL = 'App.User'
 
 ROOT_URLCONF = 'Django_Unit_Project_2.urls'
 
@@ -67,6 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'App.context_processors.current_url',
             ],
         },
     },

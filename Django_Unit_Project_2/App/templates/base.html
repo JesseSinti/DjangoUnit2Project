@@ -31,17 +31,17 @@
 
         <ul class="nav-links">
             <li class="nav-item">
-                <a href="{% url "home_page" %}">Home</a>
+                <a href="{% url 'home_page' %}">Home</a>
             </li>
             {% if request.user.is_authenticated %}
                 <li class="nav-item logout-item"><a href='{% url "logout" %}'>Logout</a></li>
-                <li class="nav-item login-item"><a href='{% url "org-login" %}'>Join Organiztion</a></li>
+                <li class="nav-item login-item"><a href='{% url "join_organization" %}'>Join Organiztion</a></li>
                 <li class="nav-item signup-item"><a href='{% url "org-signup" %}'>Register Organization</a></li>
                 <li class="nav-item addevent-item"><a href="{% url 'addevent'%}">Add Event</a></li>
             {% else %}
                 <li class="nav-item login-item"><a href='{% url "login" %}'>Login</a></li>
-                <li class="nav-item signup-item"><a href='{% url "signup" %}'>Sign Up</a></li>
-                <li class="nav-item login-item"><a href='{% url "org-login" %}'>Join Organiztion</a></li>
+                <li class="nav-item signup-item"><a href='{% url "customer-signup" %}'>Sign Up</a></li>
+                <li class="nav-item login-item"><a href="{% url 'join_organization' %}">Join Organiztion</a></li>
                 <li class="nav-item signup-item"><a href='{% url "org-signup" %}'>Register Organization</a></li>
             {% endif %}
         </ul>
@@ -73,37 +73,39 @@
     </div>
 </nav>
 
-<details id='filter-sidebar'>
-    <summary class='filter-tab-button'>
-        <i class="fas fa-sliders-h"></i> 
-        <span>Filters</span>
-    </summary>
-    <div id='filter-dropdown'>
-        <form method="get" id="locationsubmission" class="filter-form-group">
-            <h4>Location</h4>
-            <label for="location" class="location">City/State</label>
-            <input type="text" name="event__location" id="location" onchange="this.form.submit()">
-        </form>
+{% if request.endpoint == 'home_page' %}
+    <details id='filter-sidebar'>
+        <summary class='filter-tab-button'>
+            <i class="fas fa-sliders-h"></i> 
+            <span>Filters</span>
+        </summary>
+        <div id='filter-dropdown'>
+            <form method="get" id="locationsubmission" class="filter-form-group">
+                <h4>Location</h4>
+                <label for="location" class="location">City/State</label>
+                <input type="text" name="event__location" id="location" onchange="this.form.submit()">
+            </form>
 
-        <form method="get" class="filter-form-group price-form">
-            <h4>Price Range</h4>
-            <div class="price-inputs">
-                <label for="minprice" class="minprice">Min:</label>
-                <input type="number" name="tickettier__min_price" min="0" default="0" id="minprice" onchange="this.form.submit()">
-            </div>
-            <div class="price-inputs">
-                <label for="maxprice" class="maxprice">Max:</label>
-                <input type="number" name="tickettier__max_price" max="999999" default="0" id="maxprice" onchange="this.form.submit()">
-            </div>
-        </form>
+            <form method="get" class="filter-form-group price-form">
+                <h4>Price Range</h4>
+                <div class="price-inputs">
+                    <label for="minprice" class="minprice">Min:</label>
+                    <input type="number" name="tickettier__min_price" min="0" default="0" id="minprice" onchange="this.form.submit()">
+                </div>
+                <div class="price-inputs">
+                    <label for="maxprice" class="maxprice">Max:</label>
+                    <input type="number" name="tickettier__max_price" max="999999" default="0" id="maxprice" onchange="this.form.submit()">
+                </div>
+            </form>
 
-        <form method="get" class="filter-form-group">
-            <h4>Time</h4>
-            <label for="starttime" class="starttime">Start Time:</label>
-            <input type="text" name="event__start_time" id="starttime" onchange="this.form.submit()">
-        </form>
-    </div>
-</details>
+            <form method="get" class="filter-form-group">
+                <h4>Time</h4>
+                <label for="starttime" class="starttime">Start Time:</label>
+                <input type="text" name="event__start_time" id="starttime" onchange="this.form.submit()">
+            </form>
+        </div>
+    </details>
+{% endif %}
 
 {% block content %} {% endblock content %}
 </body>

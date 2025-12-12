@@ -14,8 +14,8 @@
 
                     <div class="mb-3">
                         <h3>Organizer Name:</h3><br/>
-                        {{form.organizer|default:request.user}}
-                        
+                        {{event.organizer.organizationusers.organization_name}}
+
                     </div>
 
                     <div class="mb-3">
@@ -23,29 +23,16 @@
                         {{ form.title }}
                     </div>
 
-                    {% if form.title.errors %}
-                        <div class="text-danger small mt-1">{{ form.title.errors }}</div>
-                    {% endif %}
-
                     <div class="mb-3">
                         <label for="id_description" class="form-label">Event Description</label>
                         {{ form.description }}
                     </div>
-
-                    {% if form.description.errors %}
-                        <div class="text-danger small mt-1">{{ form.description.errors }}</div>
-                    {% endif %}
 
                     <div class="mb-3">
                         <label for="id_banner_image" class="form-label">Event Banner Image</label>
                         {{ form.banner_image }}
                         <div class="form-text">Upload a high-quality image for your event.</div>
                     </div>
-
-                    {% if form.banner_image.errors %}
-                        <div class="text-danger small mt-1">{{ form.banner_image.errors }}</div>
-                    {% endif %}
-
                 </div>
                 
                 <div class="card p-4 mb-4 shadow-sm">
@@ -56,21 +43,42 @@
                         {{ form.location }}
                     </div>
 
-                    {% if form.location.errors %}
-                        <div class="text-danger small mt-1">{{ form.location.errors }}</div>
-                    {% endif %}
-
                     <div class="mb-3">
                         <label for="id_capacity" class="form-label">Max Capacity</label>
                         {{ form.capacity }}
                         <div class="form-text">Maximum number of attendees (e.g., Stadium Limit).</div>
+                            <script>
+                                const capacity = document.getElementById('id_capacity');
+                                if (capacity) {
+                                    capacity.addEventListener('input', cap);
+                                    capacity.addEventListener('change', cap);
+                                    
+                                    function cap() {
+                                        if (this.value === '') {
+                                            return; 
+                                        }
+
+                                        let value = parseInt(this.value);
+                                        let min = parseInt(this.min) || 0; 
+                                        let max = parseInt(this.max) || 9999999; 
+
+                                        if (isNaN(value)) {
+                                            this.value = min;
+                                            return;
+                                        }
+
+                                        if (value < min) {
+                                            this.value = min;
+                                        }
+
+                                        else if (value > max) {
+                                            this.value = max;
+                                        }
+                                    }
+                                }
+                            </script>
+                        </div>
                     </div>
-
-                    {% if form.capactiy.errors %}
-                        <div class="text-danger small mt-1">{{ form.capacity.errors }}</div>
-                    {% endif %}
-
-                </div>
 
                 <div class="card p-4 mb-4 shadow-sm">
                     <h5 class="card-title text-primary">Time & Schedule</h5>
@@ -81,25 +89,16 @@
                                 {{ form.start_time }}
                             </div>
 
-                            {% if form.start_time.errors %}
-                            <div class="text-danger small mt-1">{{ form.start_time.errors }}</div>
-                            {% endif %}
-
                             <div class="col-md-6 mb-3">
                                 <label for="id_end_time" class="form-label">End Time</label>
                                 {{ form.end_time }}
                             </div>
-
-                            {% if form.end_time.errors %}
-                                <div class="text-danger small mt-1">{{ form.end_time.errors }}</div>
-                            {% endif %}
-
                         </div>
                     </div>
 
                     <div class="d-grid">
                         <button type="submit" class="btn btn-success btn-lg">
-                            <i class="fas fa-calendar-plus me-2"></i>  Create Event
+                            <i class="fas fa-calendar-plus me-2"></i> Create Event
                         </button>
                     </div>
 
