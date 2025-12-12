@@ -1,41 +1,52 @@
-<div class="card p-4 border-primary">
-    <h5 class="card-title text-primary mb-3">Configure Ticket Tier</h5>
-    
-    <div class="row g-3">
-        
-        <div class="col-md-5">
-            <label for="{{ form.ticket_type.id_for_label }}" class="form-label fw-bold">Ticket Tier Name</label>
-            <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-tag"></i></span>
+{%extends 'base.html'%}
+{%load static%}
+{%block content%}
+    <link rel="stylesheet" href="{% static 'tickettier.css' %}">
+   <div class="ticket-wrapper">
+    <div class="ticket-header">
+        <h5 class="heading"><i class="fas fa-ticket-alt me-2"></i>New Ticket</h5>
+    </div>
+<form method="post">
+    {% csrf_token %}
+    <div class="ticket-body">
+        <div class="row g-3">
+            <div class="col-12">
+                <label class="ticket-label">Ticket's Tier</label>
                 {{ form.ticket_type }}
             </div>
-            {% if form.ticket_type.errors %}
-                <div class="text-danger small mt-1">{{ form.ticket_type.errors }}</div>
-            {% endif %}
-        </div>
 
-        <div class="col-md-4">
-            <label for="{{ form.price.id_for_label }}" class="form-label fw-bold">Price</label>
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-                {{ form.price }}
+            <div class="col-12">
+                <div class="ticket-separator"></div>
             </div>
-            {% if form.price.errors %}
-                <div class="text-danger small mt-1">{{ form.price.errors }}</div>
-            {% endif %}
-        </div>
 
-        <div class="col-md-3">
-            <label for="{{ form.quantity.id_for_label }}" class="form-label fw-bold">Quantity</label>
-            {{ form.quantity }}
-            {% if form.quantity.errors %}
-                <div class="text-danger small mt-1">{{ form.quantity.errors }}</div>
-            {% endif %}
-        </div>
-        
-    </div>
+            <div class="col-6">
+                <label class="ticket-label"> Ticket Price</label>
+                <div class="d-flex align-items-center ticket-input-group">
+                  
+                    <input type="number" step="5" class="ticket-input p-0" 
+                           placeholder="Ticket price here"
+                           value="{{ form.price|default:'25' }}
+                </div>
+            </div>
 
-    <div class="mt-3">
-        <small class="text-muted">Set the number of tickets available for sale in this tier.</small>
+            <div class="col-6 border-start dashed-border">
+                <label class="ticket-label ps-2">Ticket Qty</label>
+                <input type="number" class="ticket-input ps-2" 
+                       name="{{ form.quantity.name }}" 
+                       value="{{ form.quantity.value|default:'10' }}"
+                       placeholder="Ticket quantity here">
+            </div>
+            
+            {% if form.errors %}
+            <div class="col-12 mt-2">
+                 <small class="text-danger">Please check the fields above.{{form.errors}}</small>
+            </div>
+            {% endif %}
+            <div class="subcontainer">
+                <button type="submit" class="subbtn">Add tickets</button>
+            </div>
+        </div>
     </div>
+</form>
 </div>
+{% endblock content %}

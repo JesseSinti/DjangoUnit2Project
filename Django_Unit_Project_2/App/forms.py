@@ -43,6 +43,7 @@ class CustomOrganizationUserCreationForm(UserCreationForm):
             field.help_text = ''
     
 class AddEventForm(forms.ModelForm):
+    organizer = forms.TextInput()
     title = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': "Name of Your Event"}))
     description = forms.CharField(widget=forms.Textarea(attrs={'placeholder': "Your Event's Description"}),required=True)
     banner_image = forms.FileInput()
@@ -63,5 +64,9 @@ class TicketTierForm(forms.ModelForm):
     ]
 
     ticket_type = forms.ChoiceField(choices=TICKET_CHOICES, widget=forms.Select(attrs={'class' : 'form-control'}))
-    price = forms.IntegerField(widget=forms.IntegerField())
-    quantity = forms.IntegerField(widget=forms.IntegerField())
+    price = forms.IntegerField()
+    quantity = forms.IntegerField()
+
+    class Meta:
+        model = TicketTier
+        fields = ('ticket_type', 'price', 'quantity')

@@ -1,0 +1,105 @@
+.ticket-wrapper {
+    margin : 0 auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    width : 80vw;
+    height : 80vh;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #e2e8f0;
+}
+
+.ticket-header {
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+    padding: 15px 20px;
+    color: white;
+}
+
+.fas, 
+.heading {
+    font-size : 1.5rem;
+    color : white;
+}
+
+.ticket-body {
+    padding: 20px;
+}
+
+.ticket-label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #666666;
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+
+.ticket-input {
+    width: 100%;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2d3748;
+    outline: none;
+    background : transparent;
+    padding: 5px 0;
+    border-radius : 4px;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.2s;
+}
+
+.ticket-input:focus {
+    border-bottom: 2px solid #FF6B6B;
+}
+
+
+.ticket-separator {
+    border-top: 2px dashed #e2e8f0;
+    margin: 10px 0;
+    position: relative;
+}
+
+
+.ticket-separator::before,
+.ticket-separator::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #f3f4f6; 
+    border-radius: 50%;
+    top: -11px;
+}
+
+.ticket-separator::before { left: -32px; }
+.ticket-separator::after { right: -32px; }
+
+.subcontainer {
+    position: absolute;
+    bottom: 20px; 
+    left: 0;      
+    width: 100%;  
+    display: flex;            
+    justify-content: center;  
+    padding: 0 20px;          
+}
+
+.subbtn {
+    border-radius: 50px; 
+    border: none;
+    background-color: #FF6B6B;
+    color: white;
+    width: 10rem; 
+    height: 2.5rem;
+    font-weight: 600;
+    cursor: pointer; 
+    box-shadow: 0 4px 6px rgba(255, 107, 107, 0.3); 
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.subbtn:hover {
+    transform: translateY(-5px); 
+    box-shadow: 0 6px 12px rgba(255, 107, 107, 0.4);
+}
