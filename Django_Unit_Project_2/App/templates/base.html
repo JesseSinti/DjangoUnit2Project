@@ -31,17 +31,17 @@
 
         <ul class="nav-links">
             <li class="nav-item">
-                <a href="{% url "home_page" %}">Home</a>
+                <a href="{% url 'home_page' %}">Home</a>
             </li>
             {% if request.user.is_authenticated %}
                 <li class="nav-item logout-item"><a href='{% url "logout" %}'>Logout</a></li>
-                <li class="nav-item login-item"><a href='{% url "org-login" %}'>Join Organiztion</a></li>
+                <li class="nav-item login-item"><a href='{% url "join_organization" %}'>Join Organiztion</a></li>
                 <li class="nav-item signup-item"><a href='{% url "org-signup" %}'>Register Organization</a></li>
                 <li class="nav-item addevent-item"><a href="{% url 'addevent'%}">Add Event</a></li>
             {% else %}
                 <li class="nav-item login-item"><a href='{% url "login" %}'>Login</a></li>
-                <li class="nav-item signup-item"><a href='{% url "signup" %}'>Sign Up</a></li>
-                <li class="nav-item login-item"><a href='{% url "org-login" %}'>Join Organiztion</a></li>
+                <li class="nav-item signup-item"><a href='{% url "customer-signup" %}'>Sign Up</a></li>
+                <li class="nav-item login-item"><a href="{% url 'join_organization' %}">Join Organiztion</a></li>
                 <li class="nav-item signup-item"><a href='{% url "org-signup" %}'>Register Organization</a></li>
             {% endif %}
         </ul>

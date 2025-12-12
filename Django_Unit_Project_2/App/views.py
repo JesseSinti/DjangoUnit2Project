@@ -1,80 +1,194 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from .forms import *
-hfrom django.contrib.auth.hashers import check_password
 from .filters import *
+from django.db import transaction
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from functools import wraps
 
+# Home page and dashboards for users
 def home_view(request): 
     f = TicketFilter(request.GET, queryset=Event.objects.all())
     filter_active = any(param in request.GET for param in request.GET.keys())
     return render(request, 'home.html', {'filter' : f, 'filter_active' : filter_active})
 
-def signup_view(request):
-    if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
-            request.session['user_data'] = {'firstname':first_name, 'lastname':last_name}
-            return redirect('home_page')
-    else:
-        form = CustomUserCreationForm()
-    return render(request, 'signup.html', {'form':form})
+def org_admin_required(view_func):
+    @wraps(view_func)
+    def wrapper(request, org_id, *args, **kwargs):
+        membership = OrganizationMembership.objects.filter(
+            user=request.user,
+            organization_id=org_id,
+            role="admin",
+            status="active"
+        ).first()
 
-def organization_signup_view(request):
-    if request.method == 'POST':
-        form = CustomOrganizationUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            request.session['user_data'] = {
-                'firstname': user.first_name,
-                'lastname': user.last_name
-            }
-            return redirect('home_page')
+        if not membership:
+            messages.error(request, "Admin access required.")
+            return redirect("home_page")
+
+        return view_func(request, org_id, *args, **kwargs)
+
+    return wrapper
+
+@login_required
+@org_admin_required
+def admin_dashboard(request, org_id):
+    try:
+        membership = OrganizationMembership.objects.get(
+            user=request.user, 
+            organization_id=org_id,
+            role='admin',
+            status='active'
+        )
+    except OrganizationMembership.DoesNotExist:
+        messages.error(request, "You don't have admin access to this organization.")
+        return redirect('home_page')
+
+    pending_memberships = OrganizationMembership.objects.filter(
+        organization_id=org_id,
+        status='pending'
+    ).select_related('user')
+
+    return render(request, 'admin_dashboard.html', {
+        'organization_id': org_id,
+        'pending_memberships': pending_memberships,
+    })
+
+@login_required
+def update_membership_status(request, membership_id, action):
+    membership = get_object_or_404(OrganizationMembership, id=membership_id)
+    try:
+        admin_membership = OrganizationMembership.objects.get(
+            user=request.user,
+            organization=membership.organization,
+            role='admin',
+            status='active'
+        )
+    except OrganizationMembership.DoesNotExist:
+        messages.error(request, "You don't have permission to perform this action.")
+        return redirect('home_page')
+
+    if action == 'approve':
+        membership.status = 'active'
+        membership.save()
+        messages.success(request, f"{membership.user.username} approved!")
+    elif action == 'kick':
+        membership.status = 'kicked'
+        membership.save()
+        messages.success(request, f"{membership.user.username} removed!")
     else:
-        form = CustomOrganizationUserCreationForm()
+        messages.error(request, "Invalid action.")
+
+    return redirect('admin_dashboard', org_id=membership.organization.id)
+
+@login_required
+def user_dashboard(request, org_id):
+    membership = OrganizationMembership.objects.filter(
+        user=request.user,
+        organization_id=org_id,
+        status='active'
+    ).first()
+
+    if not membership:
+        messages.error(request, "You do not belong to this organization.")
+        return redirect("home_page")
+
+    return render(request, "org_user_dashboard.html", {
+        "organization": membership.organization
+    })
+
+@login_required
+def choose_organization(request):
+    memberships = OrganizationMembership.objects.filter(
+        user=request.user
+    ).select_related("organization")
+
+    return render(request, "choose_organization.html", {
+        "memberships": memberships
+    })
+
+@login_required
+def customer_dashboard(request):
+    return render(request, "customer_dashboard.html")
+
+
+
+# Sign Up pages for users
+def organization_signup(request):
+    if request.method == 'POST':
+        form = OrganizationSignupForm(request.POST)
+        if form.is_valid():
+            with transaction.atomic():
+                user = form.save()
+
+                org_name = form.cleaned_data['organization_name']
+                organization = Organization.objects.create(name=org_name)
+
+                OrganizationMembership.objects.create(
+                    user=user,
+                    organization=organization,
+                    role='admin',
+                    status='active',
+                )
+            return redirect('admin_dashboard')
+    else:
+        form = OrganizationSignupForm()
 
     return render(request, 'organization_signup.html', {'form': form})
 
+def request_join_organization(request):
+    if request.method == 'POST':
+        form = OrganizationJoinRequestForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, "Your account was created and your join request is pending approval.")
+            return redirect('choose_organization')
+    else:
+        form = OrganizationJoinRequestForm()
+    return render(request, 'join_organization.html', {'form': form})
 
+def customer_signup(request):
+    if request.method == 'POST':
+        form = CustomerSignupForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('customer_dashboard')
+    else:
+        form = CustomerSignupForm()
+
+    return render(request, 'customer_signup.html', {'form': form})
+
+# Login page
 def login_view(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            first_name = user.first_name
-            last_name = user.last_name
-            request.session['user_data'] = {
-                'firstname': first_name,
-                'lastname': last_name
-            }
-            return redirect('home_page')
-        else:
-            messages.success(request, "There was an error logging in, Please try again...")
-            return redirect('login')
-    return render(request, 'login.html', {})
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
 
-def organization_login_view(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
         user = authenticate(request, username=username, password=password)
-        if user is not None:
+
+        if user:
             login(request, user)
-            request.session['user_data'] = {
-                'firstname': user.first_name,
-                'lastname': user.last_name
-            }
-            return redirect('home_page')
+
+            if user.is_customer:
+                return redirect("customer_dashboard")
+
+            membership = OrganizationMembership.objects.filter(
+                user=user, status="active"
+            ).first()
+
+            if membership:
+                if membership.role == "admin":
+                    return redirect("admin_dashboard", org_id=membership.organization.id)
+                else:
+                    return redirect("org_user_dashboard", org_id=membership.organization.id)
+
+            return redirect("choose_organization")
+
         else:
-            messages.error(request, "Invalid username or password")
-            return redirect('org-login')
-    return render(request, 'organization_login.html')
+            messages.error(request, "Incorrect username or password")
+
+    return render(request, "login.html")
 
 
 def logout_view(request):

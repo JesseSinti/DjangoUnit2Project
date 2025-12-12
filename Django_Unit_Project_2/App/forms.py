@@ -1,46 +1,81 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import get_user_model
 from .models import *
 from django.contrib.auth.hashers import make_password
 
-User = get_user_model()
+class OrganizationSignupForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    first_name = forms.CharField(max_length=30)
+    last_name = forms.CharField(max_length=30)
+    phone = forms.CharField(max_length=20, required=False)
+    address = forms.CharField(max_length=255, required=False)
 
-class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField(required=True, label='Email')
-    first_name = forms.CharField(required=True, label='First Name', max_length=20)
-    last_name = forms.CharField(required=True, label='Last Name', max_length=25)
+    organization_name = forms.CharField(max_length=255)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.help_text = ''
 
-    class Meta(UserCreationForm.Meta):
+    class Meta:
         model = User
-        fields = UserCreationForm.Meta.fields + ('email', 'first_name', 'last_name')
+        fields = ('username', 'email', 'first_name', 'last_name', 'phone', 'address', 'password1', 'password2', 'organization_name')
 
-class CustomOrganizationUserCreationForm(UserCreationForm):
-    organization_name = forms.CharField(required=True)
-    is_admin = forms.BooleanField(required=False)
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.is_customer = False
+        if commit:
+            user.save()
+        return user
+    
+class OrganizationJoinRequestForm(UserCreationForm):
+    organization = forms.ModelChoiceField(queryset=Organization.objects.all())
+    role = forms.ChoiceField(choices=OrganizationMembership.ROLE_CHOICES, initial='user')
 
-    class Meta(UserCreationForm.Meta):
-        model = OrganizationUsers
-        fields = (
-            "username",
-            "email",
-            "first_name",
-            "last_name",
-            "organization_name",
-            "is_admin",
-            "password1",
-            "password2",
+    def save(self, commit=True):
+        user = super().save(commit=commit)
+        OrganizationMembership.objects.create(
+            user=user,
+            organization=self.cleaned_data['organization'],
+            role=self.cleaned_data['role'],
+            status='pending'
         )
+        return user
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.help_text = ''
 
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'first_name', 'last_name', 'phone', 'address', 'password1', 'password2', 'organization', 'role')
+
+
+    
+class CustomerSignupForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    first_name = forms.CharField(max_length=30)
+    last_name = forms.CharField(max_length=30)
+    phone = forms.CharField(max_length=20, required=False)
+    address = forms.CharField(max_length=255, required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.help_text = ''
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'first_name', 'last_name', 'phone', 'address', 'password1', 'password2')
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.is_customer = True
+        if commit:
+            user.save()
+        return user
     
 class AddEventForm(forms.ModelForm):
     organizer = forms.TextInput()

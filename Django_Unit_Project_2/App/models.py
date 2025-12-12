@@ -1,12 +1,44 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 # Create your models here.
 
-class OrganizationUsers(AbstractUser):
-    organization_name = models.CharField(max_length=150)
-    is_admin = models.BooleanField(default=False)
+class User(AbstractUser):
+    is_customer = models.BooleanField(default=False)
+
+    address = models.CharField(max_length=255, blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+
+class Organization(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+class OrganizationMembership(models.Model):
+    ROLE_CHOICES = (
+        ('admin', 'Organization Admin'),
+        ('user', 'Organization User'),
+    )
+    STATUS_CHOICES = (
+        ('pending', 'Pending'),
+        ('active', 'Active'),
+        ('kicked', 'Kicked'),
+    )
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    joined_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'organization')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.organization.name} ({self.role})"
+
 
 class Event(models.Model):
     organizer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

@@ -2,4 +2,4 @@ from django.contrib import admin
 from .models import * 
 # Register your models here.
 
-admin.site.register([OrganizationUsers, Event, TicketTier, Order, Ticket,])
+admin.site.register([User, Organization, OrganizationMembership, Event, TicketTier, Order, Ticket,])
