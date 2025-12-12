@@ -51,6 +51,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+AUTH_USER_MODEL = 'App.OrganizationUsers'
+
 ROOT_URLCONF = 'Django_Unit_Project_2.urls'
 
 import os
