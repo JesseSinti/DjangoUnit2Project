@@ -23,8 +23,8 @@ class CustomOrganizationUserCreationForm(UserCreationForm):
     organization_name = forms.CharField(required=True)
     is_admin = forms.BooleanField(required=False)
 
-    class Meta(UserCreationForm.Meta):
-        model = OrganizationUsers
+    class Meta():
+        model = User
         fields = (
             "username",
             "email",
