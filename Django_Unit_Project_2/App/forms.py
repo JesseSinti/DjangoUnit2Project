@@ -93,15 +93,15 @@ class AddEventForm(forms.ModelForm):
 
 class TicketTierForm(forms.ModelForm):
     TICKET_CHOICES = [
-        ('vip', 'VIP'),
-        ('general', 'GENERAL'),
-        ('basic', 'BASIC'),
+        ('VIP', 'VIP'),
+        ('General', 'GENERAL'),
+        ('Basic', 'BASIC'),
     ]
 
-    ticket_type = forms.ChoiceField(choices=TICKET_CHOICES, widget=forms.Select(attrs={'class' : 'form-control'}))
+    type = forms.ChoiceField(choices=TICKET_CHOICES, widget=forms.Select(attrs={'class' : 'form-control'}))
     price = forms.IntegerField()
     quantity = forms.IntegerField()
 
     class Meta:
         model = TicketTier
-        fields = ('ticket_type', 'price', 'quantity')
+        fields = ('type', 'price', 'quantity')

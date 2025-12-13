@@ -12,7 +12,7 @@
         <div class="row g-3">
             <div class="col-12">
                 <label class="ticket-label">Ticket's Tier</label>
-                {{ form.ticket_type }}
+                {{ form.type }}
             </div>
 
             <div class="col-12">
@@ -22,19 +22,13 @@
             <div class="col-6">
                 <label class="ticket-label"> Ticket Price</label>
                 <div class="d-flex align-items-center ticket-input-group">
-                  
-                    <input type="number" step="5" class="ticket-input p-0" 
-                           placeholder="Ticket price here"
-                           value="{{ form.price|default:'25' }}
+                  {{ form.price }}
                 </div>
             </div>
 
             <div class="col-6 border-start dashed-border">
                 <label class="ticket-label ps-2">Ticket Qty</label>
-                <input type="number" class="ticket-input ps-2" 
-                       name="{{ form.quantity.name }}" 
-                       value="{{ form.quantity.value|default:'10' }}"
-                       placeholder="Ticket quantity here">
+                {{ form.quantity }}
             </div>
             
             {% if form.errors %}
