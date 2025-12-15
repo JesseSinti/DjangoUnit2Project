@@ -2,13 +2,25 @@
 {% block title %}Organization Signup{% endblock %}
 
 {% block content %}
-<h1>Sign Up as Organization Admin</h1>
+{% load static %}
+<link rel="stylesheet" href="{% static 'signup.css' %}">
 
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign Up</button>
-</form>
+<div class="register-container">
+    <div class="register-form-wrapper">
+        
+        <h1 class="register-text">Sign Up as Organization Admin</h1>
 
-<a href="{% url 'login' %}">Already have an account? Login</a>
+        <form method="POST" class="register-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="submit-btn">Sign Up</button>
+        </form>
+
+        <div style="margin-top: 20px;">
+            <a href="{% url 'login' %}">Already have an account? Login</a>
+        </div>
+
+    </div>
+</div>
+
 {% endblock %}
