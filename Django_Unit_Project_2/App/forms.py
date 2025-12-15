@@ -30,27 +30,55 @@ class OrganizationSignupForm(UserCreationForm):
     
 class OrganizationJoinRequestForm(UserCreationForm):
     organization = forms.ModelChoiceField(queryset=Organization.objects.all())
-    role = forms.ChoiceField(choices=OrganizationMembership.ROLE_CHOICES, initial='user')
+    role = forms.ChoiceField(
+        choices=OrganizationMembership.ROLE_CHOICES,
+        initial='user'
+    )
+
+    class Meta:
+        model = User
+        fields = (
+            'username', 'email', 'first_name', 'last_name',
+            'phone', 'address',
+            'password1', 'password2',
+            'organization', 'role'
+        )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        organization = cleaned_data.get('organization')
+
+        if organization and User.objects.filter(username=cleaned_data.get('username')).exists():
+            user = User.objects.get(username=cleaned_data.get('username'))
+
+            if OrganizationMembership.objects.filter(
+                user=user,
+                organization=organization
+            ).exists():
+                raise forms.ValidationError(
+                    "You have already requested to join this organization."
+                )
+
+        return cleaned_data
+
 
     def save(self, commit=True):
-        user = super().save(commit=commit)
+        user = super().save(commit=False)
+        user.is_customer = False
+
+        if commit:
+            user.save()
+
         OrganizationMembership.objects.create(
             user=user,
             organization=self.cleaned_data['organization'],
             role=self.cleaned_data['role'],
             status='pending'
         )
+
         return user
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.help_text = ''
 
 
-    class Meta:
-        model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'phone', 'address', 'password1', 'password2', 'organization', 'role')
 
 
     

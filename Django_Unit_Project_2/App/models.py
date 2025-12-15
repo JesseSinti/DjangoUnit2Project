@@ -1,4 +1,8 @@
 from django.db import models
+
+# Create your models here.
+
+from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 # Create your models here.
@@ -21,13 +25,17 @@ class OrganizationMembership(models.Model):
         ('admin', 'Organization Admin'),
         ('user', 'Organization User'),
     )
+
     STATUS_CHOICES = (
         ('pending', 'Pending'),
         ('active', 'Active'),
         ('kicked', 'Kicked'),
     )
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
@@ -39,9 +47,15 @@ class OrganizationMembership(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.organization.name} ({self.role})"
 
+    class Meta:
+        unique_together = ('user', 'organization')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.organization.name} ({self.role})"
+
 
 class Event(models.Model):
-    organizer = models.ForeignKey(User, on_delete=models.CASCADE)
+    organizer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     description = models.TextField()
     banner_image = models.ImageField(upload_to='event_images/')
@@ -65,13 +79,13 @@ class TicketTier(models.Model):
     quantity = models.IntegerField()
 
 class Order(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     event =  models.ForeignKey(Event, on_delete=models.CASCADE)
     total_price = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
 class Ticket(models.Model):
-    order = models.ForeignKey(User, on_delete=models.CASCADE)
+    order = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     tier = models.ForeignKey(TicketTier, on_delete=models.CASCADE)
     ticket_id = models.IntegerField(unique=True)
     qr_code_image = models.ImageField(upload_to='qr_code_img/', blank=True, null=True)
