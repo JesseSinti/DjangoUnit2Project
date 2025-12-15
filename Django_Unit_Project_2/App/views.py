@@ -8,6 +8,7 @@ from django.contrib import messages
 from functools import wraps
 from django.contrib.auth import login as auth_login
 
+
 # Home page and dashboards for users
 def home_view(request): 
     f = TicketFilter(request.GET, queryset=Event.objects.all())
@@ -50,10 +51,28 @@ def admin_dashboard(request, org_id):
         organization_id=org_id,
         status='pending'
     ).select_related('user')
+    
+    
+    organization = Organization.objects.get(id=org_id)
+    organization_users = OrganizationMembership.objects.filter(organization=organization)
+    events = Event.objects.filter(organizer=request.user)
+    total_users = len(organization_users)
+    total_events = len(events)
+    total_pending = len(pending_memberships)
+    f = MembersFilter(request.GET, queryset=OrganizationMembership.objects.filter(organization=organization))
+    filter_active = any(value.strip() for value in request.GET.values())
+
 
     return render(request, 'admin_dashboard.html', {
         'organization_id': org_id,
         'pending_memberships': pending_memberships,
+        'organization_users' : organization_users,
+        'organization_events' : events,
+        'total_users' : total_users,
+        'total_events' : total_events,
+        'pending' : total_pending,
+        'filter' : f,
+        'filter_active' : filter_active,
     })
 
 @login_required

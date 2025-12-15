@@ -6,6 +6,14 @@ class TicketFilter(django_filters.FilterSet):
     max_price = django_filters.NumberFilter(field_name='max_price', lookup_expr='lte')
     location = django_filters.CharFilter(field_name="location", lookup_expr='icontains')
     start_time = django_filters.TimeFilter(field_name='start_time', lookup_expr='exact')
+    username = django_filters.CharFilter(field_name='user__username',lookup_expr='icontains')
 
     class Meta:
-        fields = ['tickettier__min_price', 'ticketier__max_price', 'event__start_time', 'event__location' ]
+        fields = ['tickettier__min_price', 'ticketier__max_price', 'event__start_time', 'event__location', 'OrganizationMembership_username' ]
+
+class MembersFilter(django_filters.FilterSet):
+    username = django_filters.CharFilter(field_name="user__username", lookup_expr='icontains')
+
+    class Meta:
+        model = OrganizationMembership
+        fields = ['username']
