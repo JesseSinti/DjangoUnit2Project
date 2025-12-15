@@ -24,7 +24,7 @@
 .register-form-wrapper {
     /* Apply the central Glass Card look */
     width: 100%;
-    max-width: 450px; /* Slightly wider to accommodate complex forms */
+    max-width: 450px; 
     padding: 40px;
     
     /* Inherit/mimic the .glass-card style */
@@ -55,7 +55,7 @@
     text-align: left;
 }
 
-/* General form labels (for text fields, etc.) */
+/* General form labels */
 .register-form label {
     display: block;
     font-size: 0.9rem;
@@ -64,11 +64,10 @@
     margin-bottom: 6px;
 }
 
-/* Standard input fields (text, password, etc.) */
+/* Standard input fields (text, password, select, etc.) */
 .register-form input:not([type="checkbox"]),
 .register-form select,
 .register-form textarea {
-    /* Input field styling (Pill shape and focus effect) */
     width: 100%;
     padding: 12px 15px;
     background-color: var(--pill-bg);
@@ -78,7 +77,7 @@
     color: var(--primary-text);
     box-sizing: border-box; 
     transition: all 0.2s ease;
-    -webkit-appearance: none;
+    -webkit-appearance: none; /* Removes default browser styles */
     appearance: none;
 }
 
@@ -91,82 +90,67 @@
     box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
 }
 
-/* Error Message Styling */
-.register-form ul.errorlist {
-    list-style: none;
-    padding: 0;
-    margin-top: 5px;
-    font-size: 0.85rem;
-    color: #ff3b30; /* Red color for errors */
-}
-
 /* =========================================
-   2.1 CHECKBOX CLEANUP STYLING (The Fix)
+   2.1 CHECKBOX CLEANUP STYLING 
    ========================================= */
 
-/* 1. Ensure the container <p> tag is set up for alignment */
 .register-form p:has(input[type="checkbox"]) {
-    display: flex; /* Use flexbox for alignment */
-    align-items: center; /* Vertically center items */
-    gap: 10px; /* Space between the label and the checkbox */
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
 }
 
-/* 2. Style the label for the checkbox */
 .register-form input[type="checkbox"] + label, 
 .register-form label[for^="id_"][class=""] {
-    /* Set the label to align nicely with the checkbox */
-    order: 1; /* Place the label before the input in this flex container */
+    order: 1; 
     margin-bottom: 0;
-    font-weight: 400; /* Use the same font weight as custom fields */
+    font-weight: 400; 
     color: var(--primary-text);
-    /* Remove unnecessary padding from previous attempts */
     padding-left: 0; 
 }
 
-/* 3. Style the default input to look cleaner and align it */
 .register-form input[type="checkbox"] {
-    display: inline-block; /* Ensure it is visible */
-    order: 2; /* Place the checkbox after the label */
-    
-    /* Optional: Style the native checkbox slightly for a cleaner look */
+    display: inline-block; 
+    order: 2; 
     width: 18px; 
     height: 18px;
-    margin: 0; /* Remove default margins */
-    
-    /* Use the same border/background as the pills for consistency */
+    margin: 0; 
     background-color: var(--pill-bg);
     border: 1px solid var(--secondary-text); 
-    border-radius: 4px; /* Soft corners */
-    
-    /* Remove the conflicting properties for text/password inputs */
+    border-radius: 4px; 
     padding: 0; 
-    -webkit-appearance: checkbox; /* Ensure browser renders it as a checkbox */
+    -webkit-appearance: checkbox; 
     appearance: checkbox;
 }
 
-/* 4. Focus state for interaction feedback */
-.register-form input[type="checkbox"]:focus {
-    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
-    border-color: var(--primary-blue);
+/* =========================================
+   2.2 DROPDOWN SPECIFIC STYLING (NEW)
+   ========================================= */
+/* Since we used appearance: none on inputs, we need to add the arrow back for selects */
+.register-form select {
+    /* Add a custom chevron down arrow */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+    padding-right: 2.5rem; /* Ensure text doesn't overlap the arrow */
+    cursor: pointer;
 }
 
 /* =========================================
-   3. SUBMIT BUTTON
+   3. SUBMIT BUTTON & LINKS
    ========================================= */
 .submit-btn {
-    /* Replicate the primary glass button style */
     appearance: none;
     width: 100%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    
     padding: 14px 24px;
     margin-top: 20px;
     font-family: inherit;
     font-weight: 600;
     font-size: 1rem;
-    
     background-color: var(--primary-blue);
     color: white;
     border: none;
@@ -184,4 +168,15 @@
 
 .submit-btn:active {
     transform: scale(0.98);
+}
+
+/* Link styling */
+.register-form-wrapper a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.register-form-wrapper a:hover {
+    text-decoration: underline;
 }

@@ -1,14 +1,26 @@
 {% extends "base.html" %}
-{% block title %}Join Organization{% endblock %}
+{% block title %}Organization Signup{% endblock %}
 
 {% block content %}
-<h1>Request to Join an Organization</h1>
+{% load static %}
+<link rel="stylesheet" href="{% static 'signup.css' %}">
 
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Send Request</button>
-</form>
+<div class="register-container">
+    <div class="register-form-wrapper">
+        
+        <h1 class="register-text">Join Organization</h1>
 
-<a href="{% url 'choose_organization' %}">Back to Organization Selection</a>
+        <form method="POST" class="register-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="submit-btn">Sign Up</button>
+        </form>
+
+        <div style="margin-top: 20px;">
+            <a href="{% url 'login' %}">Already have an account? Login</a>
+        </div>
+
+    </div>
+</div>
+
 {% endblock %}

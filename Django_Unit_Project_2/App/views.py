@@ -224,11 +224,15 @@ def AddEvent(request):
     return render(request, 'addEvent.html', {'form' : form})
 
 def SetTicketTier(request, pk):
+    event = Event.objects.get(id=pk)
     if request.method == "POST":
         form = TicketTierForm(request.POST)
         if form.is_valid():
-            form.save()
-            return render(request,'home_page')
+
+            ticket = form.save(commit=False)
+            ticket.event = event
+            ticket.save()
+            return redirect('home_page')
     else:
         form = TicketTierForm()
     return render(request, 'ticketTier.html', {'form' : form})
