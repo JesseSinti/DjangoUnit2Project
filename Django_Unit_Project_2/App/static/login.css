@@ -8,6 +8,7 @@
     --primary-blue: #007aff;
     --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
     --pill-bg: #f5f5f7;
+    --error-color: #ff3b30;
 }
 
 /* =========================================
@@ -117,4 +118,42 @@
 
 .submit-btn:active {
     transform: scale(0.98);
+}
+
+/* =========================================
+   4. LINKS & ALERTS (Added for cleanup)
+   ========================================= */
+
+/* Footer links styling */
+.login-footer {
+    margin-top: 25px;
+    font-size: 0.95rem;
+    color: var(--primary-text);
+}
+
+.login-footer a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Messages / Alert List Styling */
+.messages-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.messages-list li {
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    background-color: #ffe5e5; /* Light red bg for errors by default */
+    color: var(--error-color);
 }

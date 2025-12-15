@@ -124,7 +124,7 @@
 }
 
 /* =========================================
-   2.2 DROPDOWN SPECIFIC STYLING (NEW)
+   2.2 DROPDOWN SPECIFIC STYLING
    ========================================= */
 /* Since we used appearance: none on inputs, we need to add the arrow back for selects */
 .register-form select {
@@ -170,13 +170,4 @@
     transform: scale(0.98);
 }
 
-/* Link styling */
-.register-form-wrapper a {
-    color: var(--primary-blue);
-    text-decoration: none;
-    font-size: 0.95rem;
-}
-
-.register-form-wrapper a:hover {
-    text-decoration: underline;
-}
+/*
