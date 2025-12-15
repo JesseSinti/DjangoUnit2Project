@@ -45,7 +45,7 @@ class OrganizationMembership(models.Model):
 
 
 class Event(models.Model):
-    organizer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    organizer = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     description = models.TextField()
     banner_image = models.ImageField(upload_to='event_images/')
@@ -69,13 +69,13 @@ class TicketTier(models.Model):
     quantity = models.IntegerField()
 
 class Order(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     event =  models.ForeignKey(Event, on_delete=models.CASCADE)
     total_price = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
 class Ticket(models.Model):
-    order = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    order = models.ForeignKey(User, on_delete=models.CASCADE)
     tier = models.ForeignKey(TicketTier, on_delete=models.CASCADE)
     ticket_id = models.IntegerField(unique=True)
     qr_code_image = models.ImageField(upload_to='qr_code_img/', blank=True, null=True)
