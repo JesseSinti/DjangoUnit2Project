@@ -6,6 +6,7 @@ from django.db import transaction
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from functools import wraps
+from django.contrib.auth import login as auth_login
 
 # Home page and dashboards for users
 def home_view(request): 
@@ -31,7 +32,7 @@ def org_admin_required(view_func):
 
     return wrapper
 
-
+@login_required
 @org_admin_required
 def admin_dashboard(request, org_id):
     try:
@@ -98,7 +99,6 @@ def user_dashboard(request, org_id):
         "organization": membership.organization
     })
 
-@login_required
 def choose_organization(request):
     memberships = OrganizationMembership.objects.filter(
         user=request.user
@@ -137,26 +137,42 @@ def organization_signup(request):
 
     return render(request, 'organization_signup.html', {'form': form})
 
+from django.db import transaction
+
+
 def request_join_organization(request):
+    if request.user.is_authenticated:
+        return redirect('choose_organization')
+
     if request.method == 'POST':
         form = OrganizationJoinRequestForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            messages.success(request, "Your account was created and your join request is pending approval.")
+            with transaction.atomic():
+                user = form.save()
+
+            login(request, user)
+
+            messages.success(
+                request,
+                "Your account was created and your request is pending admin approval."
+            )
             return redirect('choose_organization')
     else:
         form = OrganizationJoinRequestForm()
+
     return render(request, 'join_organization.html', {'form': form})
 
-def customer_signup(request):
-    if request.method == 'POST':
-        form = CustomerSignupForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('customer_dashboard')
-    else:
-        form = CustomerSignupForm()
 
+
+def customer_signup(request): 
+    if request.method == 'POST': 
+        form = CustomerSignupForm(request.POST) 
+        if form.is_valid(): 
+            user = form.save()
+            login(request, user)
+            return redirect('customer_dashboard') 
+    else: 
+        form = CustomerSignupForm() 
     return render(request, 'customer_signup.html', {'form': form})
 
 # Login page
@@ -210,14 +226,11 @@ def AddEvent(request):
     return render(request, 'addEvent.html', {'form' : form})
 
 def SetTicketTier(request, pk):
-    event = Event.objects.get(id=pk)
     if request.method == "POST":
         form = TicketTierForm(request.POST)
         if form.is_valid():
-            ticket = form.save(commit=False)
-            ticket.event = event
-            ticket.save()
-            return redirect('home_page')
+            form.save()
+            return render(request,'home_page')
     else:
         form = TicketTierForm()
     return render(request, 'ticketTier.html', {'form' : form})
