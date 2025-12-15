@@ -119,6 +119,7 @@ body {
 }
 
 #searchbar-container input {
+    padding: 0px !important;
     border: none;
     background: transparent;
     flex-grow: 1;
