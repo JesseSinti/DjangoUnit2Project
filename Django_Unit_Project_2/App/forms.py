@@ -44,6 +44,11 @@ class OrganizationJoinRequestForm(UserCreationForm):
             'organization', 'role'
         )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.help_text = ''
+
     def clean(self):
         cleaned_data = super().clean()
         organization = cleaned_data.get('organization')

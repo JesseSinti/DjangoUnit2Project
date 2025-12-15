@@ -131,14 +131,12 @@ def organization_signup(request):
                     role='admin',
                     status='active',
                 )
+                login(request, user)
             return redirect('admin_dashboard', org_id=organization.id)
     else:
         form = OrganizationSignupForm()
 
     return render(request, 'organization_signup.html', {'form': form})
-
-from django.db import transaction
-
 
 def request_join_organization(request):
     if request.user.is_authenticated:
