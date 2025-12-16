@@ -237,11 +237,13 @@ body {
     cursor: pointer;
     transition: all 0.2s;
     padding-right: 40px;
+    padding-left: 25px;
 }
 
 #filter-sidebar .filter-tab-button:hover {
     background-color: rgba(255, 255, 255, 0.95);
     color: var(--primary-blue);
+    padding-left: 23px;
 }
 
 #filter-sidebar .filter-tab-button i {

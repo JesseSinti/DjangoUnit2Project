@@ -20,7 +20,7 @@
         <header id="navbar-header">
             <a href="{% url 'home_page' %}" class='navbar-logo'>Event Finder</a>
             
-            {% if request.resolver_match.url_name == 'home_page' %}
+            {% if request.resolver_match.url_name == 'home_page' or request.resolver_match.url_name == 'Search_query' %}
             <div id='searchbar-container'>
                 <form method="get" action="{% url 'Search_query' %}">
                     <input type='text' name='query' placeholder='Search Events...' value="" {{ query }}>
