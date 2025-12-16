@@ -20,7 +20,7 @@
         <header id="navbar-header">
             <a href="{% url 'home_page' %}" class='navbar-logo'>Event Finder</a>
             
-            {% if request.resolver_match.url_name == 'home_page' or request.resolver_match.url_name == 'Search_query' %}
+            {% if request.resolver_match.url_name == 'home_page' %}
             <div id='searchbar-container'>
                 <form method="get" action="{% url 'Search_query' %}">
                     <input type='text' name='query' placeholder='Search Events...' value="" {{ query }}>
@@ -45,7 +45,7 @@
                 <li class="nav-item signup-item"><a href='{% url "org-signup" %}'>Register Organization</a></li>
             {% endif %}
             {% if status == 1 %}
-                <li class="nav-item addevent-item"><a href="{% url 'addevent'%}">Add Event</a></li>
+                <li class="nav-item addevent-item"><a href="{% url 'addevent'%}">Create Event</a></li>
                
                 <li class="nav-item addevent-item"><a href="{% url 'admin_dashboard' membership.organization.id %}">Admin Dashboard</a></li>
             {% elif status == 2 %}

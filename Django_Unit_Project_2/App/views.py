@@ -9,9 +9,9 @@ from functools import wraps
 from .forms import *
 from .filters import *
 
-# ==============================================================================
-# 1. DECORATORS
-# ==============================================================================
+# ============================================================================================================
+#                                                 1. DECORATORS
+# ============================================================================================================
 
 def org_admin_required(view_func):
     @wraps(view_func)
@@ -32,9 +32,9 @@ def org_admin_required(view_func):
     return wrapper
 
 
-# ==============================================================================
-# 2. AUTHENTICATION (Login, Logout, Signup)
-# ==============================================================================
+# =============================================================================================================
+#                                    2. AUTHENTICATION (Login, Logout, Signup)
+# =============================================================================================================
 
 def login_view(request):
     if request.method == "POST":
@@ -136,9 +136,9 @@ def customer_signup(request):
     return render(request, 'customer_signup.html', {'form': form})
 
 
-# ==============================================================================
-# 3. PUBLIC VIEWS (Home, Search)
-# ==============================================================================
+# =============================================================================================================
+#                                         3. PUBLIC VIEWS (Home, Search)
+# =============================================================================================================
 
 def home_view(request): 
     event_filter = EventFilter(request.GET, queryset=Event.objects.all())
@@ -154,9 +154,9 @@ def search_view(request):
     return render(request,'home.html', {'Events' : events, 'SearchActive' : bool(request.GET)})
 
 
-# ==============================================================================
-# 4. DASHBOARDS (Admin, User, Customer)
-# ==============================================================================
+# =============================================================================================================
+#                                       4. DASHBOARDS (Admin, User, Customer)
+# =============================================================================================================
 
 @login_required
 @org_admin_required
@@ -194,6 +194,13 @@ def admin_dashboard(request, org_id):
         'pending' : total_pending,
     })
 
+def Event_Page(request):
+    Admin = OrganizationMembership.objects.get(user=request.user)
+    organization = Organization.objects.get(name=Admin.organization.name)
+    Events = Event.objects.filter(organizer=request.user)
+    return render(request, 'event_page.html', {'Events' : Events})
+
+
 
 def search_users(request):
     """
@@ -215,6 +222,7 @@ def search_users(request):
     total_users = len(organization_users)
     total_events = len(events)
     total_pending = len(pending_memberships)
+    admin = User.objects.get(id=request.user.id)
     
     return render(request,'admin_dashboard.html', {
         'Users' : users, 
@@ -224,7 +232,8 @@ def search_users(request):
         'organization_events' : events,
         'total_users' : total_users,
         'total_events' : total_events,
-        'pending' : total_pending,})
+        'pending' : total_pending,
+        'admin' : admin})
 
 @login_required
 def user_dashboard(request, org_id):
@@ -251,12 +260,17 @@ def user_dashboard(request, org_id):
 
 @login_required
 def customer_dashboard(request):
-    return render(request, "customer_dashboard.html")
+    user = User.objects.get(id=request.user.id)
+    orders = Order.objects.filter(user=request.user)
+    total_orders = len(orders)
+    return render(request, "customer_dashboard.html",{
+    'Customer' : user,
+    'total_orders' : total_orders})
 
 
-# ==============================================================================
-# 5. MEMBERSHIP ACTIONS (Join, Cancel, Update)
-# ==============================================================================
+# =============================================================================================================
+#                                       5. MEMBERSHIP ACTIONS (Join, Cancel, Update)
+# =============================================================================================================
 
 @login_required
 def choose_organization(request):
@@ -334,9 +348,9 @@ def update_membership_status(request, membership_id, action):
     return redirect('admin_dashboard', org_id=membership.organization.id)
 
 
-# ==============================================================================
-# 6. EVENT MANAGEMENT (Add Event, Tickets)
-# ==============================================================================
+# ==============================================================================================================
+#                                           6. EVENT MANAGEMENT (Add Event, Tickets, Orders)
+# ===============================================================================================================
 
 # views.py
 
@@ -378,3 +392,4 @@ def SetTicketTier(request, pk):
     else:
         form = TicketTierForm()
     return render(request, 'ticketTier.html', {'form' : form})
+
