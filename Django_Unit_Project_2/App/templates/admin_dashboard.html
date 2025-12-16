@@ -73,17 +73,11 @@
 
         <div class="stat-card">
             <div class="stat-header">
-                <div>
-                  <form method="get" action="{% url 'search_users' %}">
-                    <input type="text" name="query" placeholder="Search users..." class="form-control form-control-sm d-inline-block w-auto me-2" value="" {{ query }}>
-                    <button class="btn-primary-custom btn-sm" type="submit">Find User</button>
-                  </form>
-                </div>
+                <div class="stat-label">Pending Invites</div>
+                <div class="stat-value">{{ pending }}</div>
             </div>
             <div class="mt-auto pt-3">
-                <small class="text-muted d-flex align-items-center">
-                    <i class="far fa-clock me-1"></i> Waiting for response
-                </small>
+                
             </div>
         </div>
     </div>
@@ -92,12 +86,14 @@
         <div class="table-header">
             <h5 class="m-0 fw-bold" style="font-size: 1rem;">Organization Users</h5>
             
-            <form method="get" class="search-wrapper">
-                <input type="text" name="query" placeholder="Search..." class="search-input" value="{{ query|default:'' }}">
-                <button type="submit" class="search-btn">
-                    <i class="fas fa-search"></i>
-                </button>
-            </form>
+            <div>
+                  <form method="get" action="{% url 'search_users' %}">
+                    <input type="text" name="query" placeholder="Search users..." class="form-control form-control-sm d-inline-block w-auto me-2" value="" {{ query }}>
+                    <button class="btn-primary-custom btn-sm" type="submit">Find User</button>
+                  </form>
+            </div>
+            
+            
         </div>
         
         <div class="table-responsive">

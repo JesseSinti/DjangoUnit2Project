@@ -30,7 +30,28 @@ def search_users(request):
     users = OrganizationMembership.objects.filter(organization=organization)
     if query:
         users = users.filter(Q(user__username__icontains=query))
-    return render(request,'admin_dashboard.html', {'Users' : users, 'SearchActive' : bool(request.GET)})
+    
+    pending_memberships = OrganizationMembership.objects.filter(
+        organization=organization,
+        status='pending'
+    ).select_related('user')
+    organization_users = OrganizationMembership.objects.filter(organization=organization)
+    events = Event.objects.filter(organizer=request.user)
+    total_users = len(organization_users)
+    total_events = len(events)
+    total_pending = len(pending_memberships)
+    
+    return render(request,'admin_dashboard.html', {
+        'Users' : users, 
+        'SearchActive' : bool(request.GET),
+        'pending_memberships': pending_memberships,
+        'organization_users' : organization_users,
+        'organization_events' : events,
+        'total_users' : total_users,
+        'total_events' : total_events,
+        'pending' : total_pending,})
+
+
 def org_admin_required(view_func):
     @wraps(view_func)
     def wrapper(request, org_id, *args, **kwargs):
@@ -75,8 +96,7 @@ def admin_dashboard(request, org_id):
     total_users = len(organization_users)
     total_events = len(events)
     total_pending = len(pending_memberships)
-    f = MembersFilter(request.GET, queryset=OrganizationMembership.objects.filter(organization=organization))
-    filter_active = any(value.strip() for value in request.GET.values())
+    
 
 
     return render(request, 'admin_dashboard.html', {
@@ -87,7 +107,6 @@ def admin_dashboard(request, org_id):
         'total_users' : total_users,
         'total_events' : total_events,
         'pending' : total_pending,
-        'organization' : organization
     })
 
 @login_required
