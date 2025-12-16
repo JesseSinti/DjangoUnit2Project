@@ -9,7 +9,7 @@ from django.conf import settings
 
 class User(AbstractUser):
     is_customer = models.BooleanField(default=False)
-    
+
     address = models.CharField(max_length=255, blank=True, null=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
 
@@ -55,15 +55,19 @@ class OrganizationMembership(models.Model):
 
 
 class Event(models.Model):
-    organizer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     description = models.TextField()
     banner_image = models.ImageField(upload_to='event_images/')
     location = models.CharField(max_length=100)
+    date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
     capacity = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} - {self.organization.name}"
 
 
 class TicketTier(models.Model):

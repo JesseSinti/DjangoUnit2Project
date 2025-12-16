@@ -144,26 +144,49 @@ class CustomerSignupForm(UserCreationForm):
         return user
     
 class AddEventForm(forms.ModelForm):
-    organizer = forms.TextInput()
     title = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': "Name of Your Event"}))
     description = forms.CharField(widget=forms.Textarea(attrs={'placeholder': "Your Event's Description"}),required=True)
     banner_image = forms.FileInput()
     location = forms.CharField(widget=forms.TextInput(attrs={'placeholder': "Enter Your Event's Location"}), required=True)
-    start_time = forms.TimeField(widget=forms.TimeInput(attrs={'placeholder': "Enter Your Event's Starting Time", 'type' : 'time',}),input_formats=[
-            '%H:%M',
-            '%H:%M:%S',
-            '%I:%M %p',
-            '%I:%M:%S %p'], required=True)
-    end_time = forms.TimeField(widget=forms.TimeInput(attrs={'placeholder': "Enter Your Event's Ending Time", 'type' : 'time'}),input_formats=[
-            '%H:%M',
-            '%H:%M:%S',
-            '%I:%M %p',
-            '%I:%M:%S %p'], required=True)
-    capacity = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': "Enter Your Event's Capacity"}), required=True)
+    date = forms.DateField(
+        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+        required=True
+    )
+    start_time = forms.TimeField(
+        widget=forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
+        input_formats=['%H:%M', '%H:%M:%S', '%I:%M %p', '%I:%M:%S %p'], 
+        required=True
+    )
+    end_time = forms.TimeField(
+        widget=forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
+        input_formats=['%H:%M', '%H:%M:%S', '%I:%M %p', '%I:%M:%S %p'], 
+        required=True
+    )
+    capacity = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': "Enter Your Event's Capacity"}), 
+        required=True
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        organizer = cleaned_data.get('organization')
+
+        if organizer and User.objects.filter(username=cleaned_data.get('username')).exists():
+            user = User.objects.get(username=cleaned_data.get('username'))
+
+            if OrganizationMembership.objects.filter(
+                user=user,
+                organization=organizer
+            ).exists():
+                raise forms.ValidationError(
+                    "You are not a member of this organization."
+                )
+
+        return organizer
 
     class Meta:
         model = Event
-        fields = ('organizer','title','description','banner_image','location','start_time','end_time','capacity')
+        fields = ('title', 'description', 'banner_image', 'location', 'date', 'start_time', 'end_time', 'capacity')
 
 class TicketTierForm(forms.ModelForm):
     TICKET_CHOICES = [
