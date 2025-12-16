@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="{% static 'home.css' %}">
     <section class="about-section" id="about">
         <div class="container">
-            <h2 class="section-title">About Me</h2>
+           
             <p class="about-text">
                 We are a modern event management and ticketing platform designed
                 to help organizations create, manage, and sell tickets with ease.
@@ -22,7 +22,23 @@
             <div class="events-header">
                 <h2 class="section-title">Upcoming Events</h2>
             </div>
-        {% for event in Events %}
+    {% if SearchActive %}
+            {% for event in Events %}
+                
+                <div class="events-grid">
+                    <article class="event-card">
+                        <div class="event-image">
+                            <img src="{{ event.banner_image.url }}">
+                        </div>
+                        <div class="event-content">
+                            <h3 class="event-title">{{ event.title }}</h3>
+                            <span class="event-date">{{ event.location }} • {{ event.start_time }} - {{ event.end_time }}</span>
+                            <p class="event-desc">{{ event.description }}</p>  
+                        </div>
+                    </article>
+            {% endfor %}
+    {% else %}
+        {% for event in Event %}
             <div class="events-grid">
                 <article class="event-card">
                     <div class="event-image">
@@ -35,6 +51,7 @@
                     </div>
                 </article>
         {% endfor %}
+    {% endif %}
             </div>
         </div>
     </section>
