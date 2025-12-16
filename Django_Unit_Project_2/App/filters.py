@@ -1,15 +1,37 @@
 import django_filters
 from .models import *
 
-class TicketFilter(django_filters.FilterSet):
-    min_price = django_filters.NumberFilter(field_name='min_price', lookup_expr='gte')
-    max_price = django_filters.NumberFilter(field_name='max_price', lookup_expr='lte')
-    location = django_filters.CharFilter(field_name="location", lookup_expr='icontains')
-    start_time = django_filters.TimeFilter(field_name='start_time', lookup_expr='exact')
-    username = django_filters.CharFilter(field_name='user__username',lookup_expr='icontains')
+class EventFilter(django_filters.FilterSet):
+    min_price = django_filters.NumberFilter(
+        field_name='tickettier__price',
+        lookup_expr='gte'
+    )
+    max_price = django_filters.NumberFilter(
+        field_name='tickettier__price',
+        lookup_expr='lte'
+    )
+    location = django_filters.CharFilter(
+        field_name='location',
+        lookup_expr='icontains'
+    )
+
+    start_time = django_filters.TimeFilter(
+        field_name='start_time',
+        input_formats=['%H:%M',
+        '%H:%M:%S',     
+        '%I:%M %p',     
+        '%I:%M:%S %p'],
+        lookup_expr='exact'
+    )
+
+    organizer = django_filters.CharFilter(
+        field_name='organizer__username',
+        lookup_expr='icontains'
+    )
 
     class Meta:
-        fields = ['tickettier__min_price', 'ticketier__max_price', 'event__start_time', 'event__location', 'OrganizationMembership_username' ]
+        model = Event
+        fields = ['location', 'start_time' ]
 
 class MembersFilter(django_filters.FilterSet):
     username = django_filters.CharFilter(field_name="user__username", lookup_expr='icontains')
