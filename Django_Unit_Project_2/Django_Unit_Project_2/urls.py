@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from App import views as v
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,4 +36,4 @@ urlpatterns = [
     path('dashboard/customer/', v.customer_dashboard, name='customer_dashboard'),
     path('dashboard/org/<int:org_id>/user/', v.user_dashboard, name='org_user_dashboard'),
     path('organization/select/', v.choose_organization, name='choose_organization'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

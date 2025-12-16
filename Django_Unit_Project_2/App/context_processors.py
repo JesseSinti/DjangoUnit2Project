@@ -6,10 +6,18 @@ def current_url(request):
         'current_absolute_uri': request.build_absolute_uri(),
     }
 
+
 def base_view(request):
-    membership = OrganizationMembership.objects.get(
-            user=request.user, 
-        )
+    
+    if not request.user.is_authenticated:
+        return {}
+
+    
+    membership = OrganizationMembership.objects.filter(user=request.user).first()
+
+    
+    if not membership:
+        return {}
     
     if membership.role == "admin":
         status = 1
@@ -17,11 +25,9 @@ def base_view(request):
         status = 2
     else: 
         status = 3
-    print(status)
 
     return {
-        'status' : status,
-        'membership' : membership
+        'status': status,
+        'membership': membership
     }
-    
     

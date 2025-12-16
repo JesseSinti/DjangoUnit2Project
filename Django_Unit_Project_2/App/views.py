@@ -11,9 +11,10 @@ from django.contrib.auth import login as auth_login
 
 # Home page and dashboards for users
 def home_view(request): 
-    f = TicketFilter(request.GET, queryset=Event.objects.all())
-    filter_active = any(param in request.GET for param in request.GET.keys())
-    return render(request, 'home.html', {'filter' : f, 'filter_active' : filter_active})
+    event_filter = EventFilter(request.GET, queryset=Event.objects.all())
+    
+    
+    return render(request, 'home.html', {'filter' : event_filter, 'filter_active' :  bool(request.GET), 'Events' : event_filter.qs.distinct()})
 
 def org_admin_required(view_func):
     @wraps(view_func)
