@@ -105,8 +105,8 @@
             <div class="table-header">
                 <h5 class="table-title">Organization Users</h5>
                 <div>
-                  <form method="get">
-                    <input type="text" name="query" placeholder="Search users..." class="form-control form-control-sm d-inline-block w-auto me-2" value="{{ query }}">
+                  <form method="get" action="{% url 'search_users' request.user.id %}">
+                    <input type="text" name="query" placeholder="Search users..." class="form-control form-control-sm d-inline-block w-auto me-2" value="" {{ query }}>
                     <button class="btn-primary-custom btn-sm" type="submit">Find User</button>
                   </form>
                 </div>
@@ -124,20 +124,20 @@
                     </thead>
                     <tbody>
                         <tr>
-                    {% if filter_active %}
-                        {% for u in filter.qs %}
+                    {% if SearchActive %}
+                        {% for user in Users %}
                             <td>
                                 <div class="d-flex align-items-center">
                                     <div class="user-avatar">JD</div>
                                     <div>
-                                        <div class="fw-bold">{{ u.user.username }}</div>
-                                        <div class="small text-muted">{{ u.user.email }}</div>
+                                        <div class="fw-bold">{{ user.user.username }}</div>
+                                        <div class="small text-muted">{{ user.user.email }}</div>
                                     </div>
                                 </div>
                             </td>
-                            <td><span class="role-badge role-admin">{{ u.role }}</span></td>
+                            <td><span class="role-badge role-admin">{{ user.role }}</span></td>
                             <td><span class="text-success small fw-bold"><i class="fas fa-dot-circle me-1"></i> {{ user.status }} </span></td>
-                            <td class="text-muted">{{ u.joined_at }}</td>
+                            <td class="text-muted">{{ user.joined_at }}</td>
                             <td class="text-end">
                                 <a href="#" class="text-muted"><i class="fas fa-ellipsis-h"></i></a>
                             </td>

@@ -23,6 +23,13 @@ def search_view(request):
         events = events.filter(Q(title__icontains=query))
     return render(request,'home.html', {'Events' : events, 'SearchActive' : bool(request.GET)})
 
+def search_users(request, pk):
+    query = request.GET.get('query', '')
+    organization = Organization.objects.get(id=pk)
+    users = OrganizationMembership.objects.filter(organization=organization)
+    if query:
+        users = users.filter(Q(user__username__icontains=query))
+    return render(request,'admin_dashboard.html', {'Users' : users, 'SearchActive' : bool(request.GET)})
 def org_admin_required(view_func):
     @wraps(view_func)
     def wrapper(request, org_id, *args, **kwargs):
