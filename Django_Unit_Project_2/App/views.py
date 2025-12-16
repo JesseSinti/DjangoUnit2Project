@@ -226,7 +226,6 @@ def search_users(request):
         'total_events' : total_events,
         'pending' : total_pending,})
 
-
 @login_required
 def user_dashboard(request, org_id):
     membership = OrganizationMembership.objects.filter(
@@ -239,8 +238,14 @@ def user_dashboard(request, org_id):
         messages.error(request, "You do not belong to this organization.")
         return redirect("home_page")
 
+    my_events = Event.objects.filter(
+        organizer=request.user
+    ).order_by('-created_at')
+
     return render(request, "org_user_dashboard.html", {
-        "organization": membership.organization
+        "organization": membership.organization,
+        "membership": membership,
+        "my_events": my_events, 
     })
 
 
