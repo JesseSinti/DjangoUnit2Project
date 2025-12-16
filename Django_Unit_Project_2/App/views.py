@@ -23,9 +23,10 @@ def search_view(request):
         events = events.filter(Q(title__icontains=query))
     return render(request,'home.html', {'Events' : events, 'SearchActive' : bool(request.GET)})
 
-def search_users(request, pk):
+def search_users(request):
     query = request.GET.get('query', '')
-    organization = Organization.objects.get(id=pk)
+    current_user = OrganizationMembership.objects.get(user=request.user)
+    organization = Organization.objects.get(name=current_user.organization.name)
     users = OrganizationMembership.objects.filter(organization=organization)
     if query:
         users = users.filter(Q(user__username__icontains=query))
@@ -86,8 +87,7 @@ def admin_dashboard(request, org_id):
         'total_users' : total_users,
         'total_events' : total_events,
         'pending' : total_pending,
-        'filter' : f,
-        'filter_active' : filter_active,
+        'organization' : organization
     })
 
 @login_required

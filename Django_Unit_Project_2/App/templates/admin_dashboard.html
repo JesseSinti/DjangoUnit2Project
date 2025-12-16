@@ -74,7 +74,7 @@
         <div class="stat-card">
             <div class="stat-header">
                 <div>
-                  <form method="get" action="{% url 'search_users' request.user.id %}">
+                  <form method="get" action="{% url 'search_users' %}">
                     <input type="text" name="query" placeholder="Search users..." class="form-control form-control-sm d-inline-block w-auto me-2" value="" {{ query }}>
                     <button class="btn-primary-custom btn-sm" type="submit">Find User</button>
                   </form>
@@ -112,19 +112,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% if filter_active %}
-                    {% for u in filter.qs %}
-                        <tr>
-                            <th>User Name/Email</th>
-                            <th>Role</th>
-                            <th>Status</th>
-                            <th>Joined Date</th>
-                            <th class="text-end">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                    {% if SearchActive %}
+                
+                {% if SearchActive %}
                         {% for user in Users %}
                             <td>
                                 <div class="d-flex align-items-center">
