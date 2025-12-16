@@ -179,7 +179,7 @@ def admin_dashboard(request, org_id):
     
     organization = Organization.objects.get(id=org_id)
     organization_users = OrganizationMembership.objects.filter(organization=organization)
-    events = Event.objects.filter(organizer=request.user)
+    events = Event.objects.filter(organization=organization)
     total_users = len(organization_users)
     total_events = len(events)
     total_pending = len(pending_memberships)
@@ -219,7 +219,7 @@ def search_users(request):
         status='pending'
     ).select_related('user')
     organization_users = OrganizationMembership.objects.filter(organization=organization)
-    events = Event.objects.filter(organizer=request.user)
+    events = Event.objects.filter(organization=request.user)
     total_users = len(organization_users)
     total_events = len(events)
     total_pending = len(pending_memberships)
@@ -249,7 +249,7 @@ def user_dashboard(request, org_id):
         return redirect("home_page")
 
     my_events = Event.objects.filter(
-        organizer=request.user
+        organization=membership.organization
     ).order_by('-created_at')
 
     return render(request, "org_user_dashboard.html", {
@@ -353,17 +353,32 @@ def update_membership_status(request, membership_id, action):
 #                                           6. EVENT MANAGEMENT (Add Event, Tickets, Orders)
 # ===============================================================================================================
 
+# views.py
+
+@login_required
 def AddEvent(request):
     if request.method == "POST":
         form = AddEventForm(request.POST, request.FILES)
         if form.is_valid():
             event = form.save(commit=False)
-            event.organizer = request.user
+            
+            membership = OrganizationMembership.objects.filter(
+                user=request.user, 
+                status='active'
+            ).first()
+
+            if not membership:
+                messages.error(request, "You must belong to an organization to create events.")
+                return redirect('home_page')
+
+            event.organization = membership.organization
+            
             event.save()
             return redirect('ticket_tier', pk=event.id)
     else: 
         form = AddEventForm()
-    return render(request, 'addEvent.html', {'form' : form})
+    
+    return render(request, 'addEvent.html', {'form': form})
 
 
 def SetTicketTier(request, pk):

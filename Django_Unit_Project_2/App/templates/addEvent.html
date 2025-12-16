@@ -1,37 +1,44 @@
-{%extends 'base.html'%}
-{%load static%}
-    {%block content%}
-    <link rel="stylesheet" href="{% static 'addevent.css' %}">
-    <div class="container my-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %} <h2 class="mb-4 text-center">Register New Event</h2>
-                    <hr>
+{% extends 'base.html' %}
+{% load static %}
 
-                    <div class="card p-4 mb-4 shadow-sm">
-                        <h5 class="card-title text-primary">General Information</h5>
+{% block content %}
+<link rel="stylesheet" href="{% static 'addevent.css' %}">
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %} 
+                
+                <h2 class="mb-4 text-center">Register New Event</h2>
+                <hr>
 
-                    <div class="mb-3">
-                        <h3>Organizer Name:</h3><br/>
-                        {{ form.organizer}}
-
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        Please correct the errors below.
+                        {{ form.non_field_errors }}
                     </div>
+                {% endif %}
+
+                <div class="card p-4 mb-4 shadow-sm">
+                    <h5 class="card-title text-primary">General Information</h5>
 
                     <div class="mb-3">
-                        <label for="id_title" class="form-label">Event Title</label>
+                        <label for="{{ form.title.id_for_label }}" class="form-label">Event Title</label>
                         {{ form.title }}
+                        {{ form.title.errors }}
                     </div>
 
                     <div class="mb-3">
-                        <label for="id_description" class="form-label">Event Description</label>
+                        <label for="{{ form.description.id_for_label }}" class="form-label">Event Description</label>
                         {{ form.description }}
+                        {{ form.description.errors }}
                     </div>
 
                     <div class="mb-3">
-                        <label for="id_banner_image" class="form-label">Event Banner Image</label>
+                        <label for="{{ form.banner_image.id_for_label }}" class="form-label">Event Banner Image</label>
                         {{ form.banner_image }}
                         <div class="form-text">Upload a high-quality image for your event.</div>
+                        {{ form.banner_image.errors }}
                     </div>
                 </div>
                 
@@ -39,71 +46,61 @@
                     <h5 class="card-title text-primary">Location & Capacity</h5>
                     
                     <div class="mb-3">
-                        <label for="id_location" class="form-label">Location</label>
+                        <label for="{{ form.location.id_for_label }}" class="form-label">Location</label>
                         {{ form.location }}
+                        {{ form.location.errors }}
                     </div>
 
                     <div class="mb-3">
-                        <label for="id_capacity" class="form-label">Max Capacity</label>
+                        <label for="{{ form.capacity.id_for_label }}" class="form-label">Max Capacity</label>
                         {{ form.capacity }}
-                        <div class="form-text">Maximum number of attendees (e.g., Stadium Limit).</div>
-                            <script>
-                                const capacity = document.getElementById('id_capacity');
-                                if (capacity) {
-                                    capacity.addEventListener('input', cap);
-                                    capacity.addEventListener('change', cap);
-                                    
-                                    function cap() {
-                                        if (this.value === '') {
-                                            return; 
-                                        }
-
-                                        let value = parseInt(this.value);
-                                        let min = parseInt(this.min) || 0; 
-                                        let max = parseInt(this.max) || 9999999; 
-
-                                        if (isNaN(value)) {
-                                            this.value = min;
-                                            return;
-                                        }
-
-                                        if (value < min) {
-                                            this.value = min;
-                                        }
-
-                                        else if (value > max) {
-                                            this.value = max;
-                                        }
-                                    }
-                                }
-                            </script>
-                        </div>
+                        <div class="form-text">Maximum number of attendees.</div>
+                        {{ form.capacity.errors }}
                     </div>
+                </div>
 
                 <div class="card p-4 mb-4 shadow-sm">
                     <h5 class="card-title text-primary">Time & Schedule</h5>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="id_start_time" class="form-label">Start Time</label>
-                                {{ form.start_time }}
-                            </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.date.id_for_label }}" class="form-label">Event Date</label>
+                        {{ form.date }}
+                        {{ form.date.errors }}
+                    </div>
 
-                            <div class="col-md-6 mb-3">
-                                <label for="id_end_time" class="form-label">End Time</label>
-                                {{ form.end_time }}
-                            </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.start_time.id_for_label }}" class="form-label">Start Time</label>
+                            {{ form.start_time }}
+                            {{ form.start_time.errors }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.end_time.id_for_label }}" class="form-label">End Time</label>
+                            {{ form.end_time }}
+                            {{ form.end_time.errors }}
                         </div>
                     </div>
-
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-success btn-lg">
-                            <i class="fas fa-calendar-plus me-2"></i> Create Event
-                        </button>
                     </div>
+                </div>
 
-                </form>
-            </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="fas fa-calendar-plus me-2"></i> Create Event
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
+
+<script>
+    // Simple script to ensure capacity doesn't go below 0
+    const capacityInput = document.getElementById('id_capacity');
+    if (capacityInput) {
+        capacityInput.addEventListener('input', function() {
+            if (this.value < 0) this.value = 0;
+        });
+    }
+</script>
 {% endblock content %}
