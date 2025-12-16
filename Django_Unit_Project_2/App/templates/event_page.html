@@ -3,46 +3,77 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'event_page.css' %}">
 
+<section class="page-title">
+    <h1>Organization's Events</h1>
+</section>
 
-    <section class="page-title">
-        <h1>Organization's Events</h1>
-        
-    </section>
+<main class="container">
+    <div class="events-grid">
 
-    <main class="container">
-        <div class="events-grid">
         {% for event in Events %}
-            <article class="event-card">
-                <div class="card-image">
-                    <img src="{{ event.banner_image.url }}"
-                        alt="{{ event.title }}">
-                    <div class="date-badge">
-                        <span class="month">Oct</span>
-                        <span class="day">12</span>
-                    </div>
+        <article class="event-card">
+
+            <div class="card-image">
+                <img src="{{ event.banner_image.url }}" alt="{{ event.title }}">
+                <div class="date-badge">
+                    <span class="month">Oct</span>
+                    <span class="day">12</span>
                 </div>
-                <div class="card-content">
-                    <div class="event-title">{{ event.title }}</div>
-                    <h3 class="event-description">{{ event.description }}</h3>
-                    <div class="event-details">
-                        <svg class="icon" viewBox="0 0 24 24">
-                            <path
-                                d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z" />
-                        </svg>
-                        <span>{{ event.start_time }} - {{ event.end_time }} </span>
-                    </div>
-                    <div class="event-details">
-                        <svg class="icon" viewBox="0 0 24 24">
-                            <path
-                                d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5c-1.4 0-2.5-1.1-2.5-2.5s1.1-2.5 2.5-2.5 2.5 1.1 2.5 2.5-1.1 2.5-2.5 2.5z" />
-                        </svg>
-                        <span>{{ event.location }}</span>
-                    </div>
-                    <div class="card-footer">
-                        <a href="#" class="btn">View Details</a>
-                    </div>
+            </div>
+
+            <div class="card-content">
+                <div class="event-title">{{ event.title }}</div>
+                <h3 class="event-description">{{ event.description }}</h3>
+
+                <div class="event-details">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z" />
+                    </svg>
+                    <span>{{ event.start_time }} - {{ event.end_time }}</span>
                 </div>
-            </article
+
+                <div class="event-details">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5c-1.4 0-2.5-1.1-2.5-2.5s1.1-2.5 2.5-2.5 2.5 1.1 2.5 2.5-1.1 2.5-2.5 2.5z" />
+                    </svg>
+                    <span>{{ event.location }}</span>
+                </div>
+
+                
+                <div class="ticket-tiers">
+                    <h4>Ticket Options</h4>
+
+                    {% for tier in event.ticket_tiers.all %}
+                    <div class="ticket-tier">
+                        <div class="tier-info">
+                            <span class="tier-name">{{ tier.type }}</span>
+                            <span class="tier-price">${{ tier.price|floatformat:2 }}</span>
+                        </div>
+
+                        <div class="tier-quantity">
+                            {% if tier.quantity > 0 %}
+                            <span>{{ tier.quantity }} tickets available</span>
+                            {% else %}
+                            <span class="sold-out">Sold Out</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="no-tickets">No ticket tiers created yet.</p>
+                    {% endfor %}
+                </div>
+
+                <div class="card-footer">
+                    <a href="{% url 'ticket_tier' event.id %}" class="btn">Add Tickets</a>
+                </div>
+            </div>
+
+        </article>
         {% endfor %}
+
+    </div>
+</main>
 
 {% endblock content %}

@@ -197,7 +197,8 @@ def admin_dashboard(request, org_id):
 def Event_Page(request):
     Admin = OrganizationMembership.objects.get(user=request.user)
     organization = Organization.objects.get(name=Admin.organization.name)
-    Events = Event.objects.filter(organizer=request.user)
+    Events = Event.objects.filter(organizer=request.user).prefetch_related('ticket_tiers')
+
     return render(request, 'event_page.html', {'Events' : Events})
 
 

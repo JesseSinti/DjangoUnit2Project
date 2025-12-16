@@ -73,7 +73,7 @@ class TicketTier(models.Model):
         GENERAL = "General",('General')
         BASIC = "Basic",('Basic')
 
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='ticket_tiers')
     type = models.CharField(max_length=10,choices=Status.choices, default="Basic")
     price = models.FloatField()
     quantity = models.IntegerField()
