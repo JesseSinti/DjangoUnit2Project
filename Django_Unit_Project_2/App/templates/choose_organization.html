@@ -1,5 +1,111 @@
 {% extends "base.html" %}
 {% block content %}
-<p><a href="{% url 'join_organization' %}">Join Organization</a></p>
-<p><a href="{% url 'org-signup' %}">Register Organization</a></p>
+    <div class="container">
+        <h2>My Organizations</h2>
+
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <div class="section">
+            <h3>Active Organizations</h3>
+            {% if active_memberships %}
+                <div class="org-grid">
+                    {% for membership in active_memberships %}
+                        <div class="card org-card">
+                            <h4>{{ membership.organization.name }}</h4>
+                            <p><strong>Role:</strong> {{ membership.get_role_display }}</p>
+                            <a href="#" class="btn btn-primary">Enter Dashboard</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>You are not an active member of any organization yet.</p>
+            {% endif %}
+        </div>
+
+        <hr>
+
+            <div class="section">
+                <h3>Pending Requests</h3>
+                {% if pending_memberships %}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Organization</th>
+                                <th>Requested Role</th>
+                                <th>Date Requested</th>
+                                <th>Status</th>
+                                <th>Actions</th> </tr>
+                        </thead>
+                        <tbody>
+                            {% for membership in pending_memberships %}
+                            <tr>
+                                <td>{{ membership.organization.name }}</td>
+                                <td>{{ membership.get_role_display }}</td>
+                                <td>{{ membership.joined_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <span class="badge badge-warning">Pending Approval</span>
+                                </td>
+                                <td>
+                                    <form action="{% url 'cancel_organization_request' membership.pk %}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this request?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger btn-sm">Cancel Request</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No pending requests.</p>
+                {% endif %}
+            </div>
+
+        <hr>
+
+        <hr>
+
+            <div class="section join-section">
+                {% if can_join_new %}
+                    <h3>Join an Organization</h3>
+                    <div class="form-wrapper">
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            {% if join_form.non_field_errors %}
+                                <div class="alert alert-danger">
+                                    {{ join_form.non_field_errors }}
+                                </div>
+                            {% endif %}
+
+                            <div class="form-group">
+                                <label>Organization:</label>
+                                {{ join_form.organization }}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Role:</label>
+                                {{ join_form.role }}
+                            </div>
+
+                            <button type="submit" class="btn btn-success">Send Join Request</button>
+                        </form>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        <h3>Join an Organization</h3>
+                        <p>
+                            You are currently a member (or have a pending request) with an organization. 
+                            <strong>Organization Users are limited to one organization at a time.</strong>
+                        </p>
+                        <p>If you wish to join a different organization, please contact support or leave your current organization.</p>
+                    </div>
+                {% endif %}
+            </div>
+    </div>
 {% endblock %}

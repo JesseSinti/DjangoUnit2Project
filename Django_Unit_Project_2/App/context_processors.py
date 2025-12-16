@@ -7,8 +7,7 @@ def current_url(request):
     }
 
 
-def base_view(request):
-    
+def base_view(request): 
     if not request.user.is_authenticated:
         return {}
 

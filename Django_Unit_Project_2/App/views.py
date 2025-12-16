@@ -6,7 +6,7 @@ from django.db import transaction
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from functools import wraps
-from django.contrib.auth import login as auth_login
+from django.views.decorators.http import require_POST
 from django.db.models import Q
 
 
@@ -133,22 +133,56 @@ def user_dashboard(request, org_id):
         "organization": membership.organization
     })
 
+@login_required
 def choose_organization(request):
-    memberships = OrganizationMembership.objects.filter(
+    all_memberships = OrganizationMembership.objects.filter(
         user=request.user
-    ).select_related("organization")
+    ).select_related("organization").order_by('-joined_at')
+
+    active_memberships = all_memberships.filter(status='active')
+    pending_memberships = all_memberships.filter(status='pending')
+    
+    can_join_new = not (active_memberships.exists() or pending_memberships.exists())
+
+    if request.method == 'POST':
+        form = JoinExistingOrganizationForm(request.user, request.POST)
+        if form.is_valid():
+            OrganizationMembership.objects.create(
+                user=request.user,
+                organization=form.cleaned_data['organization'],
+                role=form.cleaned_data['role'],
+                status='pending'
+            )
+            messages.success(request, "Request sent successfully.")
+            return redirect('choose_organization')
+    else:
+        form = JoinExistingOrganizationForm(request.user)
 
     return render(request, "choose_organization.html", {
-        "memberships": memberships
+        "active_memberships": active_memberships,
+        "pending_memberships": pending_memberships,
+        "join_form": form,
+        "can_join_new": can_join_new,
     })
+
+@login_required
+@require_POST
+def cancel_organization_request(request, pk):
+    membership = get_object_or_404(OrganizationMembership, pk=pk, user=request.user)
+
+    if membership.status == 'pending':
+        org_name = membership.organization.name
+        membership.delete()
+        messages.success(request, f"Request to join {org_name} has been cancelled.")
+    else:
+        messages.error(request, "You cannot cancel a membership that is already active or kicked.")
+
+    return redirect('choose_organization')
 
 @login_required
 def customer_dashboard(request):
     return render(request, "customer_dashboard.html")
 
-
-
-# Sign Up pages for users
 def organization_signup(request):
     if request.method == 'POST':
         form = OrganizationSignupForm(request.POST)
@@ -171,9 +205,6 @@ def organization_signup(request):
         form = OrganizationSignupForm()
 
     return render(request, 'organization_signup.html', {'form': form})
-
-from django.db import transaction
-
 
 def request_join_organization(request):
     if request.user.is_authenticated:

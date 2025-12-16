@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import *
-from django.contrib.auth.hashers import make_password
+from django.core.exceptions import ValidationError
 
 class OrganizationSignupForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -44,6 +44,11 @@ class OrganizationJoinRequestForm(UserCreationForm):
             'organization', 'role'
         )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.help_text = ''
+
     def clean(self):
         cleaned_data = super().clean()
         organization = cleaned_data.get('organization')
@@ -78,9 +83,42 @@ class OrganizationJoinRequestForm(UserCreationForm):
 
         return user
 
+class JoinExistingOrganizationForm(forms.Form):
+    organization = forms.ModelChoiceField(
+        queryset=Organization.objects.all(),
+        label="Select Organization"
+    )
+    role = forms.ChoiceField(
+        choices=OrganizationMembership.ROLE_CHOICES,
+        initial='user'
+    )
 
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
 
+    def clean(self):
+        cleaned_data = super().clean()
+        
+        has_membership = OrganizationMembership.objects.filter(
+            user=self.user,
+            status__in=['active', 'pending']
+        ).exists()
 
+        if has_membership:
+            raise ValidationError(
+                "You are already a member (or have a pending request) for an organization. "
+                "You must leave your current organization before joining a new one."
+            )
+
+        organization = cleaned_data.get('organization')
+        if organization and OrganizationMembership.objects.filter(
+            user=self.user, 
+            organization=organization
+        ).exists():
+            raise ValidationError("You have already joined this organization.")
+
+        return cleaned_data
     
 class CustomerSignupForm(UserCreationForm):
     email = forms.EmailField(required=True)
