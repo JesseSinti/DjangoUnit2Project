@@ -19,6 +19,8 @@
     <div id='navbar-content'>
         <header id="navbar-header">
             <a href="{% url 'home_page' %}" class='navbar-logo'>Event Finder</a>
+            
+            {% if request.resolver_match.url_name == 'home_page' %}
             <div id='searchbar-container'>
                 <form method="get">
                     <input type='text' name='query' placeholder='Search Events...' value="{{ query }}">
@@ -26,7 +28,8 @@
                          <i class="fas fa-search"></i>
                     </button>
                 </form>
-            </div>    
+            </div> 
+            {% endif %}   
         </header>
 
         <ul class="nav-links">
@@ -81,6 +84,7 @@
     </div>
 </nav>
 
+{% if request.resolver_match.url_name == 'home_page' %}
 <details id='filter-sidebar'>
     <summary class='filter-tab-button'>
         <i class="fas fa-sliders-h"></i> 
@@ -112,6 +116,7 @@
         </form>
     </div>
 </details>
+{% endif %}
 
 {% block content %} {% endblock content %}
 </body>
