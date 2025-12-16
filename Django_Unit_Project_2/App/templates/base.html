@@ -50,7 +50,6 @@
                 <li class="nav-item addevent-item"><a href="{% url 'admin_dashboard' membership.organization.id %}">Admin Dashboard</a></li>
             {% elif status == 2 %}
                 <li class="nav-item addevent-item"><a href="{% url 'addevent'%}">Add Event</a></li>
-                <li class="nav-item addevent-item"><a href="{% url '#'%}">Add Tickets</a></li>
                 <li class="nav-item addevent-item"><a href="{% url 'org_user_dashboard' membership.organization.id %}">Organization</a></li>
             {% elif status == 3 %}
                 <li class="nav-item addevent-item"><a href="{% url 'customer_dashboard' %}">Profile</a></li>

@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', v.home_view, name='home_page'),
     path('searchbar', v.search_view, name='Search_query'),
+    path('<int:pk>/searchusers/', v.search_users, name='search_users'),
     path('login/', v.login_view, name='login'),
     path('logout/', v.logout_view, name='logout'),
     path('organization-signup/', v.organization_signup, name='org-signup'),
@@ -36,4 +37,5 @@ urlpatterns = [
     path('dashboard/customer/', v.customer_dashboard, name='customer_dashboard'),
     path('dashboard/org/<int:org_id>/user/', v.user_dashboard, name='org_user_dashboard'),
     path('organization/select/', v.choose_organization, name='choose_organization'),
+    path('organization/cancel-request/<int:pk>/', v.cancel_organization_request, name='cancel_organization_request'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
