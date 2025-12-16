@@ -194,6 +194,13 @@ def admin_dashboard(request, org_id):
         'pending' : total_pending,
     })
 
+def Event_Page(request):
+    Admin = OrganizationMembership.objects.get(user=request.user)
+    organization = Organization.objects.get(name=Admin.organization.name)
+    Events = Event.objects.filter(organizer=request.user)
+    return render(request, 'event_page.html', {'Events' : Events})
+
+
 
 def search_users(request):
     """
@@ -254,9 +261,11 @@ def user_dashboard(request, org_id):
 @login_required
 def customer_dashboard(request):
     user = User.objects.get(id=request.user.id)
-    
+    orders = Order.objects.filter(user=request.user)
+    total_orders = len(orders)
     return render(request, "customer_dashboard.html",{
-    'Customer' : user,})
+    'Customer' : user,
+    'total_orders' : total_orders})
 
 
 # =============================================================================================================
@@ -340,7 +349,7 @@ def update_membership_status(request, membership_id, action):
 
 
 # ==============================================================================================================
-#                                           6. EVENT MANAGEMENT (Add Event, Tickets)
+#                                           6. EVENT MANAGEMENT (Add Event, Tickets, Orders)
 # ===============================================================================================================
 
 def AddEvent(request):
@@ -368,3 +377,4 @@ def SetTicketTier(request, pk):
     else:
         form = TicketTierForm()
     return render(request, 'ticketTier.html', {'form' : form})
+

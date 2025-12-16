@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('event/page/', v.Event_Page, name='event_page'),
     path('', v.home_view, name='home_page'),
     path('searchbar', v.search_view, name='Search_query'),
     path('searchusers/', v.search_users, name='search_users'),

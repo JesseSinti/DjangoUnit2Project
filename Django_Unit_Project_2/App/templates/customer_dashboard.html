@@ -16,8 +16,7 @@
             
             <ul class="sidebar-menu">
                 <li><a href="#" class="active-item">Overview</a></li>
-                <li><a href="#">My Tickets</a></li>
-                <li><a href="#">Order History</a></li>
+                <li><a href="#">My Tickets</a></li> 
                
             </ul>
         </aside>
@@ -32,28 +31,29 @@
             <section class="stats-grid">
                 <div class="stat-card">
                     <span class="stat-label">Total Orders</span>
-                    <span class="stat-number">12</span>
+                    <span class="stat-int">{{ total_orders }}</span>
                 </div>
                 <div class="stat-card">
                     <span class="stat-label">Total Expenses</span>
-                    <span class="stat-number">3</span>
+                    <span class="stat-int">3</span>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-label">Member Since</span>
-                    <span class="stat-number">1,250</span>
+                    <span class="stat-label">Contact Info </span>
+                    <span class="stat-number">{{ Customer.email }}</span>
+                    <span class="stat-number">{{ Customer.address }}</span>
+                    <span class="stat-number">{{ Customer.phone }}</span>"
                 </div>
             </section>
 
             <section class="recent-activity">
-                <h3 class="section-header">Recent Orders</h3>
+                <h3 class="section-header">Orders</h3>
                 <div class="table-responsive">
                     <table class="clean-table">
                         <thead>
                             <tr>
                                 <th>Order ID</th>
-                                <th>Event / Item</th>
-                                <th>Date</th>
-                                <th>Status</th>
+                                <th>Event-Title</th>
+                                <th>Date</th> 
                                 <th>Amount</th>
                             </tr>
                         </thead>
@@ -62,28 +62,24 @@
                                 <td>#ORD-4421</td>
                                 <td>Web Design Workshop</td>
                                 <td>Oct 24, 2023</td>
-                                <td><span class="badge success">Confirmed</span></td>
                                 <td>$150.00</td>
                             </tr>
                             <tr>
                                 <td>#ORD-4420</td>
                                 <td>Networking Night VIP</td>
                                 <td>Oct 10, 2023</td>
-                                <td><span class="badge success">Confirmed</span></td>
                                 <td>$45.00</td>
                             </tr>
                             <tr>
                                 <td>#ORD-4418</td>
                                 <td>Tech Conf Early Bird</td>
                                 <td>Sep 28, 2023</td>
-                                <td><span class="badge warning">Pending</span></td>
                                 <td>$299.00</td>
                             </tr>
                             <tr>
                                 <td>#ORD-4415</td>
                                 <td>Design E-Book</td>
                                 <td>Sep 15, 2023</td>
-                                <td><span class="badge success">Downloaded</span></td>
                                 <td>$19.99</td>
                             </tr>
                         </tbody>
