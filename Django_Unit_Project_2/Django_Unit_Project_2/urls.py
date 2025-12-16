@@ -39,4 +39,5 @@ urlpatterns = [
     path('dashboard/org/<int:org_id>/user/', v.user_dashboard, name='org_user_dashboard'),
     path('organization/select/', v.choose_organization, name='choose_organization'),
     path('organization/cancel-request/<int:pk>/', v.cancel_organization_request, name='cancel_organization_request'),
+    path('non/active/', v.non_active_view, name='non_active_goon'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

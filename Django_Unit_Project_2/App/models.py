@@ -29,7 +29,7 @@ class OrganizationMembership(models.Model):
     STATUS_CHOICES = (
         ('pending', 'Pending'),
         ('active', 'Active'),
-        ('kicked', 'Kicked'),
+        ('Non-active', 'Non-active'),
     )
 
     user = models.ForeignKey(
