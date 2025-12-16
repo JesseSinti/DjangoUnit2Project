@@ -1,49 +1,31 @@
 {% extends "base.html" %}
 {% block title %}Customer Dashboard{% endblock %}
-
+{% load static %}
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Dashboard | BrandName</title>
-    <link rel="stylesheet" href="dashboard.css">
-</head>
-<body>
-
-    <nav class="navbar">
-        <div class="logo">BrandName</div>
-        <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="#">My Events</a></li>
-            <li><a href="#" class="active">Dashboard</a></li>
-            <li><a href="#" class="logout-btn">Log Out</a></li>
-        </ul>
-    </nav>
+    <link rel="stylesheet" href="{% static 'customer_dashboard.css' %}">
+    
 
     <div class="dashboard-container">
         
         <aside class="dashboard-sidebar">
             <div class="user-profile-card">
-                <div class="user-avatar">JD</div>
-                <h3 class="user-name">John Doe</h3>
-                <p class="user-role">Premium Member</p>
+                <div class="user-avatar">{{ Customer.first_name.0 }}{{ Customer.last_name.0 }}</div>
+                <h3 class="user-name">{{ Customer.first_name }} {{ Customer.last_name }}</h3>
+                
             </div>
             
             <ul class="sidebar-menu">
                 <li><a href="#" class="active-item">Overview</a></li>
                 <li><a href="#">My Tickets</a></li>
                 <li><a href="#">Order History</a></li>
-                <li><a href="#">Account Settings</a></li>
-                <li><a href="#">Support</a></li>
+               
             </ul>
         </aside>
 
         <main class="dashboard-content">
             
             <header class="content-header">
-                <h2>Welcome back, John!</h2>
+                <h2>Welcome back, {{ Customer.first_name }}!</h2>
                 <p>Here is an overview of your account activity.</p>
             </header>
 
@@ -53,11 +35,11 @@
                     <span class="stat-number">12</span>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-label">Upcoming Events</span>
+                    <span class="stat-label">Total Expenses</span>
                     <span class="stat-number">3</span>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-label">Loyalty Points</span>
+                    <span class="stat-label">Member Since</span>
                     <span class="stat-number">1,250</span>
                 </div>
             </section>
@@ -112,6 +94,5 @@
         </main>
     </div>
 
-</body>
-</html>
+
 {% endblock %}

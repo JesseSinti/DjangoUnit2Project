@@ -215,6 +215,7 @@ def search_users(request):
     total_users = len(organization_users)
     total_events = len(events)
     total_pending = len(pending_memberships)
+    admin = User.objects.get(id=request.user.id)
     
     return render(request,'admin_dashboard.html', {
         'Users' : users, 
@@ -224,7 +225,8 @@ def search_users(request):
         'organization_events' : events,
         'total_users' : total_users,
         'total_events' : total_events,
-        'pending' : total_pending,})
+        'pending' : total_pending,
+        'admin' : admin})
 
 
 @login_required
@@ -246,7 +248,10 @@ def user_dashboard(request, org_id):
 
 @login_required
 def customer_dashboard(request):
-    return render(request, "customer_dashboard.html")
+    user = User.objects.get(id=request.user.id)
+    
+    return render(request, "customer_dashboard.html",{
+    'Customer' : user,})
 
 
 # =============================================================================================================
