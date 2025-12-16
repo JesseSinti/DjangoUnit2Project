@@ -74,7 +74,7 @@
         <div class="stat-card">
             <div class="stat-header">
                 <div>
-                  <form method="get" action="{% url 'search_users' request.user.id %}">
+                  <form method="get" action="{% url 'search_users' %}">
                     <input type="text" name="query" placeholder="Search users..." class="form-control form-control-sm d-inline-block w-auto me-2" value="" {{ query }}>
                     <button class="btn-primary-custom btn-sm" type="submit">Find User</button>
                   </form>
@@ -112,28 +112,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% if filter_active %}
-                    {% for u in filter.qs %}
-                        <tr>
-<<<<<<< HEAD
-                            <th>User Name/Email</th>
-                            <th>Role</th>
-                            <th>Status</th>
-                            <th>Joined Date</th>
-                            <th class="text-end">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                    {% if SearchActive %}
+                
+                {% if SearchActive %}
                         {% for user in Users %}
-=======
->>>>>>> fde6396ebf82af00df1959c8276d03dd6f3c6f84
                             <td>
                                 <div class="d-flex align-items-center">
                                     <div class="user-avatar">{{ u.user.username|slice:":1"|upper }}</div>
                                     <div>
-<<<<<<< HEAD
                                         <div class="fw-bold">{{ user.user.username }}</div>
                                         <div class="small text-muted">{{ user.user.email }}</div>
                                     </div>
@@ -142,20 +127,6 @@
                             <td><span class="role-badge role-admin">{{ user.role }}</span></td>
                             <td><span class="text-success small fw-bold"><i class="fas fa-dot-circle me-1"></i> {{ user.status }} </span></td>
                             <td class="text-muted">{{ user.joined_at }}</td>
-=======
-                                        <div class="fw-bold text-dark">{{ u.user.username }}</div>
-                                        <div class="small text-muted">{{ u.user.email }}</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="role-badge {% if u.role == 'Admin' %}role-admin{% else %}role-member{% endif %}">{{ u.role }}</span></td>
-                            <td>
-                                <div class="d-flex align-items-center small text-dark fw-medium">
-                                    <i class="fas fa-circle me-2 text-success" style="font-size: 6px;"></i> {{ u.status|default:"active" }}
-                                </div>
-                            </td>
-                            <td class="text-muted small">{{ u.joined_at|date:"M d, Y" }}</td>
->>>>>>> fde6396ebf82af00df1959c8276d03dd6f3c6f84
                             <td class="text-end">
                                 <a href="#" class="text-muted"><i class="fas fa-ellipsis-h"></i></a>
                             </td>
