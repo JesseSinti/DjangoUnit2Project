@@ -20,8 +20,8 @@
         <header id="navbar-header">
             <a href="{% url 'home_page' %}" class='navbar-logo'>Event Finder</a>
             <div id='searchbar-container'>
-                <form method="get">
-                    <input type='text' name='query' placeholder='Search Events...' value="{{ query }}">
+                <form method="get" action="{% url 'Search_query' %}">
+                    <input type='text' name='query' placeholder='Search Events...' value="" {{ query }}>
                     <button type="submit" class="search-btn" aria-label="Search">
                          <i class="fas fa-search"></i>
                     </button>
