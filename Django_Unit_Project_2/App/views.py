@@ -6,7 +6,7 @@ from django.db import transaction
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from functools import wraps
-from django.contrib.auth import login as auth_login
+from django.views.decorators.http import require_POST
 from django.db.models import Q
 
 
