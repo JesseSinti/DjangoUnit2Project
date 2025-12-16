@@ -7,14 +7,21 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from functools import wraps
 from django.contrib.auth import login as auth_login
+from django.db.models import Q
 
 
 # Home page and dashboards for users
 def home_view(request): 
     event_filter = EventFilter(request.GET, queryset=Event.objects.all())
     
-    
-    return render(request, 'home.html', {'filter' : event_filter, 'filter_active' :  bool(request.GET), 'Events' : event_filter.qs.distinct()})
+    return render(request, 'home.html', {'filter' : event_filter, 'filter_active' :  bool(request.GET), 'Event' : event_filter.qs.distinct()})
+
+def search_view(request):
+    query = request.GET.get('query', '')
+    events = Event.objects.all()
+    if query:
+        events = events.filter(Q(title__icontains=query))
+    return render(request,'home.html', {'Events' : events, 'SearchActive' : bool(request.GET)})
 
 def org_admin_required(view_func):
     @wraps(view_func)
