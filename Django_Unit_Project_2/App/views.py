@@ -128,7 +128,6 @@ def user_dashboard(request, org_id):
 
 @login_required
 def choose_organization(request):
-    # Fetch all memberships first so we can check them in the view logic if needed
     all_memberships = OrganizationMembership.objects.filter(
         user=request.user
     ).select_related("organization").order_by('-joined_at')
@@ -136,11 +135,9 @@ def choose_organization(request):
     active_memberships = all_memberships.filter(status='active')
     pending_memberships = all_memberships.filter(status='pending')
     
-    # Determine if user is allowed to join a new org (has 0 active/pending)
     can_join_new = not (active_memberships.exists() or pending_memberships.exists())
 
     if request.method == 'POST':
-        # Pass request.user to the form
         form = JoinExistingOrganizationForm(request.user, request.POST)
         if form.is_valid():
             OrganizationMembership.objects.create(
@@ -152,23 +149,20 @@ def choose_organization(request):
             messages.success(request, "Request sent successfully.")
             return redirect('choose_organization')
     else:
-        # Pass request.user to the form
         form = JoinExistingOrganizationForm(request.user)
 
     return render(request, "choose_organization.html", {
         "active_memberships": active_memberships,
         "pending_memberships": pending_memberships,
         "join_form": form,
-        "can_join_new": can_join_new, # Pass this flag to the template
+        "can_join_new": can_join_new,
     })
 
 @login_required
-@require_POST  # Security: Only allow POST requests (prevents deletion via link clicks)
+@require_POST
 def cancel_organization_request(request, pk):
-    # 1. Get the membership, ensuring it belongs to the current user
     membership = get_object_or_404(OrganizationMembership, pk=pk, user=request.user)
 
-    # 2. Check if it is actually pending
     if membership.status == 'pending':
         org_name = membership.organization.name
         membership.delete()
