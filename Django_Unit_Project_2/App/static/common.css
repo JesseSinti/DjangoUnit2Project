@@ -1,72 +1,69 @@
 /* =========================================
    1. GLOBAL VARIABLES & RESET
+   (Keep these global)
    ========================================= */
 :root {
     /* Apple/Glass Palette */
-    --glass-bg: rgba(255, 255, 255, 0.85); /* Frosted background */
+    --glass-bg: rgba(255, 255, 255, 0.85);
     --glass-border: 1px solid rgba(0, 0, 0, 0.1);
     --primary-blue: #007aff;
     --primary-text: #1d1d1f;
-    --secondary-text: #000000; /* CUSTOM: Changed to black */
+    --secondary-text: #000000;
     --pill-bg: #f5f5f7;
     
     /* Navbar Dimensions */
-    --peek-height: 70px;  /* Closed height */
-    --open-height: 200px; /* CUSTOM: Base height increased */
-    --info-open-height: 400px; /* CUSTOM: Height increased */
+    --peek-height: 70px;
+    --open-height: 200px;
+    --info-open-height: 400px;
     
-    /* Sidebar Dimensions (FIXED) */
-    --sidebar-peek: 30px; /* How much of the sidebar tab button shows */
+    /* Sidebar Dimensions */
+    --sidebar-peek: 30px;
     --sidebar-open-width: 250px;
     
     /* Animations */
-    --anim-speed: 0.5s; /* CUSTOM: Speed changed */
+    --anim-speed: 0.5s;
     --anim-curve: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 body {
     margin: 0;
-    padding-top: var(--peek-height); /* Push content down */
+    padding-top: var(--peek-height);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     color: var(--primary-text);
-    /* CUSTOM: New body background */
     background: linear-gradient(135deg, rgba(230, 230, 255, 0.5) 0%, rgba(255, 255, 255, 0.2) 100%); 
 }
 
 /* =========================================
-   2. NAVBAR STRUCTURE (The "Peaking" Effect)
+   2. NAVBAR STRUCTURE (Scoped with #navbar)
    ========================================= */
 #navbar {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: var(--peek-height); /* Default: closed */
+    height: var(--peek-height);
     z-index: 1000;
     
-    /* Glassmorphism Styling */
     background-color: var(--glass-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: var(--glass-border);
     
-    /* Animation Properties */
     overflow: hidden; 
     transition: height var(--anim-speed) var(--anim-curve), box-shadow 0.3s ease;
 }
 
-/* 1st Level Hover: expands to show main links */
 #navbar:hover {
     height: var(--open-height);
     box-shadow: 0 15px 40px rgba(0,0,0,0.12);
 }
 
-/* 2nd Level Hover/Details Open: expands further for the Information menu */
 #navbar:hover:has(#options-details[open]) {
     height: var(--info-open-height); 
 }
 
-#navbar-content {
+/* Scoped: #navbar-content inside #navbar */
+#navbar #navbar-content {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
@@ -76,9 +73,9 @@ body {
 }
 
 /* =========================================
-   3. NAVBAR HEADER (Always Visible)
+   3. NAVBAR HEADER (Scoped)
    ========================================= */
-#navbar-header {
+#navbar #navbar-header {
     height: var(--peek-height);
     flex-shrink: 0;
     display: flex;
@@ -87,7 +84,7 @@ body {
     gap: 20px;
 }
 
-.navbar-logo {
+#navbar .navbar-logo {
     font-size: 1.3rem;
     font-weight: 700;
     color: var(--primary-text);
@@ -96,13 +93,13 @@ body {
     letter-spacing: -0.5px;
 }
 
-/* Search Bar (Pill Shape) */
-#searchbar-container {
+/* Search Bar (Scoped) */
+#navbar #searchbar-container {
     flex-grow: 1;
     max-width: 450px;
 }
 
-#searchbar-container form {
+#navbar #searchbar-container form {
     display: flex;
     align-items: center;
     background-color: var(--pill-bg);
@@ -112,13 +109,14 @@ body {
     border: 1px solid transparent;
 }
 
-#searchbar-container form:focus-within {
+#navbar #searchbar-container form:focus-within {
     background-color: #fff;
     border-color: var(--primary-blue);
     box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
 }
 
-#searchbar-container input {
+/* Extremely specific to override global input styles */
+#navbar #searchbar-container input {
     padding: 0px !important;
     border: none;
     background: transparent;
@@ -126,9 +124,11 @@ body {
     font-size: 0.95rem;
     outline: none;
     color: var(--primary-text);
+    box-shadow: none; /* Reset potential shadows */
+    margin: 0;
 }
 
-.search-btn {
+#navbar .search-btn {
     border: none;
     background: none;
     cursor: pointer;
@@ -137,14 +137,14 @@ body {
     transition: color 0.2s;
 }
 
-.search-btn:hover {
+#navbar .search-btn:hover {
     color: var(--primary-blue);
 }
 
 /* =========================================
-   4. HIDDEN LINKS (Revealed on Hover)
+   4. HIDDEN LINKS (Scoped)
    ========================================= */
-.nav-links {
+#navbar .nav-links {
     list-style: none;
     padding: 20px 0 0 0;
     margin: 0;
@@ -153,7 +153,6 @@ body {
     gap: 20px;
     border-top: var(--glass-border);
     
-    /* Fade In Animation */
     opacity: 0;
     transform: translateY(-10px);
     transition: opacity 0.3s ease 0.1s, transform 0.3s ease 0.1s;
@@ -164,13 +163,12 @@ body {
     transform: translateY(0);
 }
 
-.nav-item {
+#navbar .nav-item {
     display: flex;
     align-items: center;
 }
 
-/* Basic Text Links */
-.nav-item a {
+#navbar .nav-item a {
     text-decoration: none;
     color: var(--secondary-text);
     font-weight: 500;
@@ -180,59 +178,49 @@ body {
     transition: all 0.2s;
 }
 
-.nav-item a:hover {
+#navbar .nav-item a:hover {
     color: var(--primary-blue);
     background-color: rgba(0, 122, 255, 0.08);
 }
 
 
 /* =========================================
-   5. VERTICAL FILTER SIDEBAR (#filter-sidebar) - FIXES APPLIED
+   5. VERTICAL FILTER SIDEBAR (Scoped with #filter-sidebar)
    ========================================= */
 #filter-sidebar {
     position: fixed;
-    /* DEFAULT POSITION: Aligned with the closed navbar height */
     top: var(--peek-height); 
     right: 0;
     z-index: 999;
     
     width: var(--sidebar-open-width);
     
-    /* Start position: Push element off-screen */
     transform: translateX(calc(var(--sidebar-open-width) - var(--sidebar-peek))); 
-    /* FIX: Ensure 'top' transition uses the new --anim-speed */
     transition: transform var(--anim-speed) var(--anim-curve), box-shadow 0.3s ease, top var(--anim-speed) var(--anim-curve); 
 }
 
-/* NEW: When the navbar is hovered (open), push the sidebar down */
-/* IMPORTANT: The `~` selector requires the sidebar to immediately follow the navbar in the HTML. */
+/* Sibling selector remains valid */
 #navbar:hover ~ #filter-sidebar {
     top: var(--open-height);
 }
 
-/* Open state on click (details open) - Only way to open */
 #filter-sidebar[open] {
     transform: translateX(0);
 }
 
 /* Sidebar Button/Summary Style */
-.filter-tab-button {
+#filter-sidebar .filter-tab-button {
     position: absolute;
-    /* CUSTOM: Added margin-top: 15px */
     top: 25px; 
-    /* FIX: Position the button relative to the sidebar's starting point (the peek amount) plus the desired padding/margin */
     left: calc(var(--sidebar-peek) * -1); 
     
-    /* FIX: Corrected width calculation to use calc() instead of illegal CSS addition.
-       The width is sidebar-peek (30px) + the padding inside the button. */
     width: calc(var(--sidebar-peek) + 20px);
-    height: 100px; /* Tall button */
+    height: 100px;
     
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* CUSTOM: Changed gap to 6px */
     gap: 6px;
 
     background: var(--glass-bg);
@@ -249,23 +237,22 @@ body {
     cursor: pointer;
     transition: all 0.2s;
     padding-right: 40px;
-    /* CUSTOM: Removed margin-top (moved to top property) and padding-left (handled by width) to keep alignment clean */
 }
 
-.filter-tab-button:hover {
+#filter-sidebar .filter-tab-button:hover {
     background-color: rgba(255, 255, 255, 0.95);
     color: var(--primary-blue);
 }
 
-.filter-tab-button i {
+#filter-sidebar .filter-tab-button i {
     font-size: 1.2rem;
 }
 
-.filter-tab-button::-webkit-details-marker { display: none; }
+#filter-sidebar .filter-tab-button::-webkit-details-marker { display: none; }
 
 
-/* Sidebar Dropdown Content (The filter list) */
-#filter-dropdown {
+/* Sidebar Dropdown Content */
+#filter-sidebar #filter-dropdown {
     width: var(--sidebar-open-width);
     margin-top: 15px;
     height: auto;
@@ -285,8 +272,8 @@ body {
     gap: 20px;
 }
 
-/* Filter Group Styling */
-.filter-form-group {
+/* Filter Group Styling (Scoped) */
+#filter-sidebar .filter-form-group {
     background: rgba(255, 255, 255, 0.7);
     border-radius: 12px;
     border: var(--glass-border);
@@ -296,14 +283,14 @@ body {
     gap: 8px;
 }
 
-.filter-form-group h4 {
+#filter-sidebar .filter-form-group h4 {
     color: var(--primary-text);
     margin: 0 0 5px 0;
     font-size: 1rem;
     font-weight: 600;
 }
 
-.filter-form-group label {
+#filter-sidebar .filter-form-group label {
     color: var(--secondary-text);
     font-weight: 500;
     display: block;
@@ -313,9 +300,9 @@ body {
     text-overflow: ellipsis;
 }
 
-/* Input Styles */
-.filter-form-group input[type="text"],
-.filter-form-group input[type="number"] {
+/* Input Styles (Scoped to Sidebar) */
+#filter-sidebar .filter-form-group input[type="text"],
+#filter-sidebar .filter-form-group input[type="number"] {
     border: none;
     background-color: var(--pill-bg);
     padding: 6px 10px;
@@ -329,39 +316,39 @@ body {
     text-overflow: ellipsis; 
 }
 
-.filter-form-group input[type="text"]:focus,
-.filter-form-group input[type="number"]:focus {
+#filter-sidebar .filter-form-group input[type="text"]:focus,
+#filter-sidebar .filter-form-group input[type="number"]:focus {
     background-color: #fff;
     border: 1px solid var(--primary-blue);
     box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
 }
 
 /* Price specific layout */
-.price-inputs {
+#filter-sidebar .price-inputs {
     display: flex;
     align-items: center;
     gap: 10px;
     margin-bottom: 5px;
 }
 
-.price-inputs label {
+#filter-sidebar .price-inputs label {
     flex-shrink: 0;
     width: 40px; 
     text-align: right;
     margin-bottom: 0;
-    white-space: nowrap; /* Keep Min/Max from wrapping */
+    white-space: nowrap;
 }
 
-.price-inputs input {
+#filter-sidebar .price-inputs input {
     flex-grow: 1;
     margin-bottom: 0;
 }
 
 
 /* =========================================
-   6. INFORMATION DROPDOWN
+   6. INFORMATION DROPDOWN (Scoped)
    ========================================= */
-#options-details {
+#navbar #options-details {
     margin-top: 20px;
     padding-bottom: 20px;
     opacity: 0;
@@ -373,7 +360,7 @@ body {
 }
 
 /* --- Shared Button Styling (.options-button) --- */
-.options-button {
+#navbar .options-button {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -393,36 +380,36 @@ body {
     transition: all 0.2s ease;
 }
 
-.options-button::after {
+#navbar .options-button::after {
     content: '\25BC';
     font-size: 0.5rem;
     margin-left: 4px;
     transition: transform 0.2s;
 }
 
-.options-button:hover {
+#navbar .options-button:hover {
     background-color: #e8e8ed; 
 }
 
-#options-details[open] .options-button {
+#navbar #options-details[open] .options-button {
     color: var(--primary-blue);
     background-color: rgba(0, 122, 255, 0.1);
 }
 
-#options-details[open] .options-button::after {
+#navbar #options-details[open] .options-button::after {
     transform: rotate(180deg);
 }
 
-.options-button::-webkit-details-marker { display: none; }
+#navbar .options-button::-webkit-details-marker { display: none; }
 
-#options-dropdown {
+#navbar #options-dropdown {
     display: flex; 
     gap: 40px;
     padding: 0;
 }
 
-/* Info Group Styling */
-.info-group {
+/* Info Group Styling (Scoped) */
+#navbar .info-group {
     margin-bottom: 20px;
     width: 250px; 
     background: rgba(255, 255, 255, 0.7);
@@ -433,30 +420,31 @@ body {
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
-.info-group h4 {
+#navbar .info-group h4 {
     color: var(--primary-text);
     margin: 0 0 8px 0;
     font-size: 1rem;
     font-weight: 600;
 }
-.info-group p { 
+#navbar .info-group p { 
     margin: 4px 0; 
     cursor: pointer; 
     font-size: 0.9rem;
     color: var(--secondary-text);
     padding: 4px 0;
 }
-.info-group p:hover { 
+#navbar .info-group p:hover { 
     color: var(--primary-blue);
     text-decoration: underline; 
 }
 
 
 /* =========================================================
-   7. VERSATILE ASSET SET (Reusable Classes)
+   7. VERSATILE ASSET SET
+   (Kept global for utility usage, but will not be affected 
+   by simple tag selectors in other files due to class specificity)
    ========================================================= */
 
-/* --- Glass Button (.glass-btn) --- */
 .glass-btn {
     appearance: none;
     display: inline-flex;
@@ -492,7 +480,6 @@ body {
     background-color: #0062cc;
 }
 
-/* --- Glass Card (.glass-card) --- */
 .glass-card {
     background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(20px);
@@ -502,7 +489,6 @@ body {
     box-shadow: 0 8px 30px rgba(0,0,0,0.1);
 }
 
-/* --- Uniform Glass List (.glass-list) --- */
 .glass-list {
     list-style: none;
     padding: 0;
