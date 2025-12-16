@@ -51,7 +51,7 @@
             {% elif status == 2 %}
                 <li class="nav-item addevent-item"><a href="{% url 'addevent'%}">Add Event</a></li>
                 <li class="nav-item addevent-item"><a href="{% url 'org_user_dashboard' membership.organization.id %}">Organization</a></li>
-            {% elif status == 3 %}
+            {% else %}
                 <li class="nav-item addevent-item"><a href="{% url 'customer_dashboard' %}">Profile</a></li>
             {% endif %}
         </ul>
