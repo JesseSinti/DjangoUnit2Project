@@ -9,9 +9,48 @@ from functools import wraps
 from django.views.decorators.http import require_POST
 from django.db.models import Q
 
-# ==============================================================================
-# 1. DECORATORS & UTILITIES
-# ==============================================================================
+
+# Home page and dashboards for users
+def home_view(request): 
+    event_filter = EventFilter(request.GET, queryset=Event.objects.all())
+    
+    return render(request, 'home.html', {'filter' : event_filter, 'filter_active' :  bool(request.GET), 'Event' : event_filter.qs.distinct()})
+
+def search_view(request):
+    query = request.GET.get('query', '')
+    events = Event.objects.all()
+    if query:
+        events = events.filter(Q(title__icontains=query))
+    return render(request,'home.html', {'Events' : events, 'SearchActive' : bool(request.GET)})
+
+def search_users(request):
+    query = request.GET.get('query', '')
+    current_user = OrganizationMembership.objects.get(user=request.user)
+    organization = Organization.objects.get(name=current_user.organization.name)
+    users = OrganizationMembership.objects.filter(organization=organization)
+    if query:
+        users = users.filter(Q(user__username__icontains=query))
+    
+    pending_memberships = OrganizationMembership.objects.filter(
+        organization=organization,
+        status='pending'
+    ).select_related('user')
+    organization_users = OrganizationMembership.objects.filter(organization=organization)
+    events = Event.objects.filter(organizer=request.user)
+    total_users = len(organization_users)
+    total_events = len(events)
+    total_pending = len(pending_memberships)
+    
+    return render(request,'admin_dashboard.html', {
+        'Users' : users, 
+        'SearchActive' : bool(request.GET),
+        'pending_memberships': pending_memberships,
+        'organization_users' : organization_users,
+        'organization_events' : events,
+        'total_users' : total_users,
+        'total_events' : total_events,
+        'pending' : total_pending,})
+
 
 def org_admin_required(view_func):
     @wraps(view_func)
@@ -199,8 +238,8 @@ def admin_dashboard(request, org_id):
     total_users = len(organization_users)
     total_events = len(events)
     total_pending = len(pending_memberships)
-    f = MembersFilter(request.GET, queryset=OrganizationMembership.objects.filter(organization=organization))
-    filter_active = any(value.strip() for value in request.GET.values())
+    
+
 
     return render(request, 'admin_dashboard.html', {
         'organization_id': org_id,
@@ -210,9 +249,34 @@ def admin_dashboard(request, org_id):
         'total_users' : total_users,
         'total_events' : total_events,
         'pending' : total_pending,
-        'organization' : organization
     })
 
+@login_required
+def update_membership_status(request, membership_id, action):
+    membership = get_object_or_404(OrganizationMembership, id=membership_id)
+    try:
+        admin_membership = OrganizationMembership.objects.get(
+            user=request.user,
+            organization=membership.organization,
+            role='admin',
+            status='active'
+        )
+    except OrganizationMembership.DoesNotExist:
+        messages.error(request, "You don't have permission to perform this action.")
+        return redirect('home_page')
+
+    if action == 'approve':
+        membership.status = 'active'
+        membership.save()
+        messages.success(request, f"{membership.user.username} approved!")
+    elif action == 'kick':
+        membership.status = 'kicked'
+        membership.save()
+        messages.success(request, f"{membership.user.username} removed!")
+    else:
+        messages.error(request, "Invalid action.")
+
+    return redirect('admin_dashboard', org_id=membership.organization.id)
 
 @login_required
 def user_dashboard(request, org_id):
