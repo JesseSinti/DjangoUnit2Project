@@ -85,7 +85,7 @@ class Order(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
 class Ticket(models.Model):
-    order = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE) 
     tier = models.ForeignKey(TicketTier, on_delete=models.CASCADE)
     ticket_id = models.IntegerField(unique=True)
     qr_code_image = models.ImageField(upload_to='qr_code_img/', blank=True, null=True)
