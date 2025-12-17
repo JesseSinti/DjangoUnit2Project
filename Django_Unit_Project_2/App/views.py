@@ -530,19 +530,39 @@ def Handle_Successful_Payment(*, user_id, event_id, tier_id, quantity, payment_i
 
         email.send(fail_silently=False)
 
-@login_required
-def Add_Ticket_Cart(request,pk):
-    cart, created = Cart.objects.get_or_create(user=request.user)
+@require_POST
+def Add_Ticket_Cart(request, pk):
+    # 1. Get the quantity from the form data (Default to 1 if missing)
+    try:
+        quantity = int(request.POST.get('quantity', 1))
+        if quantity < 1:
+            quantity = 1
+    except ValueError:
+        quantity = 1
 
-    added_ticket = TicketTier.objects.get(id=pk)
+    # 2. Get or Create Cart
+    cart, _ = Cart.objects.get_or_create(user=request.user)
 
-    ticket_item, created = TicketsSaved.objects.get_or_create(cart=cart, ticket=added_ticket)
+    # 3. Get the Ticket Tier
+    added_ticket = get_object_or_404(TicketTier, id=pk)
 
+    # 4. Get or Create the item in the cart
+    ticket_item, created = TicketsSaved.objects.get_or_create(
+        cart=cart, 
+        ticket=added_ticket,
+        # You can set defaults here if your model requires it
+        # defaults={'quantity': quantity} 
+    )
+
+    # 5. Update Quantity logic
     if not created:
-        ticket_item.quantity += 1
+        # If item already exists in cart, ADD the new amount to existing amount
+        ticket_item.quantity += quantity
         ticket_item.save()
     else:
-        created.save()
+        # If it's a new item, set the initial quantity
+        ticket_item.quantity = quantity
+        ticket_item.save()
     
     return redirect('cart')
 

@@ -23,7 +23,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('<int:pk>/remove_ticket/', v.Remove_Ticket_Cart, name='remove_ticket'),
-    path('<int:pk>/save-ticket/', v.Add_Ticket_Cart, name='add_ticket'),
+    path('add-to-cart/<int:pk>/', v.Add_Ticket_Cart, name='Add_Ticket_Cart'),
     path('cart/', v.cart, name='cart'),
     path('payment/success/', v.Payment_Success),
     path('<int:pk>/checkout/', v.CheckoutView, name="purchase_ticket"),
