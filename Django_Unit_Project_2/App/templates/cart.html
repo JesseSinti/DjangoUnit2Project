@@ -9,7 +9,7 @@
 <div class="cart-container">
     <header class="cart-header">
         <h1>Your Cart</h1>
-        <p class="cart-count">{{ tickets.count }} item{% if tickets.count != 1 %}s{% endif %}</p>
+        <p class="cart-count">{{ tickets.count }} Item{% if tickets.count != 1 %}s{% endif %}</p>
     </header>
 
     {% if tickets %}
@@ -51,10 +51,11 @@
                 </div>
 
                 <div class="ticket-actions">
-                    <a href="{% url 'remove_ticket' item.id %}">
-                        <input type="hidden" name="item_id" value="{{ item.id }}">
-                        <button type="submit" class="btn-remove" aria-label="Remove item">&times;</button>
-                    </a>
+                    <form method="post" action="{% url 'remove_ticket' item.id %}">
+                        {% csrf_token %}
+                        <input type="number" name="quantity" placeholder="Qty" min="1" max="{{ ticket.quantity }}">
+                        <button type="submit">Remove</button>
+                    </form>
                 </div>
             </div>
             {% endfor %}
@@ -80,7 +81,7 @@
                     <span>${{ total }}</span>
                 </div>
 
-                <a href="#" class="btn-checkout">Proceed to Checkout</a>
+                <a href="{% url 'checkoutcart' %}" class="btn-checkout">Proceed to Checkout</a>
                 <a href="/" class="btn-continue">Continue Shopping</a>
             </div>
         </div>

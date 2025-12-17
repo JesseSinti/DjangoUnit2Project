@@ -416,6 +416,49 @@ def SetTicketTier(request, pk):
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 @login_required
+def Checkout_Cart(request):
+    
+    cart = Cart.objects.get(user=request.user)
+    cart_items = TicketsSaved.objects.filter(cart=cart)
+
+    if not cart_items:
+        return redirect('/cart/')
+
+    line_items = []
+    for cart_item in cart_items:
+        ticket_item = cart_item.ticket
+        image_url = None
+
+        line_items.append({
+            'price_data': {
+                'currency': 'usd',
+                'unit_amount': int(ticket_item.price * 100), 
+                'product_data': {
+                    'name': ticket_item.type,
+                    'images': [image_url] if image_url else [],
+                },
+            },
+            'quantity': cart_item.quantity,
+        })
+
+    MY_DOMAIN = f"{request.scheme}://{request.get_host()}"
+    checkout_session = stripe.checkout.Session.create(
+        payment_method_types=['card'],
+        line_items=line_items,
+        metadata={
+            'tier_id' : ticket_item.id,
+        'user_id' : request.user.id,
+        'event_id' : ticket_item.event.id,
+        'quantity' : cart_item.quantity
+        },
+        mode='payment',
+        success_url = "http://127.0.0.1:8000/payment/success/?session_id={CHECKOUT_SESSION_ID}",
+        cancel_url='http://127.0.0.1:8000/cart/',
+    )
+
+    return redirect(checkout_session.url)
+
+@login_required
 def CheckoutView(request, pk):
     ticket = TicketTier.objects.get(id=pk)
     quantity = 1
@@ -542,7 +585,7 @@ def Add_Ticket_Cart(request,pk):
         ticket_item.quantity += 1
         ticket_item.save()
     else:
-        created.save()
+        ticket_item.save()
     
     return redirect('cart')
 
@@ -560,8 +603,12 @@ def Remove_Ticket_Cart(request,pk):
     cart = Cart.objects.get(user=request.user)
 
     ticket = TicketsSaved.objects.get(id=pk, cart=cart)
-
-    ticket.delete()
+    remove_qty = int(request.POST.get('quantity', 1))
+    if remove_qty >= ticket.quantity:
+        ticket.delete()
+    else: 
+        ticket.quantity -= remove_qty
+        ticket.save()
 
     return redirect('cart')
 
