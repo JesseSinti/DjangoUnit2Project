@@ -141,14 +141,14 @@ def customer_signup(request):
 # =============================================================================================================
 
 def home_view(request): 
-    event_filter = EventFilter(request.GET, queryset=Event.objects.all())
+    event_filter = EventFilter(request.GET, queryset=Event.objects.all().prefetch_related('ticket_tiers'))
     
     return render(request, 'home.html', {'filter' : event_filter, 'filter_active' :  bool(request.GET), 'Event' : event_filter.qs.distinct()})
 
 
 def search_view(request):
     query = request.GET.get('query', '')
-    events = Event.objects.all()
+    events = Event.objects.all().prefetch_related('ticket_tiers')
     if query:
         events = events.filter(Q(title__icontains=query))
     return render(request,'home.html', {'Events' : events, 'SearchActive' : bool(request.GET)})
@@ -358,7 +358,7 @@ def update_membership_status(request, membership_id, action):
 
 @login_required
 def non_active_view(request):
-    return render(request)
+    return render(request,'non_active_goon.html')
 
 
 # ==============================================================================================================

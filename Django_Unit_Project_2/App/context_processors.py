@@ -24,7 +24,7 @@ def base_view(request):
         status = 2
     else: 
         status = 3
-
+    
     return {
         'status': status,
         'membership': membership

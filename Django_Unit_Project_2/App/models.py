@@ -47,12 +47,6 @@ class OrganizationMembership(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.organization.name} ({self.role})"
 
-    class Meta:
-        unique_together = ('user', 'organization')
-
-    def __str__(self):
-        return f"{self.user.username} - {self.organization.name} ({self.role})"
-
 
 class Event(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)

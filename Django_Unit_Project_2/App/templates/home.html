@@ -2,57 +2,98 @@
 {% load static %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'home.css' %}">
-    <section class="about-section" id="about">
-        <div class="container">
-           
-            <p class="about-text">
-                We are a modern event management and ticketing platform designed
-                to help organizations create, manage, and sell tickets with ease.
-                Organizations can register, host events, and collaborate with team members 
-                through role-based access, while customers can discover events and purchase tickets securely. 
-                Our platform brings organizers and attendees together in a streamlined, reliable experience from event creation to checkout.
-            </p>
+
+<section class="about-section" id="about">
+    <div class="container">
+        <p class="about-text">
+            We are a modern event management and ticketing platform designed
+            to help organizations create, manage, and sell tickets with ease.
+            Organizations can register, host events, and collaborate with team members
+            through role-based access, while customers can discover events and purchase tickets securely.
+            Our platform brings organizers and attendees together in a streamlined, reliable experience from event
+            creation to checkout.
+        </p>
+    </div>
+</section>
+
+<div class="spacer"></div>
+
+<section class="events-section" id="events">
+    <div class="container">
+        <div class="events-header">
+            <h2 class="section-title">Upcoming Events</h2>
         </div>
-    </section>
 
-    <div class="spacer"></div>
+        <div class="events-grid">
 
-    <section class="events-section" id="events">
-        <div class="container">
-            <div class="events-header">
-                <h2 class="section-title">Upcoming Events</h2>
-            </div>
-    {% if SearchActive %}
+            {% if SearchActive %}
             {% for event in Events %}
-                
-                <div class="events-grid">
-                    <article class="event-card">
-                        <div class="event-image">
-                            <img src="{{ event.banner_image.url }}">
-                        </div>
-                        <div class="event-content">
-                            <h3 class="event-title">{{ event.title }}</h3>
-                            <span class="event-date">{{ event.location }} • {{ event.start_time }} - {{ event.end_time }}</span>
-                            <p class="event-desc">{{ event.description }}</p>  
-                        </div>
-                    </article>
+            {% include "includes/event_card_partial.html" %}
             {% endfor %}
-    {% else %}
-        {% for event in Event %}
-            <div class="events-grid">
-                <article class="event-card">
-                    <div class="event-image">
-                        <img src="{{ event.banner_image.url }}">
+
+            {% else %}
+            {% for event in Event %}
+            <article class="event-card">
+                <div class="event-image">
+                    {% if event.banner_image %}
+                    <img src="{{ event.banner_image.url }}" alt="{{ event.title }}">
+                    {% endif %}
+                </div>
+
+                <div class="event-content">
+                    <h3 class="event-title">{{ event.title }}</h3>
+                    <span class="event-date">{{ event.location }} • {{ event.start_time }} - {{ event.end_time }}</span>
+                    <p class="event-desc">{{ event.description|truncatewords:20 }}</p>
+                </div>
+
+                <div class="ticket-tiers">
+                    <h4>Ticket Options</h4>
+
+                    {% for tier in event.ticket_tiers.all %}
+                    <div class="ticket-tier">
+                        <div class="tier-top-row">
+                            <div class="tier-info">
+                                <span class="tier-name">{{ tier.type }}</span>
+                                <span class="tier-price">${{ tier.price|floatformat:2 }}</span>
+                            </div>
+                            <div class="tier-quantity">
+                                {% if tier.quantity > 0 %}
+                                <span class="qty-available">{{ tier.quantity }} left</span>
+                                {% else %}
+                                <span class="sold-out-badge">Sold Out</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="ticket-actions">
+                            <form action="#" method="POST" class="action-form">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-ticket btn-save" title="Save for Later">
+                                    Save
+                                </button>
+                            </form>
+
+                            {% if tier.quantity > 0 %}
+                            <form action="#" method="POST" class="action-form">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-ticket btn-buy">
+                                    Purchase
+                                </button>
+                            </form>
+                            {% else %}
+                            <button class="btn-ticket btn-disabled" disabled>Unavailable</button>
+                            {% endif %}
+                        </div>
                     </div>
-                    <div class="event-content">
-                        <h3 class="event-title">{{ event.title }}</h3>
-                        <span class="event-date">{{ event.location }} • {{ event.start_time }} - {{ event.end_time }}</span>
-                        <p class="event-desc">{{ event.description }}</p>  
-                    </div>
-                </article>
-        {% endfor %}
-    {% endif %}
-            </div>
+                    {% empty %}
+                    <p class="no-tickets">No ticket tiers created yet.</p>
+                    {% endfor %}
+                </div>
+            </article>
+            {% endfor %}
+            {% endif %}
+
         </div>
-    </section>
+    </div>
+</section>
 {% endblock content %}
