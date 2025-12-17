@@ -51,8 +51,12 @@
             {% elif status == 2 %}
                 {% if membership.status == 'Non-active' %}
                     <li class="nav-item addevent-item"><a href="{% url 'non_active_goon' %}">Add Event</a></li>
-                {% else %}
+                    <li class="nav-item addevent-item"><a href="{% url 'org_user_dashboard' membership.organization.id %}">Organization</a></li>
+                {% elif membership.status == 'active' %}
                     <li class="nav-item addevent-item"><a href="{% url 'addevent' %}">Add Event</a></li>
+                    <li class="nav-item addevent-item"><a href="{% url 'org_user_dashboard' membership.organization.id %}">Organization</a></li>
+                {% elif membership.status == 'pending' %}
+                    <li class="nav-item addevent-item"><a href="{% url 'choose_organization' %}">Organization</a></li>
                 {% endif %}
                 {% if membership.status == 'pending' %}
                     <li class="nav-item addevent-item"><a href="{% url 'choose_organizatino' membership.organization.id %}">Organization</a></li>
