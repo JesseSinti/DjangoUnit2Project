@@ -8,7 +8,14 @@ from django.db.models import Q
 from functools import wraps
 from .forms import *
 from .filters import *
-
+from django.conf import settings 
+import stripe 
+from django.http import HttpResponse
+from decimal import Decimal 
+import qrcode
+from io import BytesIO
+from django.core.files import File
+from django.core.mail import EmailMessage 
 # ============================================================================================================
 #                                                 1. DECORATORS
 # ============================================================================================================
@@ -406,3 +413,122 @@ def SetTicketTier(request, pk):
         form = TicketTierForm()
     return render(request, 'ticketTier.html', {'form' : form})
 
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
+@login_required
+def CheckoutView(request, pk):
+    ticket = TicketTier.objects.get(id=pk)
+    quantity = 1
+    image_url = None
+    MY_DOMAIN = f"{request.scheme}://{request.get_host()}"
+    checkout_session = stripe.checkout.Session.create(
+        payment_method_types=['card'],
+        line_items=[{
+            'price_data': {
+                'currency':'usd',
+                'unit_amount':int(ticket.price * 100),
+                'product_data': {
+                    "name":ticket.type,
+                    'images':[image_url]
+                },
+            },
+            'quantity':1,
+        },
+    ],
+    metadata = {
+        'tier_id':ticket.id,
+        'user_id':request.user.id,
+        'event_id' : ticket.event.id,
+        'quantity' : quantity
+    },
+    mode='payment',
+    success_url = "http://127.0.0.1:8000/payment/success/?session_id={CHECKOUT_SESSION_ID}",
+
+    cancel_url=MY_DOMAIN + f'/pricing/{pk}',
+    )
+    return redirect(checkout_session.url)
+
+
+def Payment_Success(request):
+    # This collects the payment's session id
+    session_id = request.GET.get("session_id")
+
+# if the session isn't does't have the id then it cant create an order 
+    if not session_id:
+        return HttpResponse("Missing session ID", status=400)
+    
+    # Gets the actual session using its id 
+    session = stripe.checkout.Session.retrieve(session_id)
+
+    # makes sure the session had a succesful payment beofre allowing the creation of a order 
+    if session.payment_status != 'paid':
+        return HttpResponse("Payment not completed", status=400)
+    
+
+    # Gets the data that was passed to the checkout session
+    metadata = session.metadata
+
+    # runs the function if the payment was succesful 
+    Handle_Successful_Payment(
+        user_id=metadata["user_id"],
+        event_id=metadata["event_id"],
+        tier_id=metadata["tier_id"],
+        quantity=int(metadata["quantity"]),
+        payment_id=session.payment_intent
+    )
+    return redirect('home_page')
+
+def generate_qr_code(ticket):
+    # This makes the qr code using the installs and imports 
+    qr = qrcode.make(str(ticket.ticket_id))
+    buffer = BytesIO()
+    qr.save(buffer, format="PNG")
+
+    # saves the produced qr code to the ticket image 
+    ticket.qr_code_image.save(
+        f"{ticket.ticket_id}.png",
+        File(buffer),
+        save=False
+    )
+
+def Handle_Successful_Payment(*, user_id, event_id, tier_id, quantity, payment_id):
+    with transaction.atomic():  
+        # gets the data using the metadata ids
+        user = User.objects.get(id=user_id)
+        event = Event.objects.get(id=event_id)
+        tier = TicketTier.objects.select_for_update().get(id=tier_id)
+
+        # lowers the ticket quantity by however much is being purchased
+        if tier.quantity < quantity:
+            raise Exception("Not Enough Tickets")
+        # Fixes the total price and Decimal makes it round in monetary values(best used for transactions)
+        total_price = tier.price * Decimal(quantity)
+
+        
+
+        # Makes the users order with the info it got from the metadata 
+        order = Order.objects.create(user=user, event=event, total_price=total_price)
+
+        # changes the quantity so it actively displays correctly on pages
+        tier.quantity -= quantity
+        tier.save()
+        
+        Ticket.objects.bulk_create([Ticket(order=order, tier=tier) for _ in range(quantity)])
+
+        email = EmailMessage(
+        subject="Ticket Receipt",
+        body="Thank you for your purchase! Please find your tickets attached.",
+        from_email="jessecorbin75@gmail.com",
+        to=[user.email]
+        )   
+        
+        # This calls teh qr code function and has it make a qr code for each ticket and then save after because the function isn't set to auto save it
+        for ticket in Ticket.objects.filter(order=order):
+            generate_qr_code(ticket)
+            ticket.save()
+        email.attach_file(ticket.qr_code_image.path)
+
+        email.send(fail_silently=False)
+        
+    
+        

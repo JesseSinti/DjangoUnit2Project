@@ -74,12 +74,12 @@
                             </form>
 
                             {% if tier.quantity > 0 %}
-                            <form action="#" method="POST" class="action-form">
-                                {% csrf_token %}
+                            <a class="action-form" href="{% url 'purchase_ticket' tier.id %}">
+                                
                                 <button type="submit" class="btn-ticket btn-buy">
                                     Purchase
                                 </button>
-                            </form>
+                            </a>
                             {% else %}
                             <button class="btn-ticket btn-disabled" disabled>Unavailable</button>
                             {% endif %}

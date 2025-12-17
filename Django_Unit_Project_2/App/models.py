@@ -1,7 +1,4 @@
-from django.db import models
-
-# Create your models here.
-
+import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
@@ -73,7 +70,7 @@ class TicketTier(models.Model):
 
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='ticket_tiers')
     type = models.CharField(max_length=10,choices=Status.choices, default="Basic")
-    price = models.FloatField()
+    price = models.IntegerField()
     quantity = models.IntegerField()
 
 class Order(models.Model):
@@ -85,7 +82,7 @@ class Order(models.Model):
 class Ticket(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE) 
     tier = models.ForeignKey(TicketTier, on_delete=models.CASCADE)
-    ticket_id = models.IntegerField(unique=True)
+    ticket_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     qr_code_image = models.ImageField(upload_to='qr_code_img/', blank=True, null=True)
     is_used = models.BooleanField(default=False)
     
