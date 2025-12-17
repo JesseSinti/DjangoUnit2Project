@@ -85,4 +85,18 @@ class Ticket(models.Model):
     ticket_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     qr_code_image = models.ImageField(upload_to='qr_code_img/', blank=True, null=True)
     is_used = models.BooleanField(default=False)
+
+class Cart(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    def total(self):
+        return sum(ticket.subtotal() for ticket in self.tickets.all())
+
+class TicketsSaved(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='tickets')
+    ticket = models.ForeignKey(TicketTier, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    
+    def subtotal(self):
+        return self.ticket.price * self.quantity
     

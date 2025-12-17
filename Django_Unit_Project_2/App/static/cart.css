@@ -1,0 +1,313 @@
+/* Variables */
+:root {
+    --primary-color: #4f46e5;
+    --primary-hover: #4338ca;
+    --bg-color: #f9fafb;
+    --card-bg: #ffffff;
+    --text-main: #111827;
+    --text-muted: #6b7280;
+    --danger-color: #ef4444;
+    --border-radius: 12px;
+    --badge-vip-bg: #fef3c7;
+    --badge-vip-text: #92400e;
+    --badge-gen-bg: #e0e7ff;
+    --badge-gen-text: #3730a3;
+}
+
+body {
+    background-color: var(--bg-color);
+}
+
+.cart-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: var(--text-main);
+}
+
+.cart-header {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 1rem;
+}
+
+.cart-header h1 {
+    font-size: 1.875rem;
+    margin: 0;
+    font-weight: 700;
+}
+
+.cart-count {
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+
+/* Grid Layout */
+.cart-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 2rem;
+}
+
+/* Ticket List */
+.ticket-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.ticket-card {
+    display: flex;
+    align-items: center;
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+}
+
+/* Image Handling */
+.ticket-image {
+    width: 100px;
+    height: 80px;
+    flex-shrink: 0;
+    margin-right: 1.5rem;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #e5e7eb;
+}
+
+.ticket-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Ensures banner images don't stretch */
+}
+
+.placeholder-img {
+    width: 100%;
+    height: 100%;
+    background-color: #d1d5db;
+}
+
+/* Details */
+.ticket-details {
+    flex: 1;
+    margin-right: 1rem;
+}
+
+.ticket-details h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.ticket-meta {
+    margin: 0 0 0.75rem 0;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.meta-divider {
+    margin: 0 0.3rem;
+}
+
+/* Tier Badge */
+.tier-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Dynamic colors based on tier */
+.tier-vip {
+    background-color: var(--badge-vip-bg);
+    color: var(--badge-vip-text);
+}
+
+.tier-general,
+.tier-basic {
+    background-color: var(--badge-gen-bg);
+    color: var(--badge-gen-text);
+}
+
+/* Pricing Section */
+.ticket-pricing {
+    text-align: right;
+    margin-right: 1.5rem;
+    min-width: 100px;
+}
+
+.price-calculation {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+}
+
+.item-subtotal {
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+/* Remove Button */
+.ticket-actions form {
+    margin: 0;
+}
+
+.btn-remove {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    font-size: 1.5rem;
+    line-height: 1;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.btn-remove:hover {
+    color: var(--danger-color);
+    background-color: #fee2e2;
+}
+
+/* Summary Box */
+.cart-summary {
+    position: relative;
+}
+
+.summary-card {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 2rem;
+    border: 1px solid #e5e7eb;
+}
+
+.summary-card h2 {
+    margin-top: 0;
+    font-size: 1.25rem;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #e5e7eb;
+    margin: 1.5rem 0;
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 800;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Checkout Button */
+.btn-checkout {
+    display: block;
+    width: 100%;
+    background-color: var(--primary-color);
+    color: white;
+    text-align: center;
+    padding: 0.875rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    box-sizing: border-box;
+}
+
+.btn-checkout:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn-continue {
+    display: block;
+    text-align: center;
+    margin-top: 1rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+
+.btn-continue:hover {
+    color: var(--primary-color);
+}
+
+/* Empty State */
+.empty-cart {
+    text-align: center;
+    padding: 5rem 1rem;
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    border: 1px dashed #d1d5db;
+}
+
+.empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cart-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .ticket-card {
+        flex-wrap: wrap;
+    }
+
+    .ticket-image {
+        width: 60px;
+        height: 60px;
+    }
+
+    .ticket-details {
+        min-width: 150px;
+    }
+
+    .ticket-pricing {
+        width: 100%;
+        text-align: left;
+        margin: 1rem 0 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid #f3f4f6;
+        padding-top: 1rem;
+    }
+
+    .ticket-actions {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+    }
+
+    .ticket-card {
+        position: relative;
+    }
+}

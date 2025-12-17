@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Cart{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'cart.css' %}">
+
+<div class="cart-container">
+    <header class="cart-header">
+        <h1>Your Cart</h1>
+        <p class="cart-count">{{ tickets.count }} item{% if tickets.count != 1 %}s{% endif %}</p>
+    </header>
+
+    {% if tickets %}
+    <div class="cart-layout">
+        <div class="ticket-list">
+            {% for item in tickets %}
+            <div class="ticket-card">
+                <div class="ticket-image">
+                    {% if item.ticket.event.banner_image %}
+                    <img src="{{ item.ticket.event.banner_image.url }}" alt="{{ item.ticket.event.title }}">
+                    {% else %}
+                    <div class="placeholder-img"></div>
+                    {% endif %}
+                </div>
+
+                <div class="ticket-details">
+                    <h3>{{ item.ticket.event.title }}</h3>
+
+                    <p class="ticket-meta">
+                        {{ item.ticket.event.date|date:"M d, Y" }} at {{ item.ticket.event.start_time|time:"g:i A" }}
+                        <span class="meta-divider">•</span>
+                        {{ item.ticket.event.location }}
+                    </p>
+
+                    <span class="tier-badge tier-{{ item.ticket.type|lower }}">
+                        {{ item.ticket.type }} Ticket
+                    </span>
+                </div>
+
+                <div class="ticket-pricing">
+                    <div class="price-calculation">
+                        <span class="unit-price">${{ item.ticket.price }}</span>
+                        <span class="multiplication">x</span>
+                        <span class="quantity">{{ item.quantity }}</span>
+                    </div>
+                    <div class="item-subtotal">
+                        ${{ item.subtotal }}
+                    </div>
+                </div>
+
+                <div class="ticket-actions">
+                    <a href="{% url 'remove_ticket' item.id %}">
+                        <input type="hidden" name="item_id" value="{{ item.id }}">
+                        <button type="submit" class="btn-remove" aria-label="Remove item">&times;</button>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="cart-summary">
+            <div class="summary-card">
+                <h2>Order Summary</h2>
+
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>${{ total }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Taxes</span>
+                    <span>${{ Taxes|floatformat:2 }}</span>
+                </div>
+
+                <hr>
+
+                <div class="summary-total">
+                    <span>Total</span>
+                    <span>${{ total }}</span>
+                </div>
+
+                <a href="#" class="btn-checkout">Proceed to Checkout</a>
+                <a href="/" class="btn-continue">Continue Shopping</a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="empty-cart">
+        <div class="empty-icon">🎟️</div>
+        <h2>Your cart is empty</h2>
+        <p>You haven't added any tickets yet.</p>
+        <a href="/" class="btn-checkout">Browse Events</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

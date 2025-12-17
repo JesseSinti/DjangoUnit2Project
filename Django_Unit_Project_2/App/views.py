@@ -522,13 +522,50 @@ def Handle_Successful_Payment(*, user_id, event_id, tier_id, quantity, payment_i
         to=[user.email]
         )   
         
-        # This calls teh qr code function and has it make a qr code for each ticket and then save after because the function isn't set to auto save it
+        # This calls the qr code function and has it make a qr code for each ticket and then save after because the function isn't set to auto save it
         for ticket in Ticket.objects.filter(order=order):
             generate_qr_code(ticket)
             ticket.save()
         email.attach_file(ticket.qr_code_image.path)
 
         email.send(fail_silently=False)
+
+@login_required
+def Add_Ticket_Cart(request,pk):
+    cart, created = Cart.objects.get_or_create(user=request.user)
+
+    added_ticket = TicketTier.objects.get(id=pk)
+
+    ticket_item, created = TicketsSaved.objects.get_or_create(cart=cart, ticket=added_ticket)
+
+    if not created:
+        ticket_item.quantity += 1
+        ticket_item.save()
+    else:
+        created.save()
+    
+    return redirect('cart')
+
+@login_required
+def cart(request):
+    cart, created = Cart.objects.get_or_create(user=request.user)
+
+    ticket = cart.tickets.all()
+    total = cart.total()
+    taxes = total * .0725
+
+    return render(request, 'cart.html', {'cart':cart, 'tickets':ticket, 'total' : total, 'Taxes' : taxes})
+
+def Remove_Ticket_Cart(request,pk):
+    cart = Cart.objects.get(user=request.user)
+
+    ticket = TicketsSaved.objects.get(id=pk, cart=cart)
+
+    ticket.delete()
+
+    return redirect('cart')
+
+
         
     
         
