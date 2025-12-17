@@ -183,6 +183,7 @@ def admin_dashboard(request, org_id):
     total_users = len(organization_users)
     total_events = len(events)
     total_pending = len(pending_memberships)
+    admin = User.objects.get(id=request.user.id)
 
     return render(request, 'admin_dashboard.html', {
         'organization_id': org_id,
@@ -192,12 +193,15 @@ def admin_dashboard(request, org_id):
         'total_users' : total_users,
         'total_events' : total_events,
         'pending' : total_pending,
+        'admin' : admin,
     })
 
+
+
 def Event_Page(request):
-    Admin = OrganizationMembership.objects.get(user=request.user)
-    organization = Organization.objects.get(name=Admin.organization.name)
-    Events = Event.objects.filter(organizer=request.user).prefetch_related('ticket_tiers')
+    User = OrganizationMembership.objects.get(user=request.user)
+    organization = Organization.objects.get(name=User.organization.name)
+    Events = Event.objects.filter(organization=organization).prefetch_related('ticket_tiers')
 
     return render(request, 'event_page.html', {'Events' : Events})
 
@@ -219,7 +223,7 @@ def search_users(request):
         status='pending'
     ).select_related('user')
     organization_users = OrganizationMembership.objects.filter(organization=organization)
-    events = Event.objects.filter(organization=request.user)
+    events = Event.objects.filter(organization=organization)
     total_users = len(organization_users)
     total_events = len(events)
     total_pending = len(pending_memberships)
@@ -340,9 +344,12 @@ def update_membership_status(request, membership_id, action):
         membership.save()
         messages.success(request, f"{membership.user.username} approved!")
     elif action == 'kick':
-        membership.status = 'kicked'
-        membership.save()
+        membership.delete()
         messages.success(request, f"{membership.user.username} removed!")
+    elif action == 'non-active':
+        membership.status = 'Non-active'
+        membership.save()
+        messages.success(request, f"{membership.user.username} set to non-active" )
     else:
         messages.error(request, "Invalid action.")
 

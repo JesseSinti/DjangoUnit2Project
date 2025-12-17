@@ -16,8 +16,8 @@
             <div class="card-image">
                 <img src="{{ event.banner_image.url }}" alt="{{ event.title }}">
                 <div class="date-badge">
-                    <span class="month">Oct</span>
-                    <span class="day">12</span>
+                    <span class="month">{{ event.date|date:"M"}}</span>
+                    <span class="day">{{ event.date|date:"j"}}</span>
                 </div>
             </div>
 

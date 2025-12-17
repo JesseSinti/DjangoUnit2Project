@@ -14,20 +14,18 @@
         <a href="#" class="nav-link active">
             <i class="fas fa-chart-pie"></i> Overview
         </a>
-        <a href="#" class="nav-link">
+        <a href="#usersection" class="nav-link">
             <i class="fas fa-users"></i> Users
         </a>
         <a href="{% url 'event_page' %}" class="nav-link">
             <i class="fas fa-folder"></i> Events
         </a>
-        <a href="#" class="nav-link">
-            <i class="fas fa-cog"></i> Settings
-        </a>
+        
     </div>
     
     <div class="sidebar-footer">
         <a href="#" class="user-profile-btn">
-            <div class="user-avatar" style="width: 32px; height: 32px; font-size: 0.8rem;">AD</div>
+            <div class="user-avatar" style="width: 32px; height: 32px; font-size: 0.8rem;">{{ admin.first_name.0 }} {{ admin.last_name.0 }}</div>
             
             <div class="profile-info ms-2 overflow-hidden">
                 <div class="name text-truncate">{{ admin.first_name }} {{ admin.last_name }}</div>
@@ -82,7 +80,7 @@
         </div>
     </div>
 
-    <div class="table-card">
+    <div id="usersection" class="table-card">
         <div class="table-header">
             <h5 class="m-0 fw-bold" style="font-size: 1rem;">Organization Users</h5>
             
