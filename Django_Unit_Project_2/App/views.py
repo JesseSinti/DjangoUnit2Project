@@ -50,7 +50,7 @@ def login_view(request):
                 return redirect("customer_dashboard")
 
             membership = OrganizationMembership.objects.filter(
-                user=user, status="active"
+                user=user, status__in=['active', 'Non-active']
             ).first()
 
             if membership:
