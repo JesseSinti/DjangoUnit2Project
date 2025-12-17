@@ -17,8 +17,8 @@
         <a href="#usersection" class="nav-link">
             <i class="fas fa-users"></i> Users
         </a>
-        <a href="{% url 'event_page' %}" class="nav-link">
-            <i class="fas fa-folder"></i> Events
+        <a href="#" class="nav-link">
+            <i class="fas fa-folder"></i> Projects
         </a>
         
     </div>
@@ -28,8 +28,8 @@
             <div class="user-avatar" style="width: 32px; height: 32px; font-size: 0.8rem;">{{ admin.first_name.0 }} {{ admin.last_name.0 }}</div>
             
             <div class="profile-info ms-2 overflow-hidden">
-                <div class="name text-truncate">{{ admin.first_name }} {{ admin.last_name }}</div>
-                <div class="email text-truncate">{{ admin.email }}</div>
+                <div class="name text-truncate">Admin User</div>
+                <div class="email text-truncate">admin@org.com</div>
             </div>
         </a>
     </div>
@@ -105,52 +105,132 @@
                         <th class="col-action"></th>
                     </tr>
                 </thead>
-                <tbody>
-                
-                {% if SearchActive %}
+                    <tbody>
+                    {% if SearchActive %}
                         {% for user in Users %}
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="user-avatar">{{ u.user.username|slice:":1"|upper }}</div>
-                                    <div>
-                                        <div class="fw-bold">{{ user.user.username }}</div>
-                                        <div class="small text-muted">{{ user.user.email }}</div>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-avatar">{{ user.user.username|slice:":1"|upper }}</div>
+                                        <div>
+                                            <div class="fw-bold">{{ user.user.username }}</div>
+                                            <div class="small text-muted">{{ user.user.email }}</div>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                            <td><span class="role-badge role-admin">{{ user.role }}</span></td>
-                            <td><span class="text-success small fw-bold"><i class="fas fa-dot-circle me-1"></i> {{ user.status }} </span></td>
-                            <td class="text-muted">{{ user.joined_at }}</td>
-                            <td class="text-end">
-                                <a href="#" class="text-muted"><i class="fas fa-ellipsis-h"></i></a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                {% else %}
-                    {% for user in organization_users %}
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="user-avatar">{{ user.user.username|slice:":1"|upper }}</div>
-                                    <div>
-                                        <div class="fw-bold text-dark">{{ user.user.username }}</div>
-                                        <div class="small text-muted">{{ user.user.email }}</div>
+                                </td>
+                                <td><span class="role-badge {% if user.role == 'admin' %}role-admin{% else %}role-member{% endif %}">{{ user.role }}</span></td>
+                                <td>
+                                    <span class="text-{% if user.status == 'active' %}success{% elif user.status == 'pending' %}warning{% else %}secondary{% endif %} small fw-bold">
+                                        <i class="fas fa-dot-circle me-1"></i> {{ user.status|title }}
+                                    </span>
+                                </td>
+                                <td class="text-muted">{{ user.joined_at|date:"M d, Y" }}</td>
+                                <td class="text-end">
+                                    {% if user.user != request.user %}
+                                    <div class="dropdown">
+                                        <a href="#" class="text-muted" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-h"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            {% if user.status == 'pending' %}
+                                                <li>
+                                                    <a class="dropdown-item text-success" href="{% url 'update_membership_status' user.id 'approve' %}">
+                                                        <i class="fas fa-check me-2"></i>Approve
+                                                    </a>
+                                                </li>
+                                            
+                                            {% elif user.status == 'active' %}
+                                                <li>
+                                                    <a class="dropdown-item text-warning" href="{% url 'update_membership_status' user.id 'non-active' %}">
+                                                        <i class="fas fa-ban me-2"></i>Set Non-active
+                                                    </a>
+                                                </li>
+
+                                            {% elif user.status == 'Non-active' %}
+                                                <li>
+                                                    <a class="dropdown-item text-success" href="{% url 'update_membership_status' user.id 'approve' %}">
+                                                        <i class="fas fa-redo me-2"></i>Re-activate
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+                                            
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li>
+                                                <a class="dropdown-item text-danger" href="{% url 'update_membership_status' user.id 'kick' %}" onclick="return confirm('Are you sure you want to remove this user?');">
+                                                    <i class="fas fa-trash-alt me-2"></i>Remove User
+                                                </a>
+                                            </li>
+                                        </ul>
                                     </div>
-                                </div>
-                            </td>
-                            <td><span class="role-badge {% if user.role == 'Admin' %}role-admin{% else %}role-member{% endif %}">{{ user.role }}</span></td>
-                            <td>
-                                <div class="d-flex align-items-center small text-dark fw-medium">
-                                    <i class="fas fa-circle me-2 text-success" style="font-size: 6px;"></i> {{ user.status|default:"active" }}
-                                </div>
-                            </td>
-                            <td class="text-muted small">{{ user.joined_at|date:"M d, Y" }}</td>
-                            <td class="text-end">
-                                <a href="#" class="text-muted"><i class="fas fa-ellipsis-h"></i></a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                    {% else %}
+                        
+                        {% for user in organization_users %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-avatar">{{ user.user.username|slice:":1"|upper }}</div>
+                                        <div>
+                                            <div class="fw-bold text-dark">{{ user.user.username }}</div>
+                                            <div class="small text-muted">{{ user.user.email }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="role-badge {% if user.role == 'admin' %}role-admin{% else %}role-member{% endif %}">{{ user.role|title }}</span></td>
+                                <td>
+                                    <div class="d-flex align-items-center small text-dark fw-medium">
+                                        <i class="fas fa-circle me-2 text-{% if user.status == 'active' %}success{% elif user.status == 'pending' %}warning{% else %}secondary{% endif %}" style="font-size: 6px;"></i> 
+                                        {{ user.status|default:"active"|title }}
+                                    </div>
+                                </td>
+                                <td class="text-muted small">{{ user.joined_at|date:"M d, Y" }}</td>
+                                <td class="text-end">
+                                    {% if user.user != request.user %}
+                                    <div class="dropdown">
+                                        <a href="#" class="text-muted" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-h"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            
+                                            {% if user.status == 'pending' %}
+                                                <li>
+                                                    <a class="dropdown-item text-success" href="{% url 'update_membership_status' user.id 'approve' %}">
+                                                        <i class="fas fa-check me-2"></i>Approve
+                                                    </a>
+                                                </li>
+                                            
+                                            {% elif user.status == 'active' %}
+                                                <li>
+                                                    <a class="dropdown-item text-warning" href="{% url 'update_membership_status' user.id 'non-active' %}">
+                                                        <i class="fas fa-ban me-2"></i>Set Non-active
+                                                    </a>
+                                                </li>
+
+                                            {% elif user.status == 'Non-active' %}
+                                                <li>
+                                                    <a class="dropdown-item text-success" href="{% url 'update_membership_status' user.id 'approve' %}">
+                                                        <i class="fas fa-redo me-2"></i>Re-activate
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li>
+                                                <a class="dropdown-item text-danger" href="{% url 'update_membership_status' user.id 'kick' %}" onclick="return confirm('Are you sure you want to remove this user?');">
+                                                    <i class="fas fa-trash-alt me-2"></i>Remove User
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
                 </tbody>
             </table>
         </div>

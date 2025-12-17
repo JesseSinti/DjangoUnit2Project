@@ -245,7 +245,7 @@ def user_dashboard(request, org_id):
     membership = OrganizationMembership.objects.filter(
         user=request.user,
         organization_id=org_id,
-        status='active'
+        status__in=['active', 'Non-active']
     ).first()
 
     if not membership:
@@ -344,16 +344,21 @@ def update_membership_status(request, membership_id, action):
         membership.save()
         messages.success(request, f"{membership.user.username} approved!")
     elif action == 'kick':
+        membership.status = 'kicked'
         membership.delete()
         messages.success(request, f"{membership.user.username} removed!")
     elif action == 'non-active':
         membership.status = 'Non-active'
         membership.save()
-        messages.success(request, f"{membership.user.username} set to non-active" )
+        messages.success(request, f"{membership.user.username} set to non-active")
     else:
         messages.error(request, "Invalid action.")
 
     return redirect('admin_dashboard', org_id=membership.organization.id)
+
+@login_required
+def non_active_view(request):
+    return render(request)
 
 
 # ==============================================================================================================
