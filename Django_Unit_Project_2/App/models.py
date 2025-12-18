@@ -1,4 +1,5 @@
 import uuid
+from decimal import Decimal 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
@@ -70,17 +71,16 @@ class TicketTier(models.Model):
 
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='ticket_tiers')
     type = models.CharField(max_length=10,choices=Status.choices, default="Basic")
-    price = models.IntegerField()
+    price = models.DecimalField(max_digits=8, decimal_places=2)
     quantity = models.IntegerField()
 
 class Order(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    event =  models.ForeignKey(Event, on_delete=models.CASCADE)
-    total_price = models.FloatField()
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders')
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
     timestamp = models.DateTimeField(auto_now_add=True)
 
 class Ticket(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE) 
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='ticket') 
     tier = models.ForeignKey(TicketTier, on_delete=models.CASCADE)
     ticket_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     qr_code_image = models.ImageField(upload_to='qr_code_img/', blank=True, null=True)

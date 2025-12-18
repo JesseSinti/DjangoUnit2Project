@@ -16,6 +16,7 @@ import qrcode
 from io import BytesIO
 from django.core.files import File
 from django.core.mail import EmailMessage 
+import json
 # ============================================================================================================
 #                                                 1. DECORATORS
 # ============================================================================================================
@@ -272,12 +273,22 @@ def user_dashboard(request, org_id):
 
 @login_required
 def customer_dashboard(request):
-    user = User.objects.get(id=request.user.id)
-    orders = Order.objects.filter(user=request.user)
-    total_orders = len(orders)
-    return render(request, "customer_dashboard.html",{
-    'Customer' : user,
-    'total_orders' : total_orders})
+    user = request.user
+    orders = Order.objects.filter(user=user)
+
+    
+    total = sum(order.total_price for order in orders)
+
+    total_orders = orders.count()
+
+    return render(request, "customer_dashboard.html", {
+        'Customer': user,
+        'total_orders': total_orders,
+        'Orders': orders,
+        'Total_expenses': total
+    })
+
+
 
 
 # =============================================================================================================
@@ -415,48 +426,52 @@ def SetTicketTier(request, pk):
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
+
 @login_required
 def Checkout_Cart(request):
-    
     cart = Cart.objects.get(user=request.user)
     cart_items = TicketsSaved.objects.filter(cart=cart)
 
-    if not cart_items:
+    if not cart_items.exists():
         return redirect('/cart/')
 
     line_items = []
+    metadata_items = []
+
     for cart_item in cart_items:
-        ticket_item = cart_item.ticket
-        image_url = None
+        ticket = cart_item.ticket
 
         line_items.append({
             'price_data': {
                 'currency': 'usd',
-                'unit_amount': int(ticket_item.price * 100), 
+                'unit_amount': int(ticket.price * Decimal(107.25)),  
                 'product_data': {
-                    'name': ticket_item.type,
-                    'images': [image_url] if image_url else [],
+                    'name': f"{ticket.event.title} – {ticket.type}",
                 },
             },
             'quantity': cart_item.quantity,
         })
 
-    MY_DOMAIN = f"{request.scheme}://{request.get_host()}"
+        metadata_items.append({
+            'tier_id': ticket.id,
+            'quantity': cart_item.quantity,
+            'price': str(ticket.price),
+        })
+
     checkout_session = stripe.checkout.Session.create(
         payment_method_types=['card'],
+        mode='payment',
         line_items=line_items,
         metadata={
-            'tier_id' : ticket_item.id,
-        'user_id' : request.user.id,
-        'event_id' : ticket_item.event.id,
-        'quantity' : cart_item.quantity
+            'user_id': str(request.user.id),
+            'cart_items': json.dumps(metadata_items),
         },
-        mode='payment',
-        success_url = "http://127.0.0.1:8000/payment/success/?session_id={CHECKOUT_SESSION_ID}",
-        cancel_url='http://127.0.0.1:8000/cart/',
+        success_url="http://127.0.0.1:8000/payment/success/?session_id={CHECKOUT_SESSION_ID}",
+        cancel_url="http://127.0.0.1:8000/cart/",
     )
 
     return redirect(checkout_session.url)
+
 
 @login_required
 def CheckoutView(request, pk):
@@ -469,7 +484,7 @@ def CheckoutView(request, pk):
         line_items=[{
             'price_data': {
                 'currency':'usd',
-                'unit_amount':int(ticket.price * 100),
+                'unit_amount':int(ticket.price * Decimal(107.25)),
                 'product_data': {
                     "name":ticket.type,
                     'images':[image_url]
@@ -481,7 +496,6 @@ def CheckoutView(request, pk):
     metadata = {
         'tier_id':ticket.id,
         'user_id':request.user.id,
-        'event_id' : ticket.event.id,
         'quantity' : quantity
     },
     mode='payment',
@@ -510,16 +524,51 @@ def Payment_Success(request):
 
     # Gets the data that was passed to the checkout session
     metadata = session.metadata
-
+    if "cart_items" in metadata:
+        handle_cart_payment(
+            user_id=metadata["user_id"],
+            cart_items=json.loads(metadata["cart_items"]),
+            payment_id=session.payment_intent
+        )
+    else:
     # runs the function if the payment was succesful 
-    Handle_Successful_Payment(
-        user_id=metadata["user_id"],
-        event_id=metadata["event_id"],
-        tier_id=metadata["tier_id"],
-        quantity=int(metadata["quantity"]),
-        payment_id=session.payment_intent
-    )
+        Handle_Successful_Payment(
+            user_id=metadata["user_id"],
+            tier_id=metadata["tier_id"],
+            quantity=int(metadata["quantity"]),
+            payment_id=session.payment_intent
+        )
     return redirect('home_page')
+
+def send_ticket_email(order, user):
+    tickets = Ticket.objects.filter(order=order)
+
+    subject = "Your Tickets"
+    body = f"""
+Thank you for your purchase!
+
+Attached are your {tickets.count()} ticket(s).
+Please bring the QR codes with you to the event.
+        """
+    from_email = "jessecorbin75@gmail.com"
+
+
+    email = EmailMessage(
+        subject=subject,
+        body=body,
+        from_email=from_email,
+        to=[user.email],
+    )
+
+    for ticket in tickets:
+        if not ticket.qr_code_image:
+            generate_qr_code(ticket)
+            ticket.save()
+
+        email.attach_file(ticket.qr_code_image.path)
+
+    email.send(fail_silently=False)
+
 
 def generate_qr_code(ticket):
     # This makes the qr code using the installs and imports 
@@ -534,57 +583,99 @@ def generate_qr_code(ticket):
         save=False
     )
 
-def Handle_Successful_Payment(*, user_id, event_id, tier_id, quantity, payment_id):
-    with transaction.atomic():  
-        # gets the data using the metadata ids
+def handle_cart_payment(*, user_id, cart_items, payment_id):
+    with transaction.atomic():
         user = User.objects.get(id=user_id)
-        event = Event.objects.get(id=event_id)
+
+        order = Order.objects.create(
+            user=user,
+            total_price=Decimal("0.00")
+        )
+
+        total = Decimal("0.00")
+
+        for item in cart_items:
+            tier = TicketTier.objects.select_for_update().get(id=item["tier_id"])
+            quantity = int(item["quantity"])
+
+            if tier.quantity < quantity:
+                raise Exception("Not enough tickets")
+
+            tier.quantity -= quantity
+            tier.save()
+
+            Ticket.objects.bulk_create([
+                Ticket(order=order, tier=tier)
+                for _ in range(quantity)
+            ])
+
+            total += tier.price * quantity
+            taxes = total  * Decimal(0.0725)
+
+            true_total = total + taxes
+        order.total_price = true_total
+        order.save()
+
+        send_ticket_email(order, user)
+
+def Handle_Successful_Payment(*, user_id, tier_id, quantity, payment_id):
+    with transaction.atomic():
+        user = User.objects.get(id=user_id)
         tier = TicketTier.objects.select_for_update().get(id=tier_id)
 
-        # lowers the ticket quantity by however much is being purchased
         if tier.quantity < quantity:
             raise Exception("Not Enough Tickets")
-        # Fixes the total price and Decimal makes it round in monetary values(best used for transactions)
-        total_price = tier.price * Decimal(quantity)
 
-        
-
-        # Makes the users order with the info it got from the metadata 
-        order = Order.objects.create(user=user, event=event, total_price=total_price)
-
-        # changes the quantity so it actively displays correctly on pages
         tier.quantity -= quantity
         tier.save()
-        
-        Ticket.objects.bulk_create([Ticket(order=order, tier=tier) for _ in range(quantity)])
+        total = tier.price * quantity 
+        taxes = total * Decimal(0.0725)
+        true_total =  total + taxes
+        order = Order.objects.create(
+            user=user,
+            total_price=true_total
+        )
 
-        email = EmailMessage(
-        subject="Ticket Receipt",
-        body="Thank you for your purchase! Please find your tickets attached.",
-        from_email="jessecorbin75@gmail.com",
-        to=[user.email]
-        )   
-        
-        # This calls the qr code function and has it make a qr code for each ticket and then save after because the function isn't set to auto save it
-        for ticket in Ticket.objects.filter(order=order):
-            generate_qr_code(ticket)
-            ticket.save()
-        email.attach_file(ticket.qr_code_image.path)
+        Ticket.objects.bulk_create([
+            Ticket(order=order, tier=tier)
+            for _ in range(quantity)
+        ])
 
-        email.send(fail_silently=False)
+        send_ticket_email(order, user)
 
-@login_required
-def Add_Ticket_Cart(request,pk):
-    cart, created = Cart.objects.get_or_create(user=request.user)
 
-    added_ticket = TicketTier.objects.get(id=pk)
+@require_POST
+def Add_Ticket_Cart(request, pk):
+    # 1. Get the quantity from the form data (Default to 1 if missing)
+    try:
+        quantity = int(request.POST.get('quantity', 1))
+        if quantity < 1:
+            quantity = 1
+    except ValueError:
+        quantity = 1
 
-    ticket_item, created = TicketsSaved.objects.get_or_create(cart=cart, ticket=added_ticket)
+    # 2. Get or Create Cart
+    cart, _ = Cart.objects.get_or_create(user=request.user)
 
+    # 3. Get the Ticket Tier
+    added_ticket = get_object_or_404(TicketTier, id=pk)
+
+    # 4. Get or Create the item in the cart
+    ticket_item, created = TicketsSaved.objects.get_or_create(
+        cart=cart, 
+        ticket=added_ticket,
+        # You can set defaults here if your model requires it
+        # defaults={'quantity': quantity} 
+    )
+
+    # 5. Update Quantity logic
     if not created:
-        ticket_item.quantity += 1
+        # If item already exists in cart, ADD the new amount to existing amount
+        ticket_item.quantity += quantity
         ticket_item.save()
     else:
+        # If it's a new item, set the initial quantity
+        ticket_item.quantity = quantity
         ticket_item.save()
     
     return redirect('cart')
@@ -595,9 +686,10 @@ def cart(request):
 
     ticket = cart.tickets.all()
     total = cart.total()
-    taxes = total * .0725
+    taxes = total * Decimal(.0725)
+    true_total = total + taxes
 
-    return render(request, 'cart.html', {'cart':cart, 'tickets':ticket, 'total' : total, 'Taxes' : taxes})
+    return render(request, 'cart.html', {'cart':cart, 'tickets':ticket, 'total' : total, 'Taxes' : taxes, 'true_total' : true_total})
 
 def Remove_Ticket_Cart(request,pk):
     cart = Cart.objects.get(user=request.user)
