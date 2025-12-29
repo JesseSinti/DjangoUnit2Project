@@ -3,11 +3,11 @@ from .models import *
 
 class EventFilter(django_filters.FilterSet):
     min_price = django_filters.NumberFilter(
-        field_name='tickettier__price',
+        field_name='ticket_tiers__price',
         lookup_expr='gte'
     )
     max_price = django_filters.NumberFilter(
-        field_name='tickettier__price',
+        field_name='ticket_tiers__price',
         lookup_expr='lte'
     )
     location = django_filters.CharFilter(

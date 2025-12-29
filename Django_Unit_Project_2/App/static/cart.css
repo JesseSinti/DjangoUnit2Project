@@ -1,4 +1,4 @@
-/* Variables */
+
 :root {
     --primary-color: #4f46e5;
     --primary-hover: #4338ca;
@@ -46,14 +46,14 @@ body {
     color: var(--text-muted);
 }
 
-/* Grid Layout */
+
 .cart-layout {
     display: grid;
     grid-template-columns: 1fr 320px;
     gap: 2rem;
 }
 
-/* Ticket List */
+
 .ticket-list {
     display: flex;
     flex-direction: column;
@@ -70,7 +70,7 @@ body {
     border: 1px solid #e5e7eb;
 }
 
-/* Image Handling */
+
 .ticket-image {
     width: 100px;
     height: 80px;
@@ -85,7 +85,7 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* Ensures banner images don't stretch */
+    
 }
 
 .placeholder-img {
@@ -94,7 +94,7 @@ body {
     background-color: #d1d5db;
 }
 
-/* Details */
+
 .ticket-details {
     flex: 1;
     margin-right: 1rem;
@@ -116,7 +116,7 @@ body {
     margin: 0 0.3rem;
 }
 
-/* Tier Badge */
+
 .tier-badge {
     display: inline-block;
     padding: 0.25rem 0.75rem;
@@ -127,7 +127,7 @@ body {
     letter-spacing: 0.05em;
 }
 
-/* Dynamic colors based on tier */
+
 .tier-vip {
     background-color: var(--badge-vip-bg);
     color: var(--badge-vip-text);
@@ -139,7 +139,7 @@ body {
     color: var(--badge-gen-text);
 }
 
-/* Pricing Section */
+
 .ticket-pricing {
     text-align: right;
     margin-right: 1.5rem;
@@ -157,29 +157,79 @@ body {
     font-size: 1.25rem;
 }
 
-/* Remove Button */
+
+
+.ticket-actions {
+    margin-top: 0.5rem;
+    
+    display: flex;
+    justify-content: flex-end;
+    
+}
+
 .ticket-actions form {
-    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
 }
 
-.btn-remove {
-    background: none;
-    border: none;
-    color: #9ca3af;
-    cursor: pointer;
-    font-size: 1.5rem;
-    line-height: 1;
-    padding: 0.5rem;
-    border-radius: 50%;
-    transition: all 0.2s;
+
+.ticket-actions input[type="number"] {
+    width: 60px;
+    padding: 0.4rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    background-color: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.btn-remove:hover {
+
+.ticket-actions input[type="number"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+ 
+}
+
+
+.ticket-actions button {
+    background-color: #fff;
     color: var(--danger-color);
-    background-color: #fee2e2;
+    
+    border: 1px solid #fee2e2;
+    
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-/* Summary Box */
+
+.ticket-actions button:hover {
+    background-color: var(--danger-color);
+    color: white;
+    border-color: var(--danger-color);
+}
+
+
+
+
+@media (max-width: 768px) {
+    .ticket-actions {
+        justify-content: flex-start;
+        
+        margin-top: 1rem;
+    }
+}
+
+
 .cart-summary {
     position: relative;
 }
@@ -224,7 +274,7 @@ hr {
     margin-bottom: 1.5rem;
 }
 
-/* Checkout Button */
+
 .btn-checkout {
     display: block;
     width: 100%;
@@ -256,7 +306,7 @@ hr {
     color: var(--primary-color);
 }
 
-/* Empty State */
+
 .empty-cart {
     text-align: center;
     padding: 5rem 1rem;
@@ -271,7 +321,7 @@ hr {
     opacity: 0.5;
 }
 
-/* Responsive */
+
 @media (max-width: 768px) {
     .cart-layout {
         grid-template-columns: 1fr;

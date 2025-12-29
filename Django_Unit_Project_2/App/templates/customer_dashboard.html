@@ -16,7 +16,7 @@
             
             <ul class="sidebar-menu">
                 <li><a href="#" class="active-item">Overview</a></li>
-                <li><a href="#">My Tickets</a></li> 
+                <li><a href="{% url 'cart' %}">My Tickets</a></li> 
                
             </ul>
         </aside>
@@ -35,7 +35,7 @@
                 </div>
                 <div class="stat-card">
                     <span class="stat-label">Total Expenses</span>
-                    <span class="stat-int">3</span>
+                    <span class="stat-int">${{ Total_expenses|floatformat:2 }}</span>
                 </div>
                 <div class="stat-card">
                     <span class="stat-label">Contact Info </span>
@@ -51,37 +51,35 @@
                     <table class="clean-table">
                         <thead>
                             <tr>
-                                <th>Order ID</th>
-                                <th>Event-Title</th>
-                                <th>Date</th> 
-                                <th>Amount</th>
+                                <th style="width: 10%;">Order ID</th>
+                                <th style="width: 70%;">Ticket Details</th>
+                                <th style="width: 20%; text-align: right;">Total Amount</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {% for order in Orders %}
                             <tr>
-                                <td>#ORD-4421</td>
-                                <td>Web Design Workshop</td>
-                                <td>Oct 24, 2023</td>
-                                <td>$150.00</td>
+                                <td class="align-top">
+                                    <span class="order-id-text">#{{ order.id }}</span>
+                                </td>
+            
+                                <td>
+                                    <div class="ticket-scroll-container">
+                                        {% for ticket in order.ticket.all %}
+                                        <div class="ticket-item">
+                                            <span class="ticket-icon">🎟️</span>
+                                            <span class="ticket-name">{{ ticket.tier.event.title }}/{{ticket.tier.type }} Ticket</span>
+                                            <span class="ticket-date">${{ ticket.tier.price }}/{{ ticket.tier.event.date|date:"M d, Y" }}</span>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+            
+                                <td class="align-top" style="text-align: right;">
+                                    <span class="order-price">${{ order.total_price|floatformat:2 }}</span>
+                                </td>
                             </tr>
-                            <tr>
-                                <td>#ORD-4420</td>
-                                <td>Networking Night VIP</td>
-                                <td>Oct 10, 2023</td>
-                                <td>$45.00</td>
-                            </tr>
-                            <tr>
-                                <td>#ORD-4418</td>
-                                <td>Tech Conf Early Bird</td>
-                                <td>Sep 28, 2023</td>
-                                <td>$299.00</td>
-                            </tr>
-                            <tr>
-                                <td>#ORD-4415</td>
-                                <td>Design E-Book</td>
-                                <td>Sep 15, 2023</td>
-                                <td>$19.99</td>
-                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>

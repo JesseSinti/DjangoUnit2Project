@@ -293,25 +293,25 @@ a {
     cursor: not-allowed;
 }
 
-/* Utility class to hide elements */
+
 .hidden {
     display: none !important;
 }
 
-/* The container for the selector */
+
 .quantity-selector {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border: 2px solid #FFC107; /* The yellow border color */
-    border-radius: 25px;       /* Rounded corners */
+    border: 2px solid #FFC107;
+    border-radius: 25px;       
     padding: 5px 10px;
-    width: 120px;              /* Adjust width as needed */
-    margin: 0 auto;            /* Center it if needed */
+    width: 120px;              
+    margin: 0 auto;           
     background-color: white;
 }
 
-/* The buttons inside the selector (trash and plus) */
+
 .qty-btn {
     background: none;
     border: none;
@@ -323,7 +323,7 @@ a {
     padding: 5px;
 }
 
-/* The number in the middle */
+
 .qty-display {
     font-weight: bold;
     font-size: 1.2rem;
@@ -331,7 +331,7 @@ a {
     text-align: center;
 }
 
-/* Margin for the confirm button */
+
 .mt-2 {
     margin-top: 0.5rem;
 }

@@ -28,7 +28,79 @@
 
             {% if SearchActive %}
             {% for event in Events %}
-            {% include "includes/event_card_partial.html" %}
+                <article class="event-card">
+                    <div class="event-image">
+                        {% if event.banner_image %}
+                        <img src="{{ event.banner_image.url }}" alt="{{ event.title }}">
+                        {% endif %}
+                    </div>
+                
+                    <div class="event-content">
+                        <h3 class="event-title">{{ event.title }}</h3>
+                        <span class="event-date">{{ event.location }} • {{ event.start_time }} - {{ event.end_time }}</span>
+                        <p class="event-desc">{{ event.description|truncatewords:20 }}</p>
+                    </div>
+                
+                    <div class="ticket-tiers">
+                        <h4>Ticket Options</h4>
+                
+                        {% for tier in event.ticket_tiers.all %}
+                        <div class="ticket-tier">
+                            <div class="tier-top-row">
+                                <div class="tier-info">
+                                    <span class="tier-name">{{ tier.type }}</span>
+                                    <span class="tier-price">${{ tier.price|floatformat:2 }}</span>
+                                </div>
+                                <div class="tier-quantity">
+                                    {% if tier.quantity > 0 %}
+                                    <span class="qty-available">{{ tier.quantity }} left</span>
+                                    {% else %}
+                                    <span class="sold-out-badge">Sold Out</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                
+                            <div class="ticket-actions">
+                                <form action="{% url 'Add_Ticket_Cart' tier.id %}" method="POST" class="ticket-purchase-form">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="quantity" value="1" class="hidden-quantity-input">
+                
+                                    <button type="button" class="btn-ticket btn-buy initial-buy-btn">
+                                        Add to cart
+                                    </button>
+                
+                                    <div class="quantity-selector hidden">
+                                        <button type="button" class="qty-btn decrease-btn">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                
+                                        <span class="qty-display">1</span>
+                
+                                        <button type="button" class="qty-btn increase-btn">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </button>
+                                    </div>
+                
+                                    <button type="submit" class="btn-ticket btn-confirm hidden mt-2">
+                                        Confirm Add
+                                    </button>
+                                </form>
+                                {% if tier.quantity > 0 %}
+                                <a class="action-form" href="{% url 'purchase_ticket' tier.id %}">
+                                    <button type="submit" class="btn-ticket btn-buy">
+                                        Purchase
+                                    </button>
+                                </a>
+                                {% else %}
+                                <button class="btn-ticket btn-disabled" disabled>Unavailable</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="no-tickets">No ticket tiers created yet.</p>
+                        {% endfor %}
+                    </div>
+                </article>
             {% endfor %}
 
             {% else %}
