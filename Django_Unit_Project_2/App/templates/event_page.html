@@ -43,25 +43,29 @@
 
                 
                 <div class="ticket-tiers">
-                    <h4>Ticket Options</h4>
+                    <h4>Sales Tracking</h4>
 
                     {% for tier in event.ticket_tiers.all %}
-                    <div class="ticket-tier">
+                    <div class="ticket-tier" style="border-bottom: 1px solid #eee; padding: 10px 0;">
                         <div class="tier-info">
-                            <span class="tier-name">{{ tier.type }}</span>
-                            <span class="tier-price">${{ tier.price|floatformat:2 }}</span>
+                            <span class="tier-name"><strong>{{ tier.get_type_display }}</strong></span>
+                            <span class="tier-price">${{ tier.price }}</span>
                         </div>
 
-                        <div class="tier-quantity">
-                            {% if tier.quantity > 0 %}
-                            <span>{{ tier.quantity }} tickets available</span>
+                        <div class="tier-stats">
+                            <p>
+                                <strong>Sold:</strong> {{ tier.sold_tickets }} / {{ tier.quantity }}
+                            </p>
+                            
+                            {% if tier.sold_tickets >= tier.quantity %}
+                                <span style="color: red; font-weight: bold;">SOLD OUT</span>
                             {% else %}
-                            <span class="sold-out">Sold Out</span>
+                                <span style="color: green;">{{ tier.quantity }} Remaining</span>
                             {% endif %}
                         </div>
                     </div>
                     {% empty %}
-                    <p class="no-tickets">No ticket tiers created yet.</p>
+                    <p>No ticket tiers created.</p>
                     {% endfor %}
                 </div>
 
