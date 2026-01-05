@@ -120,7 +120,7 @@
 
                 <div class="ticket-tiers">
                     <h4>Ticket Options</h4>
-
+                
                     {% for tier in event.ticket_tiers.all %}
                     <div class="ticket-tier">
                         <div class="tier-top-row">
@@ -173,6 +173,7 @@
                             {% endif %}
                         </div>
                     </div>
+                
                     {% empty %}
                     <p class="no-tickets">No ticket tiers created yet.</p>
                     {% endfor %}
