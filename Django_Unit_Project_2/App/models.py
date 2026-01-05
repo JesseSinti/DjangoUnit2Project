@@ -79,12 +79,6 @@ class TicketTier(models.Model):
     def tickets_remaining(self):
         return self.quantity - self.ticket_set.count()
 
-    def sold_count(self):
-        return self.ticket_set.count()
-
-    def tickets_remaining(self):
-        return self.quantity - self.sold_count()
-
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders')
     total_price = models.DecimalField(max_digits=10, decimal_places=2)

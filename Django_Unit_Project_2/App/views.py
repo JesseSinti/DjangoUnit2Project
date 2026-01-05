@@ -153,12 +153,12 @@ def customer_signup(request):
 def home_view(request):
     annotated_tiers = TicketTier.objects.annotate(
         sold_tickets=Count('ticket'),
-        remaining=F('quantity') - Count('ticket')
+        remaining=F('quantity')
     )
 
     events_with_stats = Event.objects.all().prefetch_related(
         Prefetch('ticket_tiers', queryset=annotated_tiers)
-    ).order_by('-date')
+    ).order_by('date')
 
     event_filter = EventFilter(request.GET, queryset=events_with_stats)
     
@@ -229,7 +229,7 @@ def Event_Page(request):
     
     tier_stats = TicketTier.objects.annotate(
         sold_tickets=Count('ticket'),
-        remaining=F('quantity') - Count('ticket')
+        remaining=F('quantity')
     )
     
     Events = Event.objects.filter(organization=organization).prefetch_related(
