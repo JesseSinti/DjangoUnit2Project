@@ -129,11 +129,11 @@
                                 <span class="tier-price">${{ tier.price|floatformat:2 }}</span>
                             </div>
                             <div class="tier-quantity">
-                                {% if tier.quantity > 0 %}
-                                <span class="qty-available">{{ tier.quantity }} left</span>
-                                {% else %}
-                                <span class="sold-out-badge">Sold Out</span>
-                                {% endif %}
+                                    {% if tier.quantity > 0 %}
+                                    <span class="qty-available">{{ tier.remaining }} left</span>
+                                    {% else %}
+                                    <span class="sold-out-badge">Sold Out</span>
+                                    {% endif %}
                             </div>
                         </div>
 
@@ -162,14 +162,12 @@
                                     Confirm Add
                                 </button>
                             </form>
-                            {% if tier.quantity > 0 %}
-                            <a class="action-form" href="{% url 'purchase_ticket' tier.id %}">
-                                <button type="submit" class="btn-ticket btn-buy">
-                                    Purchase
-                                </button>
-                            </a>
+                            {% if tier.remaining > 0 %}
+                                <a class="action-form" href="{% url 'purchase_ticket' tier.id %}">
+                                    <button type="submit" class="btn-ticket btn-buy">Purchase</button>
+                                </a>
                             {% else %}
-                            <button class="btn-ticket btn-disabled" disabled>Unavailable</button>
+                                <button class="btn-ticket btn-disabled" disabled>Sold Out</button>
                             {% endif %}
                         </div>
                     </div>
