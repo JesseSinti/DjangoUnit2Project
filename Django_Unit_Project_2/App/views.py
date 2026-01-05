@@ -16,6 +16,7 @@ import qrcode
 from io import BytesIO
 from django.core.files import File
 from django.core.mail import EmailMessage 
+from django.db.models import Count
 import json
 # ============================================================================================================
 #                                                 1. DECORATORS
@@ -207,11 +208,18 @@ def admin_dashboard(request, org_id):
 
 
 def Event_Page(request):
-    User = OrganizationMembership.objects.get(user=request.user)
-    organization = Organization.objects.get(name=User.organization.name)
-    Events = Event.objects.filter(organization=organization).prefetch_related('ticket_tiers')
+    membership = OrganizationMembership.objects.get(user=request.user)
+    organization = membership.organization
+    
+    from django.db.models import Prefetch
+    
+    tier_stats = TicketTier.objects.annotate(sold_tickets=Count('ticket'))
+    
+    Events = Event.objects.filter(organization=organization).prefetch_related(
+        Prefetch('ticket_tiers', queryset=tier_stats)
+    )
 
-    return render(request, 'event_page.html', {'Events' : Events})
+    return render(request, 'event_page.html', {'Events': Events})
 
 
 
