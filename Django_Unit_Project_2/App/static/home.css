@@ -1,3 +1,18 @@
+/* =========================================
+   1. RESET & GLOBAL STYLES
+   ========================================= */
+:root {
+    /* New Colors based on the image */
+    --gradient-start: #F8Cdda;
+    /* Soft Pastel Pink */
+    --gradient-end: #9C68E4;
+    /* Violet/Purple */
+    --primary-black: #000000;
+    /* Solid Black for strong contrast */
+    --primary-purple-btn: #9C68E4;
+    /* Matching the violet end of gradient */
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -7,8 +22,10 @@
 body {
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     line-height: 1.6;
-    color: #333;
-    background-color: #f8f9fa; 
+    color: var(--primary-black);
+    /* Updated to solid black per image style */
+    background-color: #ffffff;
+    overflow-x: hidden;
 }
 
 a {
@@ -16,23 +33,29 @@ a {
     color: inherit;
 }
 
-
+/* =========================================
+   2. NAVBAR (UPDATED TO SOLID BLACK)
+   ========================================= */
 .navbar {
-    background-color: #ffffff;
+    background-color: var(--primary-black);
+    /* Black navbar per image */
     padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     position: sticky;
     top: 0;
     z-index: 1000;
+    color: #ffffff;
+    /* White text on black navbar */
 }
 
 .logo {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #2c3e50;
+    color: #ffffff;
+    /* White logo for contrast */
 }
 
 .nav-links {
@@ -43,18 +66,27 @@ a {
 
 .nav-links a {
     transition: color 0.3s ease;
+    font-weight: 500;
+    color: #ffffff;
+    /* White links */
 }
 
 .nav-links a:hover {
-    color: #007bff; 
+    color: var(--gradient-start);
+    /* Hover to pink */
 }
 
-
+/* =========================================
+   3. ABOUT SECTION (HERO)
+   UPDATED GRADIENT & TEXT COLOR
+   ========================================= */
 .about-section {
-    background-color: #ffffff;
-    padding: 4rem 2rem;
+    /* Horizontal gradient (90deg) from soft pink to violet */
+    background: linear-gradient(90deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+    padding: 6rem 2rem;
     text-align: center;
-    border-bottom: 1px solid #eaeaea;
+    /* Text is now BLACK to match the image example's hero text */
+    color: var(--primary-black);
 }
 
 .container {
@@ -63,37 +95,45 @@ a {
     padding: 0 1rem;
 }
 
-.section-title {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    color: #2c3e50;
-}
-
 .about-text {
-    max-width: 700px;
+    max-width: 800px;
     margin: 0 auto;
-    color: #666;
-    font-size: 1.1rem;
+    font-size: 1.25rem;
+    /* Slightly larger */
+    font-weight: 600;
+    /* Bolder text to stand out against gradient */
+    line-height: 1.8;
 }
 
-
+/* Spacer to separate sections */
 .spacer {
-    height: 60px; 
-    background-color: transparent;
+    height: 60px;
+    background-color: #ffffff;
 }
 
-
+/* =========================================
+   4. EVENTS SECTION (White Background)
+   ========================================= */
 .events-section {
+    background-color: #ffffff;
     padding-bottom: 4rem;
 }
 
 .events-header {
     margin-bottom: 2rem;
     text-align: left;
-    border-left: 5px solid #007bff;
+    /* Accent bar changed to the new violet color */
+    border-left: 5px solid var(--primary-purple-btn);
     padding-left: 1rem;
 }
 
+.section-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--primary-black);
+    /* Solid black title */
+    font-weight: 800;
+}
 
 .events-grid {
     display: grid;
@@ -101,19 +141,35 @@ a {
     gap: 2rem;
 }
 
-
+/* =========================================
+   5. EVENT CARDS (UPDATED BORDERS)
+   ========================================= */
 .event-card {
     background: #ffffff;
-    border-radius: 8px;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border: 1px solid #eee;
+    /* Adding solid black border to match image style */
+    border: 2px solid var(--primary-black);
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
+    /* Trendy "hard" shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .event-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+    /* Harder shadow on hover */
+    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.2);
+}
+
+.event-image {
+    height: 15rem;
+    background-color: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #adb5bd;
+    overflow: hidden;
+    border-bottom: 2px solid var(--primary-black);
 }
 
 .event-image img {
@@ -121,16 +177,11 @@ a {
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform 0.5s ease;
 }
 
-
-.event-image {
-    height: 25rem;
-    background-color: #e9ecef;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #adb5bd;
+.event-card:hover .event-image img {
+    transform: scale(1.05);
 }
 
 .event-content {
@@ -139,8 +190,9 @@ a {
 
 .event-date {
     font-size: 0.85rem;
-    color: #007bff;
-    font-weight: 600;
+    /* Date accent color switched to the violet */
+    color: var(--primary-purple-btn);
+    font-weight: 700;
     text-transform: uppercase;
     margin-bottom: 0.5rem;
     display: block;
@@ -149,49 +201,48 @@ a {
 .event-title {
     font-size: 1.25rem;
     margin-bottom: 0.75rem;
-    color: #2c3e50;
+    color: var(--primary-black);
+    font-weight: 800;
 }
 
 .event-desc {
     font-size: 0.95rem;
-    color: #666;
+    color: #444;
+    /* Slightly softer black for description body */
     margin-bottom: 1.5rem;
+    line-height: 1.5;
+    font-weight: 500;
 }
 
-.btn-link {
-    display: inline-block;
-    color: #2c3e50;
-    font-weight: 600;
-    font-size: 0.9rem;
-    border-bottom: 2px solid #007bff;
-}
-
-
-
-
+/* =========================================
+   6. TICKET TIERS
+   ========================================= */
 .ticket-tiers {
     padding: 1rem 1.5rem;
-    
-    background-color: #f8f9fa;
-    
-    border-top: 1px solid #eee;
+    background-color: #fff;
+    border-top: 2px solid var(--primary-black);
+    /* Black divider */
     margin-top: auto;
-   
+}
+
+.ticket-tiers h4 {
+    margin-bottom: 10px;
+    color: var(--primary-black);
+    font-size: 1rem;
+    font-weight: 700;
 }
 
 .ticket-tier {
     display: flex;
     flex-direction: column;
-    
     gap: 0.8rem;
     padding: 1rem 0;
-    border-bottom: 1px dashed #dee2e6;
+    border-bottom: 1px dashed #aaa;
 }
 
 .ticket-tier:last-child {
     border-bottom: none;
 }
-
 
 .tier-top-row {
     display: flex;
@@ -207,35 +258,39 @@ a {
 
 .tier-name {
     font-weight: 700;
-    color: #343a40;
+    color: var(--primary-black);
     font-size: 0.95rem;
 }
 
 .tier-price {
-    font-weight: 600;
-    color: #28a745;
-    background-color: #e6ffed;
-    padding: 2px 6px;
-    border-radius: 4px;
+    font-weight: 700;
+    color: #ffffff;
+    /* Price badge is now the violet color */
+    background-color: var(--primary-purple-btn);
+    padding: 4px 10px;
+    border-radius: 20px;
     font-size: 0.85rem;
 }
 
 .qty-available {
     font-size: 0.8rem;
-    color: #6c757d;
+    color: #666;
+    font-weight: 600;
 }
 
 .sold-out-badge {
     font-size: 0.75rem;
-    color: #dc3545;
-    background: #fde8e8;
-    padding: 2px 6px;
-    border-radius: 4px;
+    color: var(--primary-black);
+    background: #e0e0e0;
+    padding: 4px 10px;
+    border-radius: 20px;
     font-weight: 700;
+    border: 1px solid #999;
 }
 
-
-
+/* =========================================
+   7. BUTTONS & ACTIONS (UPDATED COLORS)
+   ========================================= */
 .ticket-actions {
     display: flex;
     gap: 0.5rem;
@@ -244,94 +299,107 @@ a {
 
 .action-form {
     flex-grow: 1;
-   
     display: flex;
 }
 
 .btn-ticket {
     width: 100%;
-    height: 4vh;
+    height: 45px;
+    /* Slightly taller buttons */
     padding: 0.5rem;
     border: none;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    font-weight: 600;
+    border-radius: 8px;
+    /* Softer corners */
+    font-size: 0.9rem;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.2s ease;
-    text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
-
+/* Primary "Purchase/Add" Button -> UPDATED TO VIOLET */
 .btn-buy {
-    background-color: #007bff;
+    background-color: var(--primary-purple-btn);
     color: white;
+    box-shadow: 0 4px 6px rgba(156, 104, 228, 0.3);
 }
 
 .btn-buy:hover {
-    background-color: #0056b3;
-    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+    background-color: #834ec7;
+    /* Slightly darker violet */
+    transform: translateY(-2px);
 }
 
-
-.btn-save {
-    background-color: transparent;
-    border: 1px solid #ced4da;
-    color: #6c757d;
+/* Confirm Button -> Black */
+.btn-confirm {
+    background-color: var(--primary-black);
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-.btn-save:hover {
-    background-color: #e9ecef;
-    color: #495057;
-    border-color: #adb5bd;
+.btn-confirm:hover {
+    background-color: #333;
+    transform: translateY(-2px);
 }
 
-
+/* Disabled Button */
 .btn-disabled {
     background-color: #e9ecef;
     color: #adb5bd;
     cursor: not-allowed;
 }
 
-
-.hidden {
-    display: none !important;
-}
-
-
+/* =========================================
+   8. QUANTITY SELECTOR
+   ========================================= */
 .quantity-selector {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border: 2px solid #FFC107;
-    border-radius: 25px;       
-    padding: 5px 10px;
-    width: 120px;              
-    margin: 0 auto;           
+    /* Border updated to violet */
+    border: 2px solid var(--primary-purple-btn);
+    border-radius: 8px;
+    padding: 0 10px;
+    width: 100%;
+    height: 45px;
     background-color: white;
 }
-
 
 .qty-btn {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 1.1rem;
-    color: #333;
+    font-size: 1rem;
+    /* Icons updated to violet */
+    color: var(--primary-purple-btn);
     display: flex;
     align-items: center;
     padding: 5px;
 }
 
+.qty-btn:hover {
+    color: var(--primary-black);
+}
 
 .qty-display {
-    font-weight: bold;
+    font-weight: 800;
     font-size: 1.2rem;
     min-width: 30px;
     text-align: center;
+    color: var(--primary-black);
 }
 
+/* Utility */
+.hidden {
+    display: none !important;
+}
 
 .mt-2 {
     margin-top: 0.5rem;
+}
+
+.no-tickets {
+    font-size: 0.9rem;
+    color: #888;
+    font-weight: 500;
 }

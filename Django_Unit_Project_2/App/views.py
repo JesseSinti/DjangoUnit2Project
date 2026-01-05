@@ -149,7 +149,7 @@ def customer_signup(request):
 # =============================================================================================================
 
 def home_view(request): 
-    event_filter = EventFilter(request.GET, queryset=Event.objects.all().prefetch_related('ticket_tiers'))
+    event_filter = EventFilter(request.GET, queryset=Event.objects.all().prefetch_related('ticket_tiers').order_by('-date'))
     
     return render(request, 'home.html', {'filter' : event_filter, 'filter_active' :  bool(request.GET), 'Event' : event_filter.qs.distinct()})
 
