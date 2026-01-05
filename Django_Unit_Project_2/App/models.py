@@ -73,6 +73,11 @@ class TicketTier(models.Model):
     type = models.CharField(max_length=10,choices=Status.choices, default="Basic")
     price = models.DecimalField(max_digits=8, decimal_places=2)
     quantity = models.IntegerField()
+    def sold_count(self):
+        return self.ticket_set.count()
+
+    def tickets_remaining(self):
+        return self.quantity - self.ticket_set.count()
 
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders')
@@ -85,11 +90,6 @@ class Ticket(models.Model):
     ticket_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     qr_code_image = models.ImageField(upload_to='qr_code_img/', blank=True, null=True)
     is_used = models.BooleanField(default=False)
-    def sold_count(self):
-        return self.ticket_set.count()
-
-    def tickets_remaining(self):
-        return self.quantity - self.sold_count()
 
 class Cart(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
