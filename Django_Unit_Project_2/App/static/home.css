@@ -1,187 +1,140 @@
 /* =========================================
-   1. RESET & GLOBAL STYLES
+   1. APPLE-ISH PURPLE VARIABLES
    ========================================= */
 :root {
-    /* New Colors based on the image */
-    --gradient-start: #F8Cdda;
-    /* Soft Pastel Pink */
-    --gradient-end: #9C68E4;
-    /* Violet/Purple */
-    --primary-black: #000000;
-    /* Solid Black for strong contrast */
-    --primary-purple-btn: #9C68E4;
-    /* Matching the violet end of gradient */
+    --primary-purple: #8b5cf6;       /* Vibrant Purple from Dashboard */
+    --primary-purple-hover: #7c3aed;
+    --primary-light: #f5f3ff;        /* For badges/pills */
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --border-radius-lg: 24px;       /* Large Apple-style corners */
+    --border-radius-sm: 12px;
+    --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
 }
 
 body {
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    line-height: 1.6;
-    color: var(--primary-black);
-    /* Updated to solid black per image style */
-    background-color: #ffffff;
-    overflow-x: hidden;
-}
-
-a {
-    text-decoration: none;
-    color: inherit;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.5;
 }
 
 /* =========================================
-   2. NAVBAR (UPDATED TO SOLID BLACK)
+   2. NAVBAR (REFINED WHITE)
    ========================================= */
 .navbar {
-    background-color: var(--primary-black);
-    /* Black navbar per image */
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px); /* Glassmorphism */
+    -webkit-backdrop-filter: blur(20px);
     padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     position: sticky;
     top: 0;
     z-index: 1000;
-    color: #ffffff;
-    /* White text on black navbar */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .logo {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 700;
-    color: #ffffff;
-    /* White logo for contrast */
-}
-
-.nav-links {
-    list-style: none;
-    display: flex;
-    gap: 2rem;
+    color: var(--text-main);
+    letter-spacing: -0.02em;
 }
 
 .nav-links a {
-    transition: color 0.3s ease;
+    color: var(--text-muted);
     font-weight: 500;
-    color: #ffffff;
-    /* White links */
+    transition: color 0.2s;
 }
 
 .nav-links a:hover {
-    color: var(--gradient-start);
-    /* Hover to pink */
+    color: var(--primary-purple);
 }
 
 /* =========================================
-   3. ABOUT SECTION (HERO)
-   UPDATED GRADIENT & TEXT COLOR
+   3. HERO SECTION (PURPLE GRADIENT)
    ========================================= */
 .about-section {
-    /* Horizontal gradient (90deg) from soft pink to violet */
-    background: linear-gradient(90deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
-    padding: 6rem 2rem;
+    background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+    padding: 8rem 2rem;
     text-align: center;
-    /* Text is now BLACK to match the image example's hero text */
-    color: var(--primary-black);
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
+    color: white;
 }
 
 .about-text {
     max-width: 800px;
     margin: 0 auto;
-    font-size: 1.25rem;
-    /* Slightly larger */
+    font-size: 1.4rem;
     font-weight: 600;
-    /* Bolder text to stand out against gradient */
-    line-height: 1.8;
-}
-
-/* Spacer to separate sections */
-.spacer {
-    height: 60px;
-    background-color: #ffffff;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
 }
 
 /* =========================================
-   4. EVENTS SECTION (White Background)
+   4. EVENTS SECTION
    ========================================= */
 .events-section {
-    background-color: #ffffff;
-    padding-bottom: 4rem;
+    padding: 4rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .events-header {
-    margin-bottom: 2rem;
-    text-align: left;
-    /* Accent bar changed to the new violet color */
-    border-left: 5px solid var(--primary-purple-btn);
-    padding-left: 1rem;
+    margin-bottom: 3rem;
+    border-left: 6px solid var(--primary-purple);
+    padding-left: 1.5rem;
 }
 
 .section-title {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    color: var(--primary-black);
-    /* Solid black title */
+    font-size: 2.2rem;
     font-weight: 800;
+    letter-spacing: -0.03em;
 }
 
 .events-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 2.5rem;
 }
 
 /* =========================================
-   5. EVENT CARDS (UPDATED BORDERS)
+   5. EVENT CARDS (SLEEK & ROUNDED)
    ========================================= */
 .event-card {
-    background: #ffffff;
-    border-radius: 12px;
+    background: var(--card-bg);
+    border-radius: var(--border-radius-lg);
     overflow: hidden;
-    /* Adding solid black border to match image style */
-    border: 2px solid var(--primary-black);
-    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
-    /* Trendy "hard" shadow */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.03);
 }
 
 .event-card:hover {
-    transform: translateY(-5px);
-    /* Harder shadow on hover */
-    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.2);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
 .event-image {
-    height: 15rem;
-    background-color: #e9ecef;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #adb5bd;
+    height: 200px;
+    background-color: #f1f5f9;
     overflow: hidden;
-    border-bottom: 2px solid var(--primary-black);
 }
 
 .event-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
-    transition: transform 0.5s ease;
-}
-
-.event-card:hover .event-image img {
-    transform: scale(1.05);
 }
 
 .event-content {
@@ -189,217 +142,86 @@ a {
 }
 
 .event-date {
-    font-size: 0.85rem;
-    /* Date accent color switched to the violet */
-    color: var(--primary-purple-btn);
+    font-size: 0.8rem;
+    color: var(--primary-purple);
+    background: var(--primary-light);
+    display: inline-block;
+    padding: 0.2rem 0.8rem;
+    border-radius: 20px;
     font-weight: 700;
     text-transform: uppercase;
-    margin-bottom: 0.5rem;
-    display: block;
+    margin-bottom: 1rem;
 }
 
 .event-title {
-    font-size: 1.25rem;
-    margin-bottom: 0.75rem;
-    color: var(--primary-black);
-    font-weight: 800;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
 }
 
 .event-desc {
     font-size: 0.95rem;
-    color: #444;
-    /* Slightly softer black for description body */
+    color: var(--text-muted);
     margin-bottom: 1.5rem;
-    line-height: 1.5;
-    font-weight: 500;
 }
 
 /* =========================================
-   6. TICKET TIERS
+   6. TICKET UI (CLEANER)
    ========================================= */
 .ticket-tiers {
-    padding: 1rem 1.5rem;
-    background-color: #fff;
-    border-top: 2px solid var(--primary-black);
-    /* Black divider */
-    margin-top: auto;
-}
-
-.ticket-tiers h4 {
-    margin-bottom: 10px;
-    color: var(--primary-black);
-    font-size: 1rem;
-    font-weight: 700;
+    padding: 1.5rem;
+    background-color: #fafafa;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .ticket-tier {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
     padding: 1rem 0;
-    border-bottom: 1px dashed #aaa;
-}
-
-.ticket-tier:last-child {
-    border-bottom: none;
-}
-
-.tier-top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.tier-info {
-    display: flex;
-    gap: 0.5rem;
-    align-items: baseline;
-}
-
-.tier-name {
-    font-weight: 700;
-    color: var(--primary-black);
-    font-size: 0.95rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .tier-price {
     font-weight: 700;
-    color: #ffffff;
-    /* Price badge is now the violet color */
-    background-color: var(--primary-purple-btn);
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-}
-
-.qty-available {
-    font-size: 0.8rem;
-    color: #666;
-    font-weight: 600;
-}
-
-.sold-out-badge {
-    font-size: 0.75rem;
-    color: var(--primary-black);
-    background: #e0e0e0;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-weight: 700;
-    border: 1px solid #999;
-}
-
-/* =========================================
-   7. BUTTONS & ACTIONS (UPDATED COLORS)
-   ========================================= */
-.ticket-actions {
-    display: flex;
-    gap: 0.5rem;
-    width: 100%;
-}
-
-.action-form {
-    flex-grow: 1;
-    display: flex;
+    color: var(--primary-purple);
+    font-size: 1rem;
 }
 
 .btn-ticket {
-    width: 100%;
-    height: 45px;
-    /* Slightly taller buttons */
-    padding: 0.5rem;
-    border: none;
-    border-radius: 8px;
-    /* Softer corners */
-    font-size: 0.9rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    letter-spacing: 0.5px;
+    border-radius: var(--border-radius-sm);
+    font-weight: 600;
+    transition: all 0.2s;
+    height: 48px;
 }
 
-/* Primary "Purchase/Add" Button -> UPDATED TO VIOLET */
 .btn-buy {
-    background-color: var(--primary-purple-btn);
+    background-color: var(--primary-purple);
     color: white;
-    box-shadow: 0 4px 6px rgba(156, 104, 228, 0.3);
 }
 
 .btn-buy:hover {
-    background-color: #834ec7;
-    /* Slightly darker violet */
-    transform: translateY(-2px);
+    background-color: var(--primary-purple-hover);
+    transform: scale(1.02);
 }
 
-/* Confirm Button -> Black */
-.btn-confirm {
-    background-color: var(--primary-black);
-    color: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-}
-
-.btn-confirm:hover {
-    background-color: #333;
-    transform: translateY(-2px);
-}
-
-/* Disabled Button */
-.btn-disabled {
-    background-color: #e9ecef;
-    color: #adb5bd;
-    cursor: not-allowed;
-}
-
-/* =========================================
-   8. QUANTITY SELECTOR
-   ========================================= */
+/* Quantity Selector restyled for purple theme */
 .quantity-selector {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    /* Border updated to violet */
-    border: 2px solid var(--primary-purple-btn);
-    border-radius: 8px;
-    padding: 0 10px;
-    width: 100%;
-    height: 45px;
-    background-color: white;
+    border: 2px solid var(--primary-purple);
+    border-radius: var(--border-radius-sm);
 }
 
-.qty-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    /* Icons updated to violet */
-    color: var(--primary-purple-btn);
-    display: flex;
-    align-items: center;
-    padding: 5px;
-}
-
-.qty-btn:hover {
-    color: var(--primary-black);
-}
-
-.qty-display {
-    font-weight: 800;
-    font-size: 1.2rem;
-    min-width: 30px;
+/* No Events Found state */
+.no-events-container {
+    grid-column: 1 / -1;
     text-align: center;
-    color: var(--primary-black);
-}
-
-/* Utility */
-.hidden {
-    display: none !important;
-}
-
-.mt-2 {
-    margin-top: 0.5rem;
+    padding: 4rem;
+    background: white;
+    border-radius: var(--border-radius-lg);
+    border: 2px dashed #e2e8f0;
 }
 
 .no-tickets {
-    font-size: 0.9rem;
-    color: #888;
+    color: var(--text-muted);
     font-weight: 500;
 }
+
+.hidden { display: none !important; }

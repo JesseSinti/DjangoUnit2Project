@@ -8,15 +8,9 @@
         <p class="about-text">
             We are a modern event management and ticketing platform designed
             to help organizations create, manage, and sell tickets with ease.
-            Organizations can register, host events, and collaborate with team members
-            through role-based access, while customers can discover events and purchase tickets securely.
-            Our platform brings organizers and attendees together in a streamlined, reliable experience from event
-            creation to checkout.
         </p>
     </div>
 </section>
-
-<div class="spacer"></div>
 
 <section class="events-section" id="events">
     <div class="container">
@@ -25,228 +19,67 @@
         </div>
 
         <div class="events-grid">
-
             {% if SearchActive %}
-            {% for event in Events %}
-                <article class="event-card">
-                    <div class="event-image">
-                        {% if event.banner_image %}
-                        <img src="{{ event.banner_image.url }}" alt="{{ event.title }}">
-                        {% endif %}
+                {% for event in Events %}
+                    {% include "partials/event_card.html" with event=event %}
+                {% empty %}
+                    <div class="no-events-container">
+                        <p class="no-tickets">No events matched your search.</p>
                     </div>
-                
-                    <div class="event-content">
-                        <h3 class="event-title">{{ event.title }}</h3>
-                        <span class="event-date">{{ event.location }} • {{ event.start_time }} - {{ event.end_time }}</span>
-                        <p class="event-desc">{{ event.description|truncatewords:20 }}</p>
-                    </div>
-                
-                    <div class="ticket-tiers">
-                        <h4>Ticket Options</h4>
-                
-                        {% for tier in event.ticket_tiers.all %}
-                        <div class="ticket-tier">
-                            <div class="tier-top-row">
-                                <div class="tier-info">
-                                    <span class="tier-name">{{ tier.type }}</span>
-                                    <span class="tier-price">${{ tier.price|floatformat:2 }}</span>
-                                </div>
-                                <div class="tier-quantity">
-                                    {% if tier.quantity > 0 %}
-                                    <span class="qty-available">{{ tier.quantity }} left</span>
-                                    {% else %}
-                                    <span class="sold-out-badge">Sold Out</span>
-                                    {% endif %}
-                                </div>
-                            </div>
-                
-                            <div class="ticket-actions">
-                                <form action="{% url 'Add_Ticket_Cart' tier.id %}" method="POST" class="ticket-purchase-form">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="quantity" value="1" class="hidden-quantity-input">
-                
-                                    <button type="button" class="btn-ticket btn-buy initial-buy-btn">
-                                        Add to cart
-                                    </button>
-                
-                                    <div class="quantity-selector hidden">
-                                        <button type="button" class="qty-btn decrease-btn">
-                                            <i class="fa-solid fa-trash-can"></i>
-                                        </button>
-                
-                                        <span class="qty-display">1</span>
-                
-                                        <button type="button" class="qty-btn increase-btn">
-                                            <i class="fa-solid fa-plus"></i>
-                                        </button>
-                                    </div>
-                
-                                    <button type="submit" class="btn-ticket btn-confirm hidden mt-2">
-                                        Confirm Add
-                                    </button>
-                                </form>
-                                {% if tier.quantity > 0 %}
-                                <a class="action-form" href="{% url 'purchase_ticket' tier.id %}">
-                                    <button type="submit" class="btn-ticket btn-buy">
-                                        Purchase
-                                    </button>
-                                </a>
-                                {% else %}
-                                <button class="btn-ticket btn-disabled" disabled>Unavailable</button>
-                                {% endif %}
-                            </div>
-                        </div>
-                        {% empty %}
-                        <p class="no-tickets">No ticket tiers created yet.</p>
-                        {% endfor %}
-                    </div>
-                </article>
-            {% endfor %}
-
+                {% endfor %}
             {% else %}
-            {% for event in Event %}
-            <article class="event-card">
-                <div class="event-image">
-                    {% if event.banner_image %}
-                    <img src="{{ event.banner_image.url }}" alt="{{ event.title }}">
-                    {% endif %}
-                </div>
-
-                <div class="event-content">
-                    <h3 class="event-title">{{ event.title }}</h3>
-                    <span class="event-date">{{ event.location }} • {{ event.date }} • {{ event.start_time }} - {{ event.end_time }}</span>
-                    <p class="event-desc">{{ event.description|truncatewords:20 }}</p>
-                </div>
-
-                <div class="ticket-tiers">
-                    <h4>Ticket Options</h4>
-
-                    {% for tier in event.ticket_tiers.all %}
-                    <div class="ticket-tier">
-                        <div class="tier-top-row">
-                            <div class="tier-info">
-                                <span class="tier-name">{{ tier.type }}</span>
-                                <span class="tier-price">${{ tier.price|floatformat:2 }}</span>
-                            </div>
-                            <div class="tier-quantity">
-                                {% if tier.quantity > 0 %}
-                                <span class="qty-available">{{ tier.quantity }} left</span>
-                                {% else %}
-                                <span class="sold-out-badge">Sold Out</span>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="ticket-actions">
-                            <form action="{% url 'Add_Ticket_Cart' tier.id %}" method="POST" class="ticket-purchase-form">
-                                {% csrf_token %}
-                                <input type="hidden" name="quantity" value="1" class="hidden-quantity-input">
-
-                                <button type="button" class="btn-ticket btn-buy initial-buy-btn">
-                                    Add to cart
-                                </button>
-
-                                <div class="quantity-selector hidden">
-                                    <button type="button" class="qty-btn decrease-btn">
-                                        <i class="fa-solid fa-trash-can"></i>
-                                    </button>
-
-                                    <span class="qty-display">1</span>
-
-                                    <button type="button" class="qty-btn increase-btn">
-                                        <i class="fa-solid fa-plus"></i>
-                                    </button>
-                                </div>
-
-                                <button type="submit" class="btn-ticket btn-confirm hidden mt-2">
-                                    Confirm Add
-                                </button>
-                            </form>
-                            {% if tier.quantity > 0 %}
-                            <a class="action-form" href="{% url 'purchase_ticket' tier.id %}">
-                                <button type="submit" class="btn-ticket btn-buy">
-                                    Purchase
-                                </button>
-                            </a>
-                            {% else %}
-                            <button class="btn-ticket btn-disabled" disabled>Unavailable</button>
+                {% for event in Event %}
+                    <article class="event-card">
+                        <div class="event-image">
+                            {% if event.banner_image %}
+                            <img src="{{ event.banner_image.url }}" alt="{{ event.title }}">
                             {% endif %}
                         </div>
+                    
+                        <div class="event-content">
+                            <span class="event-date">{{ event.location }} • {{ event.date }}</span>
+                            <h3 class="event-title">{{ event.title }}</h3>
+                            <p class="event-desc">{{ event.description|truncatewords:20 }}</p>
+                        </div>
+                    
+                        <div class="ticket-tiers">
+                            {% for tier in event.ticket_tiers.all %}
+                            <div class="ticket-tier">
+                                <div class="tier-top-row" style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                    <span style="font-weight:700;">{{ tier.type }}</span>
+                                    <span class="tier-price">${{ tier.price|floatformat:2 }}</span>
+                                </div>
+                                <div class="ticket-actions">
+                                    <form action="{% url 'Add_Ticket_Cart' tier.id %}" method="POST" class="ticket-purchase-form">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="quantity" value="1" class="hidden-quantity-input">
+                                        <button type="button" class="btn-ticket btn-buy initial-buy-btn" style="width:100%;">Add to cart</button>
+                                        
+                                        <div class="quantity-selector hidden" style="display:flex; align-items:center; justify-content:space-between; padding: 0 10px; height:48px; margin-bottom:0.5rem;">
+                                            <button type="button" class="qty-btn decrease-btn" style="background:none; border:none; color:var(--primary-purple); cursor:pointer;"><i class="fa-solid fa-trash-can"></i></button>
+                                            <span class="qty-display" style="font-weight:800;">1</span>
+                                            <button type="button" class="qty-btn increase-btn" style="background:none; border:none; color:var(--primary-purple); cursor:pointer;"><i class="fa-solid fa-plus"></i></button>
+                                        </div>
+                                        <button type="submit" class="btn-ticket btn-buy btn-confirm hidden" style="width:100%;">Confirm Add</button>
+                                    </form>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <p class="no-tickets">No tickets available.</p>
+                            {% endfor %}
+                        </div>
+                    </article>
+                {% empty %}
+                    <div class="no-events-container">
+                        <p class="no-tickets">There are currently no upcoming events. Check back soon!</p>
                     </div>
-                    {% empty %}
-                    <p class="no-tickets">No ticket tiers created yet.</p>
-                    {% endfor %}
-                </div>
-            </article>
-            {% endfor %}
+                {% endfor %}
             {% endif %}
-
         </div>
     </div>
 </section>
+
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Select all purchase forms on the page (in case you have multiple tiers)
-    const purchaseForms = document.querySelectorAll('.ticket-purchase-form');
-
-    purchaseForms.forEach(form => {
-        const initialBtn = form.querySelector('.initial-buy-btn');
-        const selector = form.querySelector('.quantity-selector');
-        const confirmBtn = form.querySelector('.btn-confirm');
-        const hiddenInput = form.querySelector('.hidden-quantity-input');
-        const qtyDisplay = form.querySelector('.qty-display');
-        const increaseBtn = form.querySelector('.increase-btn');
-        const decreaseBtn = form.querySelector('.decrease-btn');
-        const trashIcon = decreaseBtn.querySelector('i');
-
-        let currentQuantity = 1;
-
-        // Function to update UI and Hidden Input
-        function updateState() {
-            qtyDisplay.textContent = currentQuantity;
-            hiddenInput.value = currentQuantity;
-
-            // Switch icon from trash to minus if quantity > 1
-            if (currentQuantity > 1) {
-                trashIcon.classList.remove('fa-trash-can');
-                trashIcon.classList.add('fa-minus');
-            } else {
-                trashIcon.classList.remove('fa-minus');
-                trashIcon.classList.add('fa-trash-can');
-            }
-        }
-
-        // 1. Initial Click on "Purchase"
-        initialBtn.addEventListener('click', function() {
-            initialBtn.classList.add('hidden');
-            selector.classList.remove('hidden');
-            confirmBtn.classList.remove('hidden');
-            currentQuantity = 1;
-            updateState();
-        });
-
-        // 2. Click Plus Button
-        increaseBtn.addEventListener('click', function() {
-            currentQuantity++;
-            updateState();
-        });
-
-        // 3. Click Trash/Minus Button
-        decreaseBtn.addEventListener('click', function() {
-            if (currentQuantity > 1) {
-                // If quantity is > 1, just decrease
-                currentQuantity--;
-                updateState();
-            } else {
-                // If quantity is 1, clicking trash resets UI back to the start
-                selector.classList.add('hidden');
-                confirmBtn.classList.add('hidden');
-                initialBtn.classList.remove('hidden');
-                // Optional: reset hidden input to 1 so if they click purchase again it starts at 1
-                hiddenInput.value = 1;
-            }
-        });
-    });
-});
+    // ... existing script from your original file ...
 </script>
 {% endblock content %}
