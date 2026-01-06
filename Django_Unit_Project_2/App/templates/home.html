@@ -145,10 +145,15 @@
                         {% endif %}
                                 {% csrf_token %}
                                 <input type="hidden" name="quantity" value="1" class="hidden-quantity-input">
-
+                            {% if tier.quantity > 0 %}
                                 <button type="button" class="btn-ticket btn-buy initial-buy-btn">
                                     Add to cart
                                 </button>
+                            {% else %}
+                                <button type="button" class="btn-ticket btn-buy initial-buy-btn" disabled>
+                                    Add to cart
+                                </button>
+                            {% endif %}
 
                                 <div class="quantity-selector hidden">
                                     <button type="button" class="qty-btn decrease-btn">

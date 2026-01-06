@@ -1,29 +1,29 @@
-/* Import variables from common.css/login.css for consistency */
+
 :root {
-    --primary-text: #1d1d1f;
-    --secondary-text: #000000;
-    --primary-blue: #007aff;
-    --primary-success: #34c759; /* Apple-inspired Green */
-    --pill-bg: #f5f5f7;
-    --glass-border: 1px solid rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --primary-text: #111827;
+    --secondary-text: #6b7280;
+    --primary-blue: #8b5cf6;
+    --primary-success: #8b5cf6;
+    --pill-bg: #f9fafb;
+    --glass-border: 1px solid rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
-/* =========================================
-   1. LAYOUT & CONTAINER STYLING
-   ========================================= */
+.title {
+    display: flex;
+    justify-content: center;
+    align-content : center;
+}
 
-/* The 'container' in the HTML corresponds to the page content area */
+
 .container {
     margin-left: auto;
     margin-right: auto;
-    max-width: 900px; /* Wider container for the event form */
+    max-width: 900px;
     padding-top: 40px;
     padding-bottom: 60px;
 }
 
-
-/* Page Header */
 .text-center {
     font-size: 2.5rem;
     font-weight: 700;
@@ -31,12 +31,12 @@
     letter-spacing: -0.5px;
 }
 
-/* Main Form Separator */
 hr {
     border: none;
     border-top: var(--glass-border);
     margin-top: 1.5rem;
     margin-bottom: 2rem;
+    color : rgb(252, 8, 8);
 }
 
 /* =========================================
@@ -44,13 +44,12 @@ hr {
    ========================================= */
 
 .card {
-    /* Apply the central Glass Card look */
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
     border-radius: 24px;
     border: 1px solid rgba(255, 255, 255, 0.7);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Lighter shadow for sections */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
     padding-left: 70px;
     padding-right: 70px;
@@ -59,13 +58,14 @@ hr {
 }
 
 .card:hover {
-    box-shadow: var(--shadow-md); /* Enhance shadow on hover */
+    box-shadow: var(--shadow-md);
 }
 
 .card-title {
     font-size: 1.25rem;
     font-weight: 600;
-    color: var(--primary-blue) !important; /* Use primary blue for section titles */
+    color: var(--primary-blue) !important;
+    /* Updated to Dashboard Purple */
     margin-bottom: 15px;
 }
 
@@ -79,18 +79,15 @@ hr {
 .form-label {
     display: block;
     font-size: 0.95rem;
-    font-weight: 600; /* Slightly bolder for labels */
+    font-weight: 600;
     color: var(--secondary-text);
     margin-bottom: 8px;
     letter-spacing: -0.2px;
 }
 
-/* Target all form fields: input, textarea, and select (though select isn't used here) */
-/* The Django template renders form fields using `{{ form.field }}` which produces raw input tags. */
-input:not([type="checkbox"]):not([type="radio"]), 
-textarea, 
+input:not([type="checkbox"]):not([type="radio"]),
+textarea,
 select {
-    /* Base Input field styling (Pill shape and focus effect) */
     width: 100%;
     padding: 12px 18px;
     background-color: var(--pill-bg);
@@ -98,46 +95,44 @@ select {
     border-radius: 12px;
     font-size: 1rem;
     color: var(--primary-text);
-    box-sizing: border-box; 
+    box-sizing: border-box;
     transition: all 0.2s ease;
-    -webkit-appearance: none; /* Reset appearance for better cross-browser consistency */
+    -webkit-appearance: none;
 }
 
-input:not([type="checkbox"]):not([type="radio"]):focus, 
-textarea:focus, 
+input:not([type="checkbox"]):not([type="radio"]):focus,
+textarea:focus,
 select:focus {
     outline: none;
     border-color: var(--primary-blue);
     background-color: #fff;
-    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+    /* Purple Focus Glow */
 }
 
-/* Custom styling for the description textarea */
 textarea {
     min-height: 120px;
     resize: vertical;
 }
 
-/* File Input (which can be hard to style consistently) */
 input[type="file"] {
-    padding: 12px 0; /* Remove horizontal padding since the default browser button doesn't stretch */
+    padding: 12px 0;
     background-color: transparent;
     border: none;
     border-radius: 0;
     font-size: 1rem;
 }
 
-/* Small hint text */
 .form-text {
     font-size: 0.8rem;
-    color: #6c757d;
+    color: var(--secondary-text);
     margin-top: 5px;
 }
 
-/* Error Message Styling */
 .text-danger.small {
     font-size: 0.85rem;
-    color: #ff3b30 !important; /* Apple Red for errors */
+    color: #ef4444 !important;
+    /* Standardized Dashboard Red */
     margin-top: 5px;
     font-weight: 500;
 }
@@ -147,42 +142,43 @@ input[type="file"] {
    4. SUBMIT BUTTON
    ========================================= */
 .btn-success {
-    /* Replicate the primary glass button style with success color */
     appearance: none;
     width: 100%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    
-    padding: 16px 24px; /* Slightly larger button */
+
+    padding: 16px 24px;
     margin-top: 10px;
     font-family: inherit;
     font-weight: 700;
     font-size: 1.1rem;
-    
+
     background-color: var(--primary-success);
+    /* Updated to Dashboard Purple */
     color: white;
     border: none;
-    border-radius: 14px; 
+    border-radius: 14px;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(52, 199, 89, 0.3); /* Green shadow */
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+    /* Purple shadow */
     transition: all 0.2s ease;
 }
 
 .btn-success:hover {
-    background-color: #27ae60; /* Darker green on hover */
+    background-color: #7c3aed;
+    /* Darker purple on hover */
     transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(52, 199, 89, 0.4);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
 }
 
 .btn-success:active {
     transform: scale(0.98);
-    box-shadow: 0 2px 10px rgba(52, 199, 89, 0.3);
+    box-shadow: 0 2px 10px rgba(139, 92, 246, 0.3);
 }
 
 .btn-lg i {
     font-size: 1.2rem;
-
 }
 
 .fa-calendar-plus {
@@ -193,8 +189,7 @@ input[type="file"] {
    5. RESPONSIVENESS / BOOTSTRAP OVERRIDES
    ========================================= */
 
-/* Ensure the row gap works well on smaller screens */
 .row {
     --bs-gutter-x: 1.5rem;
-    --bs-gutter-y: 1.5rem; 
+    --bs-gutter-y: 1.5rem;
 }

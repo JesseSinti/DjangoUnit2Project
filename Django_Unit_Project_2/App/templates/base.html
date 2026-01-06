@@ -59,9 +59,6 @@
                 {% elif membership.status == 'pending' %}
                     <li class="nav-item addevent-item"><a href="{% url 'choose_organization' %}">Organization</a></li>
                 {% endif %}
-                {% if membership.status == 'pending' %}
-                    <li class="nav-item addevent-item"><a href="{% url 'choose_organizatino' membership.organization.id %}">Organization</a></li>
-                {% endif %}
             {% elif membership.role != 'admin' and membership.role != 'user' and request.user.is_authenticated %}
                 <li class="nav-item addevent-item"><a href="{% url 'customer_dashboard' %}">Profile</a></li>
             {% endif %}
