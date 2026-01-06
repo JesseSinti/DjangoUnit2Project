@@ -1,405 +1,185 @@
-/* =========================================
-   1. RESET & GLOBAL STYLES
-   ========================================= */
-:root {
-    /* New Colors based on the image */
-    --gradient-start: #F8Cdda;
-    /* Soft Pastel Pink */
-    --gradient-end: #9C68E4;
-    /* Violet/Purple */
-    --primary-black: #000000;
-    /* Solid Black for strong contrast */
-    --primary-purple-btn: #9C68E4;
-    /* Matching the violet end of gradient */
-}
+/* home.css */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* --- Utilities --- */
+.hidden { display: none !important; }
 
-body {
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    line-height: 1.6;
-    color: var(--primary-black);
-    /* Updated to solid black per image style */
-    background-color: #ffffff;
-    overflow-x: hidden;
-}
-
-a {
-    text-decoration: none;
-    color: inherit;
-}
-
-/* =========================================
-   2. NAVBAR (UPDATED TO SOLID BLACK)
-   ========================================= */
-.navbar {
-    background-color: var(--primary-black);
-    /* Black navbar per image */
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    color: #ffffff;
-    /* White text on black navbar */
-}
-
-.logo {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #ffffff;
-    /* White logo for contrast */
-}
-
-.nav-links {
-    list-style: none;
-    display: flex;
-    gap: 2rem;
-}
-
-.nav-links a {
-    transition: color 0.3s ease;
-    font-weight: 500;
-    color: #ffffff;
-    /* White links */
-}
-
-.nav-links a:hover {
-    color: var(--gradient-start);
-    /* Hover to pink */
-}
-
-/* =========================================
-   3. ABOUT SECTION (HERO)
-   UPDATED GRADIENT & TEXT COLOR
-   ========================================= */
+/* --- Hero Section --- */
 .about-section {
-    /* Horizontal gradient (90deg) from soft pink to violet */
-    background: linear-gradient(90deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
-    padding: 6rem 2rem;
+    position: relative;
+    padding: 100px 20px;
+    margin: 0px;
+    border-radius: 0px;
+    /* Apple-style Purple Gradient */
+    background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 50%, #9c27b0 100%);
+    box-shadow: 0 20px 40px rgba(74, 20, 140, 0.2);
+    overflow: hidden;
     text-align: center;
-    /* Text is now BLACK to match the image example's hero text */
-    color: var(--primary-black);
 }
 
-.container {
-    max-width: 1200px;
+.hero-container {
+    max-width: 800px !important;
     margin: 0 auto;
-    padding: 0 1rem;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    padding: 40px;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .about-text {
-    max-width: 800px;
-    margin: 0 auto;
-    font-size: 1.25rem;
-    /* Slightly larger */
+    font-size: 1.8rem;
     font-weight: 600;
-    /* Bolder text to stand out against gradient */
-    line-height: 1.8;
+    line-height: 1.4;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: -0.02em;
 }
 
-/* Spacer to separate sections */
-.spacer {
-    height: 60px;
-    background-color: #ffffff;
-}
-
-/* =========================================
-   4. EVENTS SECTION (White Background)
-   ========================================= */
+/* --- Events Grid --- */
 .events-section {
-    background-color: #ffffff;
-    padding-bottom: 4rem;
-}
-
-.events-header {
-    margin-bottom: 2rem;
-    text-align: left;
-    /* Accent bar changed to the new violet color */
-    border-left: 5px solid var(--primary-purple-btn);
-    padding-left: 1rem;
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .section-title {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    color: var(--primary-black);
-    /* Solid black title */
-    font-weight: 800;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 35px;
+    color: var(--primary-text);
+    letter-spacing: -0.5px;
 }
 
 .events-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
 }
 
-/* =========================================
-   5. EVENT CARDS (UPDATED BORDERS)
-   ========================================= */
+/* --- Event Card --- */
 .event-card {
-    background: #ffffff;
-    border-radius: 12px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 28px;
+    border: var(--glass-border);
     overflow: hidden;
-    /* Adding solid black border to match image style */
-    border: 2px solid var(--primary-black);
-    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
-    /* Trendy "hard" shadow */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
 }
 
 .event-card:hover {
-    transform: translateY(-5px);
-    /* Harder shadow on hover */
-    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.2);
+    transform: translateY(-8px);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.12);
 }
 
 .event-image {
-    height: 15rem;
-    background-color: #e9ecef;
+    width: 100%;
+    height: 220px;
+    background: #f2f2f7;
+    overflow: hidden;
+}
+
+.event-image img { width: 100%; height: 100%; object-fit: cover; }
+
+.placeholder-image {
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #adb5bd;
-    overflow: hidden;
-    border-bottom: 2px solid var(--primary-black);
+    font-size: 3rem;
+    color: #d1d1d6;
 }
 
-.event-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.5s ease;
-}
+.event-content { padding: 24px; flex-grow: 1; }
 
-.event-card:hover .event-image img {
-    transform: scale(1.05);
-}
-
-.event-content {
-    padding: 1.5rem;
-}
+.event-title { margin: 0 0 10px 0; font-size: 1.5rem; color: var(--primary-text); }
 
 .event-date {
-    font-size: 0.85rem;
-    /* Date accent color switched to the violet */
-    color: var(--primary-purple-btn);
-    font-weight: 700;
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
     display: block;
-}
-
-.event-title {
-    font-size: 1.25rem;
-    margin-bottom: 0.75rem;
-    color: var(--primary-black);
-    font-weight: 800;
-}
-
-.event-desc {
-    font-size: 0.95rem;
-    color: #444;
-    /* Slightly softer black for description body */
-    margin-bottom: 1.5rem;
-    line-height: 1.5;
-    font-weight: 500;
-}
-
-/* =========================================
-   6. TICKET TIERS
-   ========================================= */
-.ticket-tiers {
-    padding: 1rem 1.5rem;
-    background-color: #fff;
-    border-top: 2px solid var(--primary-black);
-    /* Black divider */
-    margin-top: auto;
-}
-
-.ticket-tiers h4 {
-    margin-bottom: 10px;
-    color: var(--primary-black);
-    font-size: 1rem;
+    font-size: 0.8rem;
+    color: #6a1b9a;
+    text-transform: uppercase;
     font-weight: 700;
+    margin-bottom: 12px;
 }
+
+.event-desc { font-size: 0.95rem; color: #48484a; line-height: 1.5; }
+
+/* --- Ticket Tiers --- */
+.ticket-tiers {
+    padding: 24px;
+    background: rgba(0, 0, 0, 0.02);
+    border-top: var(--glass-border);
+}
+
+.ticket-tiers h4 { margin: 0 0 15px 0; font-size: 0.85rem; color: #8e8e93; text-transform: uppercase; }
 
 .ticket-tier {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-    padding: 1rem 0;
-    border-bottom: 1px dashed #aaa;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 
-.ticket-tier:last-child {
-    border-bottom: none;
-}
+.ticket-tier:last-child { border-bottom: none; }
 
-.tier-top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+.tier-top-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; }
 
-.tier-info {
-    display: flex;
-    gap: 0.5rem;
-    align-items: baseline;
-}
+.tier-name { font-weight: 700; font-size: 1.1rem; }
 
-.tier-name {
-    font-weight: 700;
-    color: var(--primary-black);
-    font-size: 0.95rem;
-}
+.tier-price { font-size: 1.1rem; color: #6a1b9a; font-weight: 700; }
 
-.tier-price {
-    font-weight: 700;
-    color: #ffffff;
-    /* Price badge is now the violet color */
-    background-color: var(--primary-purple-btn);
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-}
+.qty-available { font-size: 0.75rem; background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
 
-.qty-available {
-    font-size: 0.8rem;
-    color: #666;
-    font-weight: 600;
-}
+.sold-out-badge { font-size: 0.75rem; background: #f2f2f7; color: #8e8e93; padding: 4px 10px; border-radius: 20px; }
 
-.sold-out-badge {
-    font-size: 0.75rem;
-    color: var(--primary-black);
-    background: #e0e0e0;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-weight: 700;
-    border: 1px solid #999;
-}
-
-/* =========================================
-   7. BUTTONS & ACTIONS (UPDATED COLORS)
-   ========================================= */
-.ticket-actions {
-    display: flex;
-    gap: 0.5rem;
-    width: 100%;
-}
-
-.action-form {
-    flex-grow: 1;
-    display: flex;
-}
+/* --- Buttons & Actions --- */
+.ticket-actions { display: flex; flex-direction: column; gap: 10px; }
 
 .btn-ticket {
     width: 100%;
-    height: 45px;
-    /* Slightly taller buttons */
-    padding: 0.5rem;
+    padding: 12px;
+    border-radius: 14px;
     border: none;
-    border-radius: 8px;
-    /* Softer corners */
-    font-size: 0.9rem;
-    font-weight: 700;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
-    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    font-size: 0.95rem;
 }
 
-/* Primary "Purchase/Add" Button -> UPDATED TO VIOLET */
-.btn-buy {
-    background-color: var(--primary-purple-btn);
-    color: white;
-    box-shadow: 0 4px 6px rgba(156, 104, 228, 0.3);
-}
+.btn-buy { background-color: #6a1b9a; color: white; }
+.btn-buy:hover { background-color: #4a148c; transform: scale(1.02); }
 
-.btn-buy:hover {
-    background-color: #834ec7;
-    /* Slightly darker violet */
-    transform: translateY(-2px);
+.btn-buy-outline { 
+    background-color: transparent; 
+    color: #6a1b9a; 
+    border: 1.5px solid #6a1b9a; 
 }
+.btn-buy-outline:hover { background-color: rgba(106, 27, 154, 0.05); }
 
-/* Confirm Button -> Black */
-.btn-confirm {
-    background-color: var(--primary-black);
-    color: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-}
+.btn-confirm { background-color: #007aff; color: white; margin-top: 5px; }
 
-.btn-confirm:hover {
-    background-color: #333;
-    transform: translateY(-2px);
-}
-
-/* Disabled Button */
-.btn-disabled {
-    background-color: #e9ecef;
-    color: #adb5bd;
-    cursor: not-allowed;
-}
-
-/* =========================================
-   8. QUANTITY SELECTOR
-   ========================================= */
 .quantity-selector {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* Border updated to violet */
-    border: 2px solid var(--primary-purple-btn);
-    border-radius: 8px;
-    padding: 0 10px;
-    width: 100%;
-    height: 45px;
-    background-color: white;
+    background: #f2f2f7;
+    border-radius: 14px;
+    padding: 6px;
 }
 
 .qty-btn {
-    background: none;
+    background: white;
+    border-radius: 10px;
+    width: 34px;
+    height: 34px;
     border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    /* Icons updated to violet */
-    color: var(--primary-purple-btn);
     display: flex;
     align-items: center;
-    padding: 5px;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-.qty-btn:hover {
-    color: var(--primary-black);
-}
-
-.qty-display {
-    font-weight: 800;
-    font-size: 1.2rem;
-    min-width: 30px;
-    text-align: center;
-    color: var(--primary-black);
-}
-
-/* Utility */
-.hidden {
-    display: none !important;
-}
-
-.mt-2 {
-    margin-top: 0.5rem;
-}
-
-.no-tickets {
-    font-size: 0.9rem;
-    color: #888;
-    font-weight: 500;
-}
+.no-tickets-inline { font-size: 0.85rem; color: #8e8e93; font-style: italic; }

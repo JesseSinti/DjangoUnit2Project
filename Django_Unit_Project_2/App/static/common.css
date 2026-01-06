@@ -1,6 +1,5 @@
 /* =========================================
    1. GLOBAL VARIABLES & RESET
-   (Keep these global)
    ========================================= */
 :root {
     /* Apple/Glass Palette */
@@ -11,10 +10,13 @@
     --secondary-text: #000000;
     --pill-bg: #f5f5f7;
     
+    /* SHARED HERO GRADIENT */
+    --hero-gradient: linear-gradient(135deg, #4a148c 0%, #6a1b9a 50%, #9c27b0 100%);
+    
     /* Navbar Dimensions */
     --peek-height: 70px;
-    --open-height: 200px;
-    --info-open-height: 400px;
+    --open-height: 210px;
+    --info-open-height: 450px;
     
     /* Sidebar Dimensions */
     --sidebar-peek: 30px;
@@ -50,7 +52,10 @@ body {
     border-bottom: var(--glass-border);
     
     overflow: hidden; 
-    transition: height var(--anim-speed) var(--anim-curve), box-shadow 0.3s ease;
+    transition: height var(--anim-speed) var(--anim-curve), 
+                box-shadow 0.3s ease, 
+                background 0.4s ease, 
+                border-bottom 0.4s ease;
 }
 
 #navbar:hover {
@@ -62,7 +67,41 @@ body {
     height: var(--info-open-height); 
 }
 
-/* Scoped: #navbar-content inside #navbar */
+/* --- SCROLLED STATE (Purple Gradient) --- */
+#navbar.scrolled {
+    background: var(--hero-gradient);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 20px rgba(74, 20, 140, 0.3);
+}
+
+#navbar.scrolled .navbar-logo,
+#navbar.scrolled .nav-item a,
+#navbar.scrolled .search-btn,
+#navbar.scrolled .options-button {
+    color: #ffffff !important;
+}
+
+#navbar.scrolled #searchbar-container form {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+#navbar.scrolled #searchbar-container input {
+    color: #ffffff !important;
+}
+
+#navbar.scrolled .nav-links {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#navbar.scrolled .options-button {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+#navbar.scrolled .options-button:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Content Scoping */
 #navbar #navbar-content {
     max-width: 1200px;
     margin: 0 auto;
@@ -72,9 +111,6 @@ body {
     flex-direction: column;
 }
 
-/* =========================================
-   3. NAVBAR HEADER (Scoped)
-   ========================================= */
 #navbar #navbar-header {
     height: var(--peek-height);
     flex-shrink: 0;
@@ -89,11 +125,10 @@ body {
     font-weight: 700;
     color: var(--primary-text);
     text-decoration: none;
-    cursor: pointer;
     letter-spacing: -0.5px;
+    transition: color 0.4s ease;
 }
 
-/* Search Bar (Scoped) */
 #navbar #searchbar-container {
     flex-grow: 1;
     max-width: 450px;
@@ -105,27 +140,16 @@ body {
     background-color: var(--pill-bg);
     border-radius: 50px;
     padding: 6px 16px;
-    transition: all 0.2s ease;
-    border: 1px solid transparent;
+    transition: all 0.4s ease;
 }
 
-#navbar #searchbar-container form:focus-within {
-    background-color: #fff;
-    border-color: var(--primary-blue);
-    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
-}
-
-/* Extremely specific to override global input styles */
 #navbar #searchbar-container input {
-    padding: 0px !important;
     border: none;
     background: transparent;
     flex-grow: 1;
     font-size: 0.95rem;
     outline: none;
     color: var(--primary-text);
-    box-shadow: none; /* Reset potential shadows */
-    margin: 0;
 }
 
 #navbar .search-btn {
@@ -134,11 +158,6 @@ body {
     cursor: pointer;
     color: var(--secondary-text);
     padding: 4px;
-    transition: color 0.2s;
-}
-
-#navbar .search-btn:hover {
-    color: var(--primary-blue);
 }
 
 /* =========================================
@@ -152,20 +171,14 @@ body {
     flex-wrap: wrap;
     gap: 20px;
     border-top: var(--glass-border);
-    
     opacity: 0;
     transform: translateY(-10px);
-    transition: opacity 0.3s ease 0.1s, transform 0.3s ease 0.1s;
+    transition: opacity 0.3s ease, transform 0.3s ease, border-top 0.4s ease;
 }
 
 #navbar:hover .nav-links {
     opacity: 1;
     transform: translateY(0);
-}
-
-#navbar .nav-item {
-    display: flex;
-    align-items: center;
 }
 
 #navbar .nav-item a {
@@ -183,172 +196,70 @@ body {
     background-color: rgba(0, 122, 255, 0.08);
 }
 
-
 /* =========================================
-   5. VERTICAL FILTER SIDEBAR (Scoped with #filter-sidebar)
+   5. VERTICAL FILTER SIDEBAR
    ========================================= */
 #filter-sidebar {
     position: fixed;
     top: var(--peek-height); 
     right: 0;
     z-index: 999;
-    
     width: var(--sidebar-open-width);
-    
     transform: translateX(calc(var(--sidebar-open-width) - var(--sidebar-peek))); 
-    transition: transform var(--anim-speed) var(--anim-curve), box-shadow 0.3s ease, top var(--anim-speed) var(--anim-curve); 
+    transition: transform var(--anim-speed) var(--anim-curve), top var(--anim-speed) var(--anim-curve); 
 }
 
-/* Sibling selector remains valid */
 #navbar:hover ~ #filter-sidebar {
     top: var(--open-height);
 }
 
-#filter-sidebar[open] {
-    transform: translateX(0);
-}
+#filter-sidebar[open] { transform: translateX(0); }
 
-/* Sidebar Button/Summary Style */
 #filter-sidebar .filter-tab-button {
     position: absolute;
     top: 25px; 
     left: calc(var(--sidebar-peek) * -1); 
-    
     width: calc(var(--sidebar-peek) + 20px);
     height: 100px;
-    
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 6px;
-
     background: var(--glass-bg);
     backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
     border-left: var(--glass-border);
-    
     border-top-left-radius: 12px;
     border-bottom-left-radius: 12px;
-    
-    color: var(--secondary-text);
-    font-size: 0.8rem;
-    font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
-    padding-right: 40px;
-    padding-left: 25px;
 }
 
-#filter-sidebar .filter-tab-button:hover {
-    background-color: rgba(255, 255, 255, 0.95);
-    color: var(--primary-blue);
-    padding-left: 23px;
-}
-
-#filter-sidebar .filter-tab-button i {
-    font-size: 1.2rem;
-}
-
-#filter-sidebar .filter-tab-button::-webkit-details-marker { display: none; }
-
-
-/* Sidebar Dropdown Content */
 #filter-sidebar #filter-dropdown {
     width: var(--sidebar-open-width);
     margin-top: 15px;
-    height: auto;
-    min-height: 250px;
     padding: 20px;
-    margin-left: 19px;
-    box-sizing: border-box; 
-    
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(20px);
     border-left: var(--glass-border);
-    border-bottom-left-radius: 12px;
     border-top-left-radius: 12px;
-    
+    border-bottom-left-radius: 12px;
     display: flex;
     flex-direction: column; 
     gap: 20px;
 }
 
-/* Filter Group Styling (Scoped) */
-#filter-sidebar .filter-form-group {
+.filter-form-group {
     background: rgba(255, 255, 255, 0.7);
     border-radius: 12px;
     border: var(--glass-border);
-    padding: 12px; 
+    padding: 12px;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     gap: 8px;
 }
 
-#filter-sidebar .filter-form-group h4 {
-    color: var(--primary-text);
-    margin: 0 0 5px 0;
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-#filter-sidebar .filter-form-group label {
-    color: var(--secondary-text);
-    font-weight: 500;
-    display: block;
-    font-size: 0.85rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* Input Styles (Scoped to Sidebar) */
-#filter-sidebar .filter-form-group input[type="text"],
-#filter-sidebar .filter-form-group input[type="number"] {
-    border: none;
-    background-color: var(--pill-bg);
-    padding: 6px 10px;
-    border-radius: 12px;
-    font-size: 0.9rem;
-    color: var(--primary-text);
-    transition: all 0.2s;
-    outline: none;
-    width: 100%;
-    box-sizing: border-box;
-    text-overflow: ellipsis; 
-}
-
-#filter-sidebar .filter-form-group input[type="text"]:focus,
-#filter-sidebar .filter-form-group input[type="number"]:focus {
-    background-color: #fff;
-    border: 1px solid var(--primary-blue);
-    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
-}
-
-/* Price specific layout */
-#filter-sidebar .price-inputs {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 5px;
-}
-
-#filter-sidebar .price-inputs label {
-    flex-shrink: 0;
-    width: 40px; 
-    text-align: right;
-    margin-bottom: 0;
-    white-space: nowrap;
-}
-
-#filter-sidebar .price-inputs input {
-    flex-grow: 1;
-    margin-bottom: 0;
-}
-
-
 /* =========================================
-   6. INFORMATION DROPDOWN (Scoped)
+   6. INFORMATION DROPDOWN
    ========================================= */
 #navbar #options-details {
     margin-top: 20px;
@@ -357,161 +268,51 @@ body {
     transition: opacity 0.4s ease 0.2s;
 }
 
-#navbar:hover #options-details {
-    opacity: 1;
-}
+#navbar:hover #options-details { opacity: 1; }
 
-/* --- Shared Button Styling (.options-button) --- */
 #navbar .options-button {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    
-    list-style: none;
     color: var(--primary-text);
     font-weight: 600;
     font-size: 0.95rem;
-    
     cursor: pointer;
-    margin-bottom: 15px;
-    
     padding: 6px 14px;
     border-radius: 12px;
     background-color: var(--pill-bg);
-    border: 1px solid transparent;
-    transition: all 0.2s ease;
+    transition: all 0.4s ease;
 }
 
 #navbar .options-button::after {
     content: '\25BC';
     font-size: 0.5rem;
     margin-left: 4px;
-    transition: transform 0.2s;
 }
 
-#navbar .options-button:hover {
-    background-color: #e8e8ed; 
-}
+#navbar #options-dropdown { display: flex; gap: 40px; padding: 0; margin-top: 15px;}
 
-#navbar #options-details[open] .options-button {
-    color: var(--primary-blue);
-    background-color: rgba(0, 122, 255, 0.1);
-}
-
-#navbar #options-details[open] .options-button::after {
-    transform: rotate(180deg);
-}
-
-#navbar .options-button::-webkit-details-marker { display: none; }
-
-#navbar #options-dropdown {
-    display: flex; 
-    gap: 40px;
-    padding: 0;
-}
-
-/* Info Group Styling (Scoped) */
-#navbar .info-group {
-    margin-bottom: 20px;
+.info-group {
     width: 250px; 
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(15px);
     border-radius: 12px;
     border: var(--glass-border);
     padding: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
-#navbar .info-group h4 {
-    color: var(--primary-text);
-    margin: 0 0 8px 0;
-    font-size: 1rem;
-    font-weight: 600;
-}
-#navbar .info-group p { 
-    margin: 4px 0; 
-    cursor: pointer; 
-    font-size: 0.9rem;
-    color: var(--secondary-text);
-    padding: 4px 0;
-}
-#navbar .info-group p:hover { 
-    color: var(--primary-blue);
-    text-decoration: underline; 
-}
-
-
-/* =========================================================
-   7. VERSATILE ASSET SET
-   (Kept global for utility usage, but will not be affected 
-   by simple tag selectors in other files due to class specificity)
-   ========================================================= */
-
+/* =========================================
+   7. VERSATILE ASSETS
+   ========================================= */
 .glass-btn {
-    appearance: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
     padding: 10px 20px;
-    font-family: inherit;
     font-weight: 600;
-    font-size: 0.95rem;
     border-radius: 50px;
     border: var(--glass-border);
     background: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(10px);
-    color: var(--primary-text);
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     transition: all 0.2s;
-    text-decoration: none;
 }
 
-.glass-btn:hover {
-    background: rgba(255, 255, 255, 0.9);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.glass-btn.primary {
-    background-color: var(--primary-blue);
-    color: white;
-    border: none;
-}
-.glass-btn.primary:hover {
-    background-color: #0062cc;
-}
-
-.glass-card {
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    border: var(--glass-border);
-    padding: 24px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-}
-
-.glass-list {
-    list-style: none;
-    padding: 0;
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(15px);
-    border-radius: 16px;
-    border: var(--glass-border);
-    overflow: hidden;
-}
-
-.glass-list li {
-    padding: 15px 20px;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: background 0.2s;
-    cursor: pointer;
-}
-
-.glass-list li:last-child { border-bottom: none; }
-.glass-list li:hover { background-color: rgba(255, 255, 255, 0.9); }
-
-
+.glass-btn:hover { background: rgba(255, 255, 255, 0.9); }
