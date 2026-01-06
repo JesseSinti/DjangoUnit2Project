@@ -1,227 +1,185 @@
-/* =========================================
-   1. APPLE-ISH PURPLE VARIABLES
-   ========================================= */
-:root {
-    --primary-purple: #8b5cf6;       /* Vibrant Purple from Dashboard */
-    --primary-purple-hover: #7c3aed;
-    --primary-light: #f5f3ff;        /* For badges/pills */
-    --bg-color: #f8fafc;
-    --card-bg: #ffffff;
-    --text-main: #1e293b;
-    --text-muted: #64748b;
-    --border-radius-lg: 24px;       /* Large Apple-style corners */
-    --border-radius-sm: 12px;
-    --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-}
+/* home.css */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
-}
+/* --- Utilities --- */
+.hidden { display: none !important; }
 
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-main);
-    line-height: 1.5;
-}
-
-/* =========================================
-   2. NAVBAR (REFINED WHITE)
-   ========================================= */
-.navbar {
-    background-color: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(20px); /* Glassmorphism */
-    -webkit-backdrop-filter: blur(20px);
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.logo {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--text-main);
-    letter-spacing: -0.02em;
-}
-
-.nav-links a {
-    color: var(--text-muted);
-    font-weight: 500;
-    transition: color 0.2s;
-}
-
-.nav-links a:hover {
-    color: var(--primary-purple);
-}
-
-/* =========================================
-   3. HERO SECTION (PURPLE GRADIENT)
-   ========================================= */
+/* --- Hero Section --- */
 .about-section {
-    background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
-    padding: 8rem 2rem;
+    position: relative;
+    padding: 100px 20px;
+    margin: 0px;
+    border-radius: 0px;
+    /* Apple-style Purple Gradient */
+    background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 50%, #9c27b0 100%);
+    box-shadow: 0 20px 40px rgba(74, 20, 140, 0.2);
+    overflow: hidden;
     text-align: center;
-    color: white;
+}
+
+.hero-container {
+    max-width: 800px !important;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    padding: 40px;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .about-text {
-    max-width: 800px;
-    margin: 0 auto;
-    font-size: 1.4rem;
+    font-size: 1.8rem;
     font-weight: 600;
     line-height: 1.4;
-    letter-spacing: -0.01em;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: -0.02em;
 }
 
-/* =========================================
-   4. EVENTS SECTION
-   ========================================= */
+/* --- Events Grid --- */
 .events-section {
-    padding: 4rem 1rem;
+    padding: 40px 20px;
     max-width: 1200px;
     margin: 0 auto;
 }
 
-.events-header {
-    margin-bottom: 3rem;
-    border-left: 6px solid var(--primary-purple);
-    padding-left: 1.5rem;
-}
-
 .section-title {
     font-size: 2.2rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
+    font-weight: 700;
+    margin-bottom: 35px;
+    color: var(--primary-text);
+    letter-spacing: -0.5px;
 }
 
 .events-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 2.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
 }
 
-/* =========================================
-   5. EVENT CARDS (SLEEK & ROUNDED)
-   ========================================= */
+/* --- Event Card --- */
 .event-card {
-    background: var(--card-bg);
-    border-radius: var(--border-radius-lg);
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 28px;
+    border: var(--glass-border);
     overflow: hidden;
-    box-shadow: var(--shadow-soft);
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
-    border: 1px solid rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
 }
 
 .event-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.12);
 }
 
 .event-image {
-    height: 200px;
-    background-color: #f1f5f9;
+    width: 100%;
+    height: 220px;
+    background: #f2f2f7;
     overflow: hidden;
 }
 
-.event-image img {
-    width: 100%;
+.event-image img { width: 100%; height: 100%; object-fit: cover; }
+
+.placeholder-image {
     height: 100%;
-    object-fit: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #d1d1d6;
 }
 
-.event-content {
-    padding: 1.5rem;
-}
+.event-content { padding: 24px; flex-grow: 1; }
+
+.event-title { margin: 0 0 10px 0; font-size: 1.5rem; color: var(--primary-text); }
 
 .event-date {
+    display: block;
     font-size: 0.8rem;
-    color: var(--primary-purple);
-    background: var(--primary-light);
-    display: inline-block;
-    padding: 0.2rem 0.8rem;
-    border-radius: 20px;
-    font-weight: 700;
+    color: #6a1b9a;
     text-transform: uppercase;
-    margin-bottom: 1rem;
-}
-
-.event-title {
-    font-size: 1.5rem;
     font-weight: 700;
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.02em;
+    margin-bottom: 12px;
 }
 
-.event-desc {
-    font-size: 0.95rem;
-    color: var(--text-muted);
-    margin-bottom: 1.5rem;
-}
+.event-desc { font-size: 0.95rem; color: #48484a; line-height: 1.5; }
 
-/* =========================================
-   6. TICKET UI (CLEANER)
-   ========================================= */
+/* --- Ticket Tiers --- */
 .ticket-tiers {
-    padding: 1.5rem;
-    background-color: #fafafa;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 24px;
+    background: rgba(0, 0, 0, 0.02);
+    border-top: var(--glass-border);
 }
+
+.ticket-tiers h4 { margin: 0 0 15px 0; font-size: 0.85rem; color: #8e8e93; text-transform: uppercase; }
 
 .ticket-tier {
-    padding: 1rem 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 
-.tier-price {
-    font-weight: 700;
-    color: var(--primary-purple);
-    font-size: 1rem;
-}
+.ticket-tier:last-child { border-bottom: none; }
+
+.tier-top-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; }
+
+.tier-name { font-weight: 700; font-size: 1.1rem; }
+
+.tier-price { font-size: 1.1rem; color: #6a1b9a; font-weight: 700; }
+
+.qty-available { font-size: 0.75rem; background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+
+.sold-out-badge { font-size: 0.75rem; background: #f2f2f7; color: #8e8e93; padding: 4px 10px; border-radius: 20px; }
+
+/* --- Buttons & Actions --- */
+.ticket-actions { display: flex; flex-direction: column; gap: 10px; }
 
 .btn-ticket {
-    border-radius: var(--border-radius-sm);
+    width: 100%;
+    padding: 12px;
+    border-radius: 14px;
+    border: none;
     font-weight: 600;
+    cursor: pointer;
     transition: all 0.2s;
-    height: 48px;
+    font-size: 0.95rem;
 }
 
-.btn-buy {
-    background-color: var(--primary-purple);
-    color: white;
-}
+.btn-buy { background-color: #6a1b9a; color: white; }
+.btn-buy:hover { background-color: #4a148c; transform: scale(1.02); }
 
-.btn-buy:hover {
-    background-color: var(--primary-purple-hover);
-    transform: scale(1.02);
+.btn-buy-outline { 
+    background-color: transparent; 
+    color: #6a1b9a; 
+    border: 1.5px solid #6a1b9a; 
 }
+.btn-buy-outline:hover { background-color: rgba(106, 27, 154, 0.05); }
 
-/* Quantity Selector restyled for purple theme */
+.btn-confirm { background-color: #007aff; color: white; margin-top: 5px; }
+
 .quantity-selector {
-    border: 2px solid var(--primary-purple);
-    border-radius: var(--border-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f2f2f7;
+    border-radius: 14px;
+    padding: 6px;
 }
 
-/* No Events Found state */
-.no-events-container {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 4rem;
+.qty-btn {
     background: white;
-    border-radius: var(--border-radius-lg);
-    border: 2px dashed #e2e8f0;
+    border-radius: 10px;
+    width: 34px;
+    height: 34px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-.no-tickets {
-    color: var(--text-muted);
-    font-weight: 500;
-}
-
-.hidden { display: none !important; }
+.no-tickets-inline { font-size: 0.85rem; color: #8e8e93; font-style: italic; }

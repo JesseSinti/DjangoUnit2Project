@@ -38,30 +38,23 @@
             </li>
             {% if request.user.is_authenticated %}
                 <li class="nav-item logout-item"><a href='{% url "logout" %}'>Logout</a></li>
-
             {% else %}
                 <li class="nav-item login-item"><a href='{% url "login" %}'>Login</a></li>
                 <li class="nav-item signup-item"><a href='{% url "customer-signup" %}'>Sign Up</a></li>
                 <li class="nav-item login-item"><a href="{% url 'join_organization' %}">Join Organiztion</a></li>
                 <li class="nav-item signup-item"><a href='{% url "org-signup" %}'>Register Organization</a></li>
             {% endif %}
+            
             {% if status == 1 %}
                 <li class="nav-item addevent-item"><a href="{% url 'addevent'%}">Create Event</a></li>
-               
                 <li class="nav-item addevent-item"><a href="{% url 'admin_dashboard' membership.organization.id %}">Admin Dashboard</a></li>
             {% elif status == 2 %}
                 {% if membership.status == 'Non-active' %}
                     <li class="nav-item addevent-item"><a href="{% url 'non_active_goon' %}">Add Event</a></li>
-                    <li class="nav-item addevent-item"><a href="{% url 'org_user_dashboard' membership.organization.id %}">Organization</a></li>
                 {% elif membership.status == 'active' %}
                     <li class="nav-item addevent-item"><a href="{% url 'addevent' %}">Add Event</a></li>
-                    <li class="nav-item addevent-item"><a href="{% url 'org_user_dashboard' membership.organization.id %}">Organization</a></li>
-                {% elif membership.status == 'pending' %}
-                    <li class="nav-item addevent-item"><a href="{% url 'choose_organization' %}">Organization</a></li>
                 {% endif %}
-                {% if membership.status == 'pending' %}
-                    <li class="nav-item addevent-item"><a href="{% url 'choose_organizatino' membership.organization.id %}">Organization</a></li>
-                {% endif %}
+                <li class="nav-item addevent-item"><a href="{% url 'org_user_dashboard' membership.organization.id %}">Organization</a></li>
             {% elif membership.role != 'admin' and membership.role != 'user' and request.user.is_authenticated %}
                 <li class="nav-item addevent-item"><a href="{% url 'customer_dashboard' %}">Profile</a></li>
             {% endif %}
@@ -111,11 +104,11 @@
             <h4>Price Range</h4>
             <div class="price-inputs">
                 <label for="minprice" class="minprice">Min:</label>
-                <input type="number" name="min_price" min="0" default="0" id="minprice" onchange="this.form.submit()">
+                <input type="number" name="min_price" min="0" id="minprice" onchange="this.form.submit()">
             </div>
             <div class="price-inputs">
                 <label for="maxprice" class="maxprice">Max:</label>
-                <input type="number" name="max_price" max="999999" default="0" id="maxprice" onchange="this.form.submit()">
+                <input type="number" name="max_price" max="999999" id="maxprice" onchange="this.form.submit()">
             </div>
         </form>
 
@@ -130,5 +123,24 @@
 {% endif %}
 
 {% block content %} {% endblock content %}
+
+<script>
+    // Logic to toggle navbar theme based on hero position
+    window.onscroll = function() {
+        const navbar = document.getElementById('navbar');
+        const hero = document.querySelector('.about-section');
+        
+        if (hero) {
+            // Trigger transition when the bottom of the hero section reaches the navbar
+            // Offset by 70px (peek-height) for a seamless hand-off
+            if (window.pageYOffset > (hero.offsetTop + hero.offsetHeight - 70)) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        }
+    };
+</script>
+
 </body>
 </html>
