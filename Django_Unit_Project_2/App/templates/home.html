@@ -102,61 +102,15 @@
                                 {% endif %}
                             </div>
                         </div>
-
-                        <div class="ticket-actions">
-                        {% if request.user.is_authenticated %}
-                            <form action="{% url 'Add_Ticket_Cart' tier.id %}" method="POST" class="ticket-purchase-form">
-                        {% else %}
-                            <form action="{% url 'customer-signup' %}" method="POST" class="ticket-purchase-form">
-                        {% endif %}
-                                {% csrf_token %}
-                                <input type="hidden" name="quantity" value="1" class="hidden-quantity-input">
-                            {% if tier.quantity > 0 %}
-                                <button type="button" class="btn-ticket btn-buy initial-buy-btn">
-                                    Add to cart
-                                </button>
-                            {% else %}
-                                <button type="button" class="btn-ticket btn-buy initial-buy-btn" disabled>
-                                    Add to cart
-                                </button>
-                            {% endif %}
-
-                                <div class="quantity-selector hidden">
-                                    <button type="button" class="qty-btn decrease-btn">
-                                        <i class="fa-solid fa-trash-can"></i>
-                                    </button>
-
-                                    <span class="qty-display">1</span>
-
-                                    <button type="button" class="qty-btn increase-btn">
-                                        <i class="fa-solid fa-plus"></i>
-                                    </button>
-                                </div>
-
-                                <button type="submit" class="btn-ticket btn-confirm hidden mt-2">
-                                    Confirm Add
-                                </button>
-                            </form>
-                            {% if tier.remaining > 0 %}
-                                {% if request.user.is_authenticated %}
-                                    <a class="action-form" href="{% url 'purchase_ticket' tier.id %}">
-                                {% else %}
-                                    <a class="action-form" href="{% url 'customer-signup' %}">
-                                {% endif %}
-                                        <button type="submit" class="btn-ticket btn-buy">Purchase</button>
-                                    </a>
-                            {% else %}
-                                <button class="btn-ticket btn-disabled" disabled>Sold Out</button>
-                            {% endif %}
-                        </div>
+                        {% endfor %}
                     </div>
                 </article>
                 {% empty %}
                 <div class="no-events-container full-width">
                     <p class="no-tickets">There are currently no upcoming events. Check back soon!</p>
                 </div>
-                {% endfor %}
-            {% endif %}
+            {% endfor %}
+        {% endif %}
         </div>
     </div>
 </section>
