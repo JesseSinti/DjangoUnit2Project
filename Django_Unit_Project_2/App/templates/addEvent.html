@@ -3,104 +3,103 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'addevent.css' %}">
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %} 
-                
-                <h2 class="mb-4 text-center">Register New Event</h2>
-                <hr>
 
-                {% if form.errors %}
-                    <div class="alert alert-danger">
-                        Please correct the errors below.
-                        {{ form.non_field_errors }}
-                    </div>
-                {% endif %}
+<section class="form-hero">
+    <div class="hero-blob"></div>
+    <div class="hero-container-small">
+        <h1 class="hero-headline-small">Register New Event</h1>
+        <p class="hero-subtext">Fill out the details below to launch your next big experience.</p>
+    </div>
+</section>
 
-                <div class="card p-4 mb-4 shadow-sm">
-                    <h5 class="card-title text-primary">General Information</h5>
+<div class="form-content-area">
+    <form method="post" enctype="multipart/form-data" class="event-registration-form">
+        {% csrf_token %} 
 
-                    <div class="mb-3">
-                        <label for="{{ form.title.id_for_label }}" class="form-label">Event Title</label>
-                        {{ form.title }}
-                        {{ form.title.errors }}
-                    </div>
+        {% if form.errors %}
+            <div class="glass-alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i> Please correct the errors below.
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
 
-                    <div class="mb-3">
-                        <label for="{{ form.description.id_for_label }}" class="form-label">Event Description</label>
-                        {{ form.description }}
-                        {{ form.description.errors }}
-                    </div>
+        <div class="glass-card-form mb-4">
+            <h5 class="card-title-theme">General Information</h5>
+            <div class="mb-4">
+                <label for="{{ form.title.id_for_label }}" class="form-label-theme">Event Title</label>
+                {{ form.title }}
+                {{ form.title.errors }}
+            </div>
 
-                    <div class="mb-3">
-                        <label for="{{ form.banner_image.id_for_label }}" class="form-label">Event Banner Image</label>
-                        {{ form.banner_image }}
-                        <div class="form-text">Upload a high-quality image for your event.</div>
-                        {{ form.banner_image.errors }}
-                    </div>
+            <div class="mb-4">
+                <label for="{{ form.description.id_for_label }}" class="form-label-theme">Event Description</label>
+                {{ form.description }}
+                {{ form.description.errors }}
+            </div>
+
+            <div class="mb-0">
+                <label for="{{ form.banner_image.id_for_label }}" class="form-label-theme">Event Banner Image</label>
+                <div class="file-upload-wrapper">
+                    {{ form.banner_image }}
+                    <p class="form-text-theme">Upload a high-quality landscape image (16:9 recommended).</p>
                 </div>
-                
-                <div class="card p-4 mb-4 shadow-sm">
-                    <h5 class="card-title text-primary">Location & Capacity</h5>
-                    
-                    <div class="mb-3">
-                        <label for="{{ form.location.id_for_label }}" class="form-label">Location</label>
+                {{ form.banner_image.errors }}
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="glass-card-form">
+                    <h5 class="card-title-theme">Location & Capacity</h5>
+                    <div class="mb-4">
+                        <label for="{{ form.location.id_for_label }}" class="form-label-theme">Location</label>
                         {{ form.location }}
                         {{ form.location.errors }}
                     </div>
-
-                    <div class="mb-3">
-                        <label for="{{ form.capacity.id_for_label }}" class="form-label">Max Capacity</label>
+                    <div class="mb-0">
+                        <label for="{{ form.capacity.id_for_label }}" class="form-label-theme">Max Capacity</label>
                         {{ form.capacity }}
-                        <div class="form-text">Maximum number of attendees.</div>
                         {{ form.capacity.errors }}
                     </div>
                 </div>
+            </div>
 
-                <div class="card p-4 mb-4 shadow-sm">
-                    <h5 class="card-title text-primary">Time & Schedule</h5>
-                    
-                    <div class="mb-3">
-                        <label for="{{ form.date.id_for_label }}" class="form-label">Event Date</label>
+            <div class="col-md-6">
+                <div class="glass-card-form">
+                    <h5 class="card-title-theme">Time & Schedule</h5>
+                    <div class="mb-4">
+                        <label for="{{ form.date.id_for_label }}" class="form-label-theme">Event Date</label>
                         {{ form.date }}
                         {{ form.date.errors }}
                     </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="{{ form.start_time.id_for_label }}" class="form-label">Start Time</label>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <label for="{{ form.start_time.id_for_label }}" class="form-label-theme">Start</label>
                             {{ form.start_time }}
-                            {{ form.start_time.errors }}
                         </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label for="{{ form.end_time.id_for_label }}" class="form-label">End Time</label>
+                        <div class="col-6">
+                            <label for="{{ form.end_time.id_for_label }}" class="form-label-theme">End</label>
                             {{ form.end_time }}
-                            {{ form.end_time.errors }}
                         </div>
                     </div>
-                    </div>
                 </div>
-
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-success btn-lg">
-                        <i class="fas fa-calendar-plus me-2"></i> Create Event
-                    </button>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
+
+        <div class="submit-area">
+            <button type="submit" class="btn-theme-submit">
+                Create Event <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </form>
 </div>
 
 <script>
-    // Simple script to ensure capacity doesn't go below 0
     const capacityInput = document.getElementById('id_capacity');
     if (capacityInput) {
         capacityInput.addEventListener('input', function() {
             if (this.value < 0) this.value = 0;
         });
     }
-</script>
+</script> 
 {% endblock content %}
