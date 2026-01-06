@@ -16,6 +16,8 @@ import qrcode
 from io import BytesIO
 from django.core.files import File
 from django.core.mail import EmailMessage 
+from django.db.models import Count
+from django.db.models import Prefetch, F
 import json
 # ============================================================================================================
 #                                                 1. DECORATORS
@@ -148,10 +150,25 @@ def customer_signup(request):
 #                                         3. PUBLIC VIEWS (Home, Search)
 # =============================================================================================================
 
-def home_view(request): 
-    event_filter = EventFilter(request.GET, queryset=Event.objects.all().prefetch_related('ticket_tiers').order_by('-date'))
+def home_view(request):
+    annotated_tiers = TicketTier.objects.annotate(
+        sold_tickets=Count('ticket'),
+        remaining=F('quantity')
+    )
+
+    events_with_stats = Event.objects.all().prefetch_related(
+        Prefetch('ticket_tiers', queryset=annotated_tiers)
+    ).order_by('date')
+
+    event_filter = EventFilter(request.GET, queryset=events_with_stats)
     
-    return render(request, 'home.html', {'filter' : event_filter, 'filter_active' :  bool(request.GET), 'Event' : event_filter.qs.distinct()})
+    context = {
+        'filter': event_filter, 
+        'filter_active': bool(request.GET), 
+        'Event': event_filter.qs.distinct()
+    }
+    
+    return render(request, 'home.html', context)
 
 
 def search_view(request):
@@ -207,11 +224,19 @@ def admin_dashboard(request, org_id):
 
 
 def Event_Page(request):
-    User = OrganizationMembership.objects.get(user=request.user)
-    organization = Organization.objects.get(name=User.organization.name)
-    Events = Event.objects.filter(organization=organization).prefetch_related('ticket_tiers')
+    membership = OrganizationMembership.objects.get(user=request.user)
+    organization = membership.organization
+    
+    tier_stats = TicketTier.objects.annotate(
+        sold_tickets=Count('ticket'),
+        remaining=F('quantity')
+    )
+    
+    Events = Event.objects.filter(organization=organization).prefetch_related(
+        Prefetch('ticket_tiers', queryset=tier_stats)
+    )
 
-    return render(request, 'event_page.html', {'Events' : Events})
+    return render(request, 'event_page.html', {'Events': Events})
 
 
 

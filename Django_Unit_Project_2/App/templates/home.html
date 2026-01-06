@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="{% static 'home.css' %}">
 
 <section class="about-section" id="about">
-    <div class="container">
+    <div class="container hero-container">
         <p class="about-text">
             We are a modern event management and ticketing platform designed
             to help organizations create, manage, and sell tickets with ease.
@@ -29,50 +29,88 @@
                 {% endfor %}
             {% else %}
                 {% for event in Event %}
-                    <article class="event-card">
-                        <div class="event-image">
-                            {% if event.banner_image %}
-                            <img src="{{ event.banner_image.url }}" alt="{{ event.title }}">
-                            {% endif %}
+                <article class="event-card">
+                    <div class="event-image">
+                        {% if event.banner_image %}
+                        <img src="{{ event.banner_image.url }}" alt="{{ event.title }}">
+                        {% else %}
+                        <div class="placeholder-image">
+                            <i class="fa-regular fa-calendar-days"></i>
                         </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="event-content">
+                        <h3 class="event-title">{{ event.title }}</h3>
+                        <span class="event-date">{{ event.location }} • {{ event.date }} • {{ event.start_time }} - {{ event.end_time }}</span>
+                        <p class="event-desc">{{ event.description|truncatewords:20 }}</p>
+                    </div>
+
+                    <div class="ticket-tiers">
+                        <h4>Ticket Options</h4>
                     
-                        <div class="event-content">
-                            <span class="event-date">{{ event.location }} • {{ event.date }}</span>
-                            <h3 class="event-title">{{ event.title }}</h3>
-                            <p class="event-desc">{{ event.description|truncatewords:20 }}</p>
-                        </div>
-                    
-                        <div class="ticket-tiers">
-                            {% for tier in event.ticket_tiers.all %}
-                            <div class="ticket-tier">
-                                <div class="tier-top-row" style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                                    <span style="font-weight:700;">{{ tier.type }}</span>
+                        {% for tier in event.ticket_tiers.all %}
+                        <div class="ticket-tier">
+                            <div class="tier-top-row">
+                                <div class="tier-info">
+                                    <span class="tier-name">{{ tier.type }}</span>
                                     <span class="tier-price">${{ tier.price|floatformat:2 }}</span>
                                 </div>
-                                <div class="ticket-actions">
-                                    <form action="{% url 'Add_Ticket_Cart' tier.id %}" method="POST" class="ticket-purchase-form">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="quantity" value="1" class="hidden-quantity-input">
-                                        <button type="button" class="btn-ticket btn-buy initial-buy-btn" style="width:100%;">Add to cart</button>
-                                        
-                                        <div class="quantity-selector hidden" style="display:flex; align-items:center; justify-content:space-between; padding: 0 10px; height:48px; margin-bottom:0.5rem;">
-                                            <button type="button" class="qty-btn decrease-btn" style="background:none; border:none; color:var(--primary-purple); cursor:pointer;"><i class="fa-solid fa-trash-can"></i></button>
-                                            <span class="qty-display" style="font-weight:800;">1</span>
-                                            <button type="button" class="qty-btn increase-btn" style="background:none; border:none; color:var(--primary-purple); cursor:pointer;"><i class="fa-solid fa-plus"></i></button>
-                                        </div>
-                                        <button type="submit" class="btn-ticket btn-buy btn-confirm hidden" style="width:100%;">Confirm Add</button>
-                                    </form>
+                                <div class="tier-quantity">
+                                    {% if tier.remaining > 0 %}
+                                    <span class="qty-available">{{ tier.remaining }} left</span>
+                                    {% else %}
+                                    <span class="sold-out-badge">Sold Out</span>
+                                    {% endif %}
                                 </div>
                             </div>
-                            {% empty %}
-                            <p class="no-tickets">No tickets available.</p>
-                            {% endfor %}
+
+                            <div class="ticket-actions">
+                                {% if request.user.is_authenticated %}
+                                    <form action="{% url 'Add_Ticket_Cart' tier.id %}" method="POST" class="ticket-purchase-form">
+                                {% else %}
+                                    <form action="{% url 'customer-signup' %}" method="POST" class="ticket-purchase-form">
+                                {% endif %}
+                                    {% csrf_token %}
+                                    <input type="hidden" name="quantity" value="1" class="hidden-quantity-input">
+
+                                    <button type="button" class="btn-ticket btn-buy initial-buy-btn">
+                                        Add to cart
+                                    </button>
+
+                                    <div class="quantity-selector hidden">
+                                        <button type="button" class="qty-btn decrease-btn">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                        <span class="qty-display">1</span>
+                                        <button type="button" class="qty-btn increase-btn">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </button>
+                                    </div>
+
+                                    <button type="submit" class="btn-ticket btn-confirm hidden">
+                                        Confirm Add
+                                    </button>
+                                </form>
+
+                                {% if tier.remaining > 0 %}
+                                    <a class="action-form-link" href="{% if request.user.is_authenticated %}{% url 'purchase_ticket' tier.id %}{% else %}{% url 'customer-signup' %}{% endif %}">
+                                        <button type="button" class="btn-ticket btn-buy-outline">Purchase</button>
+                                    </a>
+                                {% else %}
+                                    <button class="btn-ticket btn-disabled" disabled>Sold Out</button>
+                                {% endif %}
+                            </div>
                         </div>
-                    </article>
-                {% empty %}
-                    <div class="no-events-container">
-                        <p class="no-tickets">There are currently no upcoming events. Check back soon!</p>
+                        {% empty %}
+                        <p class="no-tickets-inline">No ticket tiers created yet.</p>
+                        {% endfor %}
                     </div>
+                </article>
+                {% empty %}
+                <div class="no-events-container full-width">
+                    <p class="no-tickets">There are currently no upcoming events. Check back soon!</p>
+                </div>
                 {% endfor %}
             {% endif %}
         </div>
@@ -80,6 +118,51 @@
 </section>
 
 <script>
-    // ... existing script from your original file ...
+    document.addEventListener('DOMContentLoaded', function() {
+        const purchaseForms = document.querySelectorAll('.ticket-purchase-form');
+
+        purchaseForms.forEach(form => {
+            const initialBtn = form.querySelector('.initial-buy-btn');
+            const selector = form.querySelector('.quantity-selector');
+            const confirmBtn = form.querySelector('.btn-confirm');
+            const hiddenInput = form.querySelector('.hidden-quantity-input');
+            const qtyDisplay = form.querySelector('.qty-display');
+            const increaseBtn = form.querySelector('.increase-btn');
+            const decreaseBtn = form.querySelector('.decrease-btn');
+            const trashIcon = decreaseBtn.querySelector('i');
+
+            let currentQuantity = 1;
+
+            function updateState() {
+                qtyDisplay.textContent = currentQuantity;
+                hiddenInput.value = currentQuantity;
+                if (currentQuantity > 1) {
+                    trashIcon.classList.remove('fa-trash-can');
+                    trashIcon.classList.add('fa-minus');
+                } else {
+                    trashIcon.classList.remove('fa-minus');
+                    trashIcon.classList.add('fa-trash-can');
+                }
+            }
+
+            initialBtn.addEventListener('click', function() {
+                initialBtn.classList.add('hidden');
+                selector.classList.remove('hidden');
+                confirmBtn.classList.remove('hidden');
+            });
+
+            increaseBtn.addEventListener('click', () => { currentQuantity++; updateState(); });
+            decreaseBtn.addEventListener('click', () => {
+                if (currentQuantity > 1) {
+                    currentQuantity--;
+                    updateState();
+                } else {
+                    selector.classList.add('hidden');
+                    confirmBtn.classList.add('hidden');
+                    initialBtn.classList.remove('hidden');
+                }
+            });
+        });
+    });
 </script>
 {% endblock content %}

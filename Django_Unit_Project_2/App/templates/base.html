@@ -38,6 +38,7 @@
             </li>
             {% if request.user.is_authenticated %}
                 <li class="nav-item logout-item"><a href='{% url "logout" %}'>Logout</a></li>
+
             {% else %}
                 <li class="nav-item login-item"><a href='{% url "login" %}'>Login</a></li>
                 <li class="nav-item signup-item"><a href='{% url "customer-signup" %}'>Sign Up</a></li>
@@ -61,7 +62,7 @@
                 {% if membership.status == 'pending' %}
                     <li class="nav-item addevent-item"><a href="{% url 'choose_organizatino' membership.organization.id %}">Organization</a></li>
                 {% endif %}
-            {% else %}
+            {% elif membership.role != 'admin' and membership.role != 'user' and request.user.is_authenticated %}
                 <li class="nav-item addevent-item"><a href="{% url 'customer_dashboard' %}">Profile</a></li>
             {% endif %}
         </ul>
