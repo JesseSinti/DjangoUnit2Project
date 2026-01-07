@@ -120,41 +120,42 @@
 
     <section id="join-section" class="content-section">
         <div class="row g-4">
-            <div class="col-lg-6" id="j_o">
+            <div class="col-lg-6">
                 <h2 class="section-title">Join an Organization</h2>
-                <div class="table-card p-4 h-100">
+                <div class="join-form-card h-100">
                 {% if can_join_new %}
                     <form method="post">
                         {% csrf_token %}
-                        <div class="mb-4">
-                            <label class="form-label-apple">Select Organization</label>
-                            <div class="input-group-apple">
-                                <i class="fas fa-building text-muted me-3"></i>
+                        
+                        <div class="form-field-group">
+                            <label class="apple-form-label">Select Organization</label>
+                            <div class="apple-input-wrapper">
+                                <i class="fas fa-building"></i>
                                 {{ join_form.organization }}
                             </div>
                         </div>
-                        <div class="mb-4">
-                            <label class="form-label-apple">Role</label>
-                            <div class="input-group-apple">
-                                <i class="fas fa-user-tag text-muted me-3"></i>
+
+                        <div class="form-field-group">
+                            <label class="apple-form-label">Requested Role</label>
+                            <div class="apple-input-wrapper">
+                                <i class="fas fa-user-tag"></i>
                                 {{ join_form.role }}
                             </div>
                         </div>
-                        <button type="submit" class="btn-primary-apple w-100">Send Join Request</button>
+
+                        <button type="submit" class="btn-primary-apple mt-3">
+                            Send Join Request <i class="fas fa-paper-plane ms-2"></i>
+                        </button>
                     </form>
                 {% else %}
                     <div class="notice-card warning h-100">
-                        <div class="notice-header">
-                            <i class="fas fa-circle-exclamation"></i>
-                            <span>Limit Reached</span>
-                        </div>
                         <p class="small text-muted mb-0">You are currently a member of an organization. Users are limited to one organization at a time.</p>
                     </div>
                 {% endif %}
                 </div>
             </div>
             
-            <div class="col-lg-6">
+            <div class="col-lg-6" id="n_o">
                 <h2 class="section-title">New Organization</h2>
                 <div class="registration-hero-card h-100">
                     <h3>Not seeing yours?</h3>
