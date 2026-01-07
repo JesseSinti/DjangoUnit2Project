@@ -50,7 +50,7 @@ class Event(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     description = models.TextField()
-    banner_image = models.ImageField(upload_to='event_images/')
+    banner_image = models.ImageField(upload_to='event_images/', default='event_images/default_eventimage.png',null=True,blank=True)
     location = models.CharField(max_length=100)
     date = models.DateField()
     start_time = models.TimeField()
@@ -78,6 +78,9 @@ class TicketTier(models.Model):
 
     def tickets_remaining(self):
         return self.quantity - self.ticket_set.count()
+    
+    def __str__(self):
+        return (f"{self.event.title} : {self.type}")
 
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders')
