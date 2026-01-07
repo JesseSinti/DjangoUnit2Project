@@ -717,17 +717,21 @@ def cart(request):
     return render(request, 'cart.html', {'cart':cart, 'tickets':ticket, 'total' : total, 'Taxes' : taxes, 'true_total' : true_total})
 
 def Remove_Ticket_Cart(request,pk):
-    cart = Cart.objects.get(user=request.user)
+    try:
+        cart = Cart.objects.get(user=request.user)
 
-    ticket = TicketsSaved.objects.get(id=pk, cart=cart)
-    remove_qty = int(request.POST.get('quantity', 1))
-    if remove_qty >= ticket.quantity:
-        ticket.delete()
-    else: 
-        ticket.quantity -= remove_qty
-        ticket.save()
-
-    return redirect('cart')
+        ticket = TicketsSaved.objects.get(id=pk, cart=cart)
+        remove_qty = int(request.POST.get('quantity', 1))
+        if remove_qty >= ticket.quantity:
+            ticket.delete()
+        else: 
+            ticket.quantity -= remove_qty
+            ticket.save()
+        messages.success(request,"Successfully removed ticket from cart!")
+        return redirect('cart')
+    except ValueError:
+       messages.error(request,"Please select a quantity to remove first!")
+       return redirect('cart')
 
 
         

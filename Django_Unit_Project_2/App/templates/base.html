@@ -53,8 +53,10 @@
                     <li class="nav-item addevent-item"><a href="{% url 'non_active_goon' %}">Add Event</a></li>
                 {% elif membership.status == 'active' %}
                     <li class="nav-item addevent-item"><a href="{% url 'addevent' %}">Add Event</a></li>
+                    <li class="nav-item addevent-item"><a href="{% url 'org_user_dashboard' membership.organization.id %}">Organization</a></li>
+                {% elif membership.status == 'pending' %}
+                    <li class="nav-item addevent-item"><a href="{% url 'choose_organization' %}">Organization</a></li>
                 {% endif %}
-                <li class="nav-item addevent-item"><a href="{% url 'org_user_dashboard' membership.organization.id %}">Organization</a></li>
             {% elif membership.role != 'admin' and membership.role != 'user' and request.user.is_authenticated %}
                 <li class="nav-item addevent-item"><a href="{% url 'customer_dashboard' %}">Profile</a></li>
             {% endif %}
