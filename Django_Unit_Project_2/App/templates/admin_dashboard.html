@@ -8,101 +8,123 @@
 
 <nav class="sidebar">
     <div class="sidebar-brand">
-        <i class="fas fa-layer-group me-2" style="color: #a78bfa;"></i> OrgManager
+        <i class="fas fa-layer-group me-2" style="color: var(--apple-purple);"></i> OrgManager
     </div>
     
-    <div class="nav flex-column mt-3">
-        <a href="#" class="nav-link active">
-            <i class="fas fa-chart-pie"></i> Overview
-        </a>
-        <a href="#usersection" class="nav-link">
-            <i class="fas fa-users"></i> Users
-        </a>
-        <a href="{% url 'event_page' %}" class="nav-link">
-            <i class="fas fa-folder"></i> Events
-        </a>
+    <div class="nav flex-column mt-2">
+        <a href="#" class="nav-link active"><i class="fas fa-chart-pie" id="b_icon"></i> Overview</a>
+        <a href="#usersection" class="nav-link"><i class="fas fa-users" id="b_icon"></i> Users</a>
+        <a href="{% url 'event_page' %}" class="nav-link"><i class="fas fa-calendar" id="b_icon"></i> Events</a>
     </div>
     
     <div class="sidebar-footer">
-        <a href="#" class="user-profile-btn">
-            <div class="user-avatar" style="width: 32px; height: 32px; font-size: 0.8rem;">
+        <div class="peaking-tab">
+            <div class="user-avatar-sidebar">
                 {{ admin.first_name.0 }}{{ admin.last_name.0 }}
             </div>
-            <div class="profile-info ms-2 overflow-hidden">
-                <div class="name text-truncate">{{ request.user.username }}</div>
-                <div class="email text-truncate">{{ request.user.email }}</div>
+            <div class="profile-info ms-3 overflow-hidden">
+                <div class="name">Admin User</div>
+                <div class="email text-truncate">{{ admin.email }}</div>
             </div>
-        </a>
+        </div>
     </div>
 </nav>
 
 <main class="main-content animate-fade-in">
     <header class="dashboard-header">
-        <h1 class="page-title">My Organizations</h1>
-        <p class="subtitle">Select an organization to manage or join a new one.</p>
+        <h1 class="page-title">Dashboard</h1>
+        <p class="subtitle">Overview of your organization's performance.</p>
     </header>
 
-    <section class="content-section">
-        <h2 class="section-title">Active Memberships</h2>
-        <div class="glass-card empty-state">
-            <div class="icon-stack">
-                <i class="fas fa-folder-open"></i>
-            </div>
-            <p>You are not an active member of any organization yet.</p>
+    <section class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label">Total Users</div>
+            <div class="stat-int">{{ total_users }}</div>
+            <div class="stat-icon-wrapper purple-light"><i class="fas fa-users"></i></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Active Events</div>
+            <div class="stat-int">{{ total_events }}</div>
+            <div class="stat-icon-wrapper green-light"><i class="fas fa-calendar-check"></i></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Pending Requests</div>
+            <div class="stat-int">{{ pending }}</div>
+            <div class="stat-icon-wrapper orange-light"><i class="fas fa-clock"></i></div>
         </div>
     </section>
 
-    <section class="content-section">
-        <h2 class="section-title">Pending Requests</h2>
-        <div class="table-card">
-            <div class="table-responsive">
-                <table class="custom-table">
-                    <thead>
-                        <tr>
-                            <th>Organization</th>
-                            <th>Requested Role</th>
-                            <th>Date Requested</th>
-                            <th>Status</th>
-                            <th class="text-end">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="fw-bold">xyz</td>
-                            <td><span class="badge-pill">Organization User</span></td>
-                            <td class="text-muted">Jan 06, 2026</td>
-                            <td>
-                                <span class="status-indicator">
-                                    <i class="fas fa-clock"></i> Pending Approval
-                                </span>
-                            </td>
-                            <td class="text-end">
-                                <button class="btn-secondary-apple">Cancel</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+    <section id="usersection" class="table-card">
+        <div class="table-header">
+            <h5 class="table-title">Organization Users</h5>
+            <form method="get" action="{% url 'search_users' %}" class="search-pill-container">
+                <div class="search-group">
+                    <i class="fas fa-search"></i>
+                    <input type="text" name="query" placeholder="Search members..." value="{{ query }}">
+                </div>
+                <button class="search-btn-apple" type="submit">Search</button>
+            </form>
         </div>
-    </section>
-
-    <section class="content-section">
-        <h2 class="section-title">Join an Organization</h2>
-        <div class="glass-card limit-notice">
-            <div class="d-flex align-items-center mb-2">
-                <i class="fas fa-circle-exclamation me-2"></i>
-                <span class="fw-bold">Limit Reached</span>
-            </div>
-            <p>You are currently a member (or have a pending request) with an organization. <strong>Users are limited to one organization at a time.</strong></p>
-            <p class="small text-muted mt-2">To join a different organization, please leave your current organization or cancel your pending request.</p>
-        </div>
-
-        <div class="registration-cta mt-4">
-            <div class="cta-content">
-                <h3>Not seeing your organization?</h3>
-                <p>You can register a new organization and become the administrator instantly.</p>
-            </div>
-            <a href="#" class="btn-primary-apple">Register New Organization</a>
+        
+        <div class="table-responsive">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>User Name/Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Joined Date</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in organization_users %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="user-avatar-list">{{ user.user.username|slice:":1"|upper }}</div>
+                                <div class="ms-3">
+                                    <div class="user-main-name">{{ user.user.username }}</div>
+                                    <div class="user-sub-email">{{ user.user.email }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="role-badge-apple {% if user.role == 'admin' %}admin{% else %}user{% endif %}">
+                                {{ user.role }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="status-indicator">
+                                <i class="fas fa-circle status-dot-{{ user.status|lower }}"></i>
+                                <span>{{ user.status|title }}</span>
+                            </div>
+                        </td>
+                        <td>{{ user.joined_at|date:"M d, Y" }}</td>
+                        <td class="text-end">
+                            {% if user.user != request.user %}
+                            <div class="dropdown">
+                                <button class="action-trigger" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end apple-shadow">
+                                    {% if user.status == 'pending' %}
+                                        <li><a class="dropdown-item success-hover" href="{% url 'update_membership_status' user.id 'approve' %}"><i class="fas fa-check"></i> Approve</a></li>
+                                    {% elif user.status == 'active' %}
+                                        <li><a class="dropdown-item warning-hover" href="{% url 'update_membership_status' user.id 'non-active' %}"><i class="fas fa-ban"></i> Deactivate</a></li>
+                                    {% elif user.status == 'Non-active' %}
+                                        <li><a class="dropdown-item success-hover" href="{% url 'update_membership_status' user.id 'approve' %}"><i class="fas fa-redo"></i> Reactivate</a></li>
+                                    {% endif %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item danger-hover" href="{% url 'update_membership_status' user.id 'kick' %}"><i class="fas fa-user-minus"></i> Remove</a></li>
+                                </ul>
+                            </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </section>
 </main>
