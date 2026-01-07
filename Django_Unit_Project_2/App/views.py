@@ -219,6 +219,7 @@ def admin_dashboard(request, org_id):
         'total_events' : total_events,
         'pending' : total_pending,
         'admin' : admin,
+        'organization' : membership.organization,
     })
 
 
