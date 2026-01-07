@@ -283,3 +283,379 @@ body {
 #j_o {
     margin-top: 70px;
 }
+
+:root {
+    --sidebar-width: 260px;
+    --navbar-height: 70px; /* Aligned with standard top nav height */
+    --apple-bg: #f5f5f7;
+    --apple-card: #ffffff;
+    --apple-text: #1d1d1f;
+    --apple-text-secondary: #86868b;
+    --apple-purple: #7c3aed;
+    --apple-purple-deep: #6d28d9;
+    --radius-apple: 20px;
+    --shadow-apple: 0 8px 30px rgba(0, 0, 0, 0.04);
+}
+
+body {
+    background-color: var(--apple-bg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: var(--apple-text);
+    margin: 0;
+}
+
+/* --- Animations --- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+
+/* --- Sidebar (Positioned BELOW Top Navbar) --- */
+.sidebar {
+    width: var(--sidebar-width);
+    height: calc(100vh - var(--navbar-height));
+    position: fixed;
+    top: var(--navbar-height); /* Starts exactly where top nav ends */
+    left: 0;
+    background-color: #1c1c1e;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(255,255,255,0.05);
+    z-index: 800; /* Lower than top nav if needed */
+}
+
+.sidebar-brand {
+    padding: 2rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.02em;
+}
+
+.nav-link {
+    color: #9ca3af;
+    padding: 0.8rem 1.5rem;
+    margin: 4px 12px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    background: rgba(255,255,255,0.05);
+    color: white;
+}
+
+.nav-link.active {
+    color: white;
+    background-color: var(--apple-purple);
+}
+
+.nav-link i { width: 24px; margin-right: 12px; text-align: center; }
+
+/* Sidebar Footer / Profile Tab */
+.sidebar-footer {
+    margin-top: auto;
+    padding: 1.5rem 0 1.5rem 1rem;
+}
+
+.peaking-tab {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 16px 0 0 16px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-right: none;
+}
+
+.user-avatar { 
+    width: 36px; height: 36px; border-radius: 50%; 
+    background: linear-gradient(135deg, #a78bfa, var(--apple-purple)); 
+    color: white; display: flex; align-items: center; justify-content: center; 
+    font-weight: 700; flex-shrink: 0;
+    margin-right: 5px;
+}
+
+.name { color: white; font-weight: 600; font-size: 0.85rem; }
+.text-muted-sidebar { color: #9ca3af; font-size: 0.75rem; }
+
+/* --- Main Content --- */
+.main-content {
+    margin-left: var(--sidebar-width);
+    padding: 4rem 4rem;
+    min-height: calc(100vh - var(--navbar-height));
+    box-sizing: border-box;
+}
+
+.page-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle { color: var(--apple-text-secondary); font-size: 1rem; margin-bottom: 2.5rem; }
+
+/* --- Empty State Card Styling --- */
+.empty-state-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: var(--radius-apple);
+    padding: 4rem 2rem;
+    text-align: center;
+    box-shadow: var(--shadow-apple);
+}
+
+.empty-state-icon {
+    font-size: 3rem;
+    color: #d2d2d7;
+    margin-bottom: 1rem;
+}
+
+.empty-state-text {
+    color: var(--apple-text-secondary);
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+}
+
+/* --- Section Styling --- */
+.content-section { margin-bottom: 3.5rem; }
+.section-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--apple-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1.2rem;
+}
+
+/* Stats/Org Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-card {
+    background: var(--apple-card);
+    padding: 1.75rem;
+    border-radius: var(--radius-apple);
+    border: 1px solid rgba(0,0,0,0.04);
+    box-shadow: var(--shadow-apple);
+}
+
+.stat-header { display: flex; justify-content: space-between; align-items: flex-start; }
+.stat-label { font-size: 0.7rem; font-weight: 700; color: var(--apple-text-secondary); text-transform: uppercase; }
+.stat-value { font-size: 1.25rem; font-weight: 700; margin-top: 0.2rem; }
+.stat-icon { color: var(--apple-purple); font-size: 1.2rem; }
+
+/* Roles & Status */
+.role-pill { padding: 0.4rem 0.9rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+.role-pill.admin { background: #f3e8ff; color: var(--apple-purple); }
+.role-pill.member { background: #f2f2f7; color: #48484a; }
+
+.status-indicator { font-size: 0.85rem; font-weight: 600; color: var(--apple-text); }
+
+/* --- Table Styling --- */
+.table-card {
+    background: var(--apple-card);
+    border-radius: var(--radius-apple);
+    border: 1px solid rgba(0,0,0,0.04);
+    box-shadow: var(--shadow-apple);
+    overflow: hidden;
+}
+
+.custom-table { width: 100%; border-collapse: collapse; }
+.custom-table th {
+    background: #fafafa;
+    padding: 1rem 1.5rem;
+    font-size: 0.7rem;
+    color: var(--apple-text-secondary);
+    text-align: left;
+    border-bottom: 1px solid #f2f2f7;
+    text-transform: uppercase;
+}
+
+.custom-table td { padding: 1.2rem 1.5rem; border-bottom: 1px solid #f2f2f7; vertical-align: middle; font-size: 0.9rem; }
+
+/* --- Actions: Cancel Button --- */
+.btn-cancel {
+    background: #f2f2f7;
+    color: #ff3b30; /* Apple Red */
+    border: none;
+    padding: 0.5rem 1.2rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+    background: #ffe5e5;
+    transform: scale(1.02);
+}
+
+/* Forms & Buttons */
+.input-group-apple {
+    display: flex;
+    align-items: center;
+    background: #f2f2f7;
+    border-radius: 12px;
+    padding: 0.8rem 1.2rem;
+}
+
+.input-group-apple select {
+    border: none;
+    background: transparent;
+    width: 100%;
+    outline: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.btn-primary-apple {
+    background: var(--apple-purple);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 14px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary-apple:hover {
+    background: var(--apple-purple-deep);
+    transform: translateY(-1px);
+}
+
+/* Notice Card */
+.notice-card.warning {
+    background: #fff9e6;
+    border: 1px solid #ffecb3;
+    padding: 1.5rem;
+    border-radius: var(--radius-apple);
+}
+.notice-header { color: #856404; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+
+/* Register Now Hero */
+.registration-hero-card {
+    background: linear-gradient(135deg, #1c1c1e 0%, #2c2c2e 100%);
+    padding: 2.5rem;
+    border-radius: var(--radius-apple);
+    color: white;
+}
+.registration-hero-card h3 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; }
+.btn-hero {
+    background: var(--apple-purple);
+    color: white;
+    padding: 0.8rem 1.6rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 700;
+    display: inline-block;
+}
+
+#j_o {
+    margin-top: 70px;
+}
+
+.join-form-card {
+    background: var(--apple-card);
+    border-radius: var(--radius-apple);
+    border: 1px solid rgba(0,0,0,0.04);
+    box-shadow: var(--shadow-apple);
+    padding: 2.5rem !important; 
+}
+
+/* Vertical spacing between fields */
+.form-field-group {
+    margin-bottom: 1.5rem;
+}
+
+/* Polished labels with high readability */
+.apple-form-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--apple-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+}
+
+/* The "Pill" container for inputs/selects and icons */
+.apple-input-wrapper {
+    display: flex;
+    align-items: center;
+    background: #f2f2f7; 
+    border: 1.5px solid transparent;
+    border-radius: 14px;
+    padding: 0 1.25rem;
+    height: 54px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Focus state: changes background and adds a purple border glow */
+.apple-input-wrapper:focus-within {
+    background: #ffffff;
+    border-color: var(--apple-purple);
+    box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1);
+}
+
+.apple-input-wrapper i {
+    color: #8e8e93;
+    margin-right: 12px;
+    font-size: 1rem;
+}
+
+/* Resetting the select element to fit perfectly inside the pill */
+.apple-input-wrapper select {
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 100%;
+    height: 100%;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--apple-text);
+    cursor: pointer;
+}
+
+/* High-contrast purple button */
+.btn-primary-apple {
+    background: var(--apple-purple);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 14px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-primary-apple:hover {
+    background: var(--apple-purple-deep);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 15px rgba(124, 58, 237, 0.2);
+}
+
+#n_o {
+    margin-top: 60px;
+}

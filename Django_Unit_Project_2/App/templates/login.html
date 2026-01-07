@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Login | Event Finder{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'login.css' %}">
@@ -9,6 +9,7 @@
 <div class="login-container">
     <div class="login-form-wrapper">
         <h1>Login</h1>
+        <span class="login-subtitle">Welcome back to Event Finder</span>
 
         {% if messages %}
             <ul class="messages-list">
@@ -22,23 +23,24 @@
             {% csrf_token %}
             
             <div class="mb-3">
-                <label for="username" class="form-label">Username:</label>
-                <input type="text" name="username" id="username" class="form-control" required>
+                <label for="username" class="form-label">Username</label>
+                <input type="text" name="username" id="username" class="form-control" placeholder="Enter your username" required>
             </div>
 
             <div class="mb-3">
-                <label for="password" class="form-label">Password:</label>
-                <input type="password" name="password" id="password" class="form-control" required>
+                <label for="password" class="form-label">Password</label>
+                <input type="password" name="password" id="password" class="form-control" placeholder="••••••••" required>
             </div>
 
-            <button type="submit" class="submit-btn">Login</button>
+            <button type="submit" class="submit-btn">Continue</button>
         </form>
 
         <div class="login-footer">
+            <p>Don't have an account?</p>
             <p>
-                Don't have an account? <br>
-                <a href="{% url 'customer-signup' %}">Sign up as Customer</a> |
-                <a href="{% url 'org-signup' %}">Sign up as Organization Admin</a>
+                <a href="{% url 'customer-signup' %}">Signup as Customer</a> 
+                <span style="margin: 0 10px; opacity: 0.5;">|</span>
+                <a href="{% url 'org-signup' %}">Organization Admin</a>
             </p>
         </div>
     </div>
