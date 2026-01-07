@@ -219,7 +219,7 @@ body {
     position: absolute;
     top: 25px; 
     left: calc(var(--sidebar-peek) * -1); 
-    width: calc(var(--sidebar-peek) + 20px);
+    width: calc(var(--sidebar-peek) + 40px);
     height: 100px;
     display: flex;
     flex-direction: column;

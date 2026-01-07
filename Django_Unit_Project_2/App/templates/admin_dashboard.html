@@ -3,239 +3,130 @@
 {% block title %}Organization Admin Dashboard{% endblock %}
 
 {% block content %}
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <link rel="stylesheet" href="{% static 'admin_dashboard.css' %}">
 
 <nav class="sidebar">
     <div class="sidebar-brand">
-        <i class="fas fa-layer-group me-2" style="color: #a78bfa;"></i> OrgManager
+        <i class="fas fa-layer-group me-2" style="color: var(--apple-purple);"></i> OrgManager
     </div>
     
-    <div class="nav flex-column mt-3">
-        <a href="#" class="nav-link active">
-            <i class="fas fa-chart-pie"></i> Overview
-        </a>
-        <a href="#usersection" class="nav-link">
-            <i class="fas fa-users"></i> Users
-        </a>
-        <a href="{% url 'event_page' %}" class="nav-link">
-            <i class="fas fa-folder"></i> Events
-        </a>
-        
+    <div class="nav flex-column mt-2">
+        <a href="#" class="nav-link active"><i class="fas fa-chart-pie" id="b_icon"></i> Overview</a>
+        <a href="#usersection" class="nav-link"><i class="fas fa-users" id="b_icon"></i> Users</a>
+        <a href="{% url 'event_page' %}" class="nav-link"><i class="fas fa-calendar" id="b_icon"></i> Events</a>
     </div>
     
     <div class="sidebar-footer">
-        <a href="#" class="user-profile-btn">
-            <div class="user-avatar" style="width: 32px; height: 32px; font-size: 0.8rem;">{{ admin.first_name.0 }} {{ admin.last_name.0 }}</div>
-            
-            <div class="profile-info ms-2 overflow-hidden">
-                <div class="name text-truncate">{{ request.user.username }}</div>
-                <div class="email text-truncate">{{ request.user.email }}</div>
+        <div class="peaking-tab">
+            <div class="user-avatar-sidebar">
+                {{ admin.first_name.0 }}{{ admin.last_name.0 }}
             </div>
-        </a>
+            <div class="profile-info ms-3 overflow-hidden">
+                <div class="name">Admin User</div>
+                <div class="email text-truncate">{{ admin.email }}</div>
+            </div>
+        </div>
     </div>
 </nav>
 
 <main class="main-content animate-fade-in">
-    
-    <div class="dashboard-header">
-        <div>
-            <h1 class="page-title">Dashboard</h1>
-            <p class="text-muted m-0 small">Overview of your organization's performance.</p>
-        </div>
-    </div>
+    <header class="dashboard-header">
+        <h1 class="page-title">Dashboard</h1>
+        <p class="subtitle">Overview of your organization's performance.</p>
+    </header>
 
-    <div class="stats-grid">
+    <section class="stats-grid">
         <div class="stat-card">
-            <div class="stat-header">
-                <div>
-                    <div class="stat-label">Total Users</div>
-                    <div class="stat-value">{{ total_users }}</div>
-                </div>
-                <div class="stat-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-            </div>
+            <div class="stat-label">Total Users</div>
+            <div class="stat-int">{{ total_users }}</div>
+            <div class="stat-icon-wrapper purple-light"><i class="fas fa-users"></i></div>
         </div>
-        
         <div class="stat-card">
-            <div class="stat-header">
-                <div>
-                    <div class="stat-label">Total Events</div>
-                    <div class="stat-value">{{ total_events }}</div>
-                </div>
-                <div class="stat-icon" style="background: #ecfdf5; color: #059669;">
-                    <i class="fas fa-calendar-check"></i>
-                </div>
-            </div>
+            <div class="stat-label">Active Events</div>
+            <div class="stat-int">{{ total_events }}</div>
+            <div class="stat-icon-wrapper green-light"><i class="fas fa-calendar-check"></i></div>
         </div>
+        <div class="stat-card">
+            <div class="stat-label">Pending Requests</div>
+            <div class="stat-int">{{ pending }}</div>
+            <div class="stat-icon-wrapper orange-light"><i class="fas fa-clock"></i></div>
+        </div>
+    </section>
 
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-label">Pending Invites</div>
-                <div class="stat-value">{{ pending }}</div>
-            </div>
-            <div class="mt-auto pt-3">
-                
-            </div>
-        </div>
-    </div>
-
-    <div id="usersection" class="table-card">
+    <section id="usersection" class="table-card">
         <div class="table-header">
-            <h5 class="m-0 fw-bold" style="font-size: 1rem;">Organization Users</h5>
-            
-            <div>
-                  <form method="get" action="{% url 'search_users' %}">
-                    <input type="text" name="query" placeholder="Search users..." class="form-control form-control-sm d-inline-block w-auto me-2" value="" {{ query }}>
-                    <button class="btn-primary-custom btn-sm" type="submit">Find User</button>
-                  </form>
-            </div>
-            
-            
+            <h5 class="table-title">Organization Users</h5>
+            <form method="get" action="{% url 'search_users' %}" class="search-pill-container">
+                <div class="search-group">
+                    <i class="fas fa-search"></i>
+                    <input type="text" name="query" placeholder="Search members..." value="{{ query }}">
+                </div>
+                <button class="search-btn-apple" type="submit">Search</button>
+            </form>
         </div>
         
         <div class="table-responsive">
-            <table class="table custom-table mb-0">
+            <table class="custom-table">
                 <thead>
                     <tr>
-                        <th class="col-user">User Name/Email</th>
-                        <th class="col-role">Role</th>
-                        <th class="col-status">Status</th>
-                        <th class="col-date">Joined Date</th>
-                        <th class="col-action"></th>
+                        <th>User Name/Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Joined Date</th>
+                        <th class="text-end">Actions</th>
                     </tr>
                 </thead>
-                    <tbody>
-                    {% if SearchActive %}
-                        {% for user in Users %}
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="user-avatar">{{ user.user.username|slice:":1"|upper }}</div>
-                                        <div>
-                                            <div class="fw-bold">{{ user.user.username }}</div>
-                                            <div class="small text-muted">{{ user.user.email }}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td><span class="role-badge {% if user.role == 'admin' %}role-admin{% else %}role-member{% endif %}">{{ user.role }}</span></td>
-                                <td>
-                                    <span class="text-{% if user.status == 'active' %}success{% elif user.status == 'pending' %}warning{% else %}secondary{% endif %} small fw-bold">
-                                        <i class="fas fa-dot-circle me-1"></i> {{ user.status|title }}
-                                    </span>
-                                </td>
-                                <td class="text-muted">{{ user.joined_at|date:"M d, Y" }}</td>
-                                <td class="text-end">
-                                    {% if user.user != request.user %}
-                                    <div class="dropdown">
-                                        <a href="#" class="text-muted" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-h"></i>
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                            {% if user.status == 'pending' %}
-                                                <li>
-                                                    <a class="dropdown-item text-success" href="{% url 'update_membership_status' user.id 'approve' %}">
-                                                        <i class="fas fa-check me-2"></i>Approve
-                                                    </a>
-                                                </li>
-                                            
-                                            {% elif user.status == 'active' %}
-                                                <li>
-                                                    <a class="dropdown-item text-warning" href="{% url 'update_membership_status' user.id 'non-active' %}">
-                                                        <i class="fas fa-ban me-2"></i>Set Non-active
-                                                    </a>
-                                                </li>
-
-                                            {% elif user.status == 'Non-active' %}
-                                                <li>
-                                                    <a class="dropdown-item text-success" href="{% url 'update_membership_status' user.id 'approve' %}">
-                                                        <i class="fas fa-redo me-2"></i>Re-activate
-                                                    </a>
-                                                </li>
-                                            {% endif %}
-                                            
-                                            <li><hr class="dropdown-divider"></li>
-                                            <li>
-                                                <a class="dropdown-item text-danger" href="{% url 'update_membership_status' user.id 'kick' %}" onclick="return confirm('Are you sure you want to remove this user?');">
-                                                    <i class="fas fa-trash-alt me-2"></i>Remove User
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                <tbody>
+                    {% for user in organization_users %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="user-avatar-list">{{ user.user.username|slice:":1"|upper }}</div>
+                                <div class="ms-3">
+                                    <div class="user-main-name">{{ user.user.username }}</div>
+                                    <div class="user-sub-email">{{ user.user.email }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="role-badge-apple {% if user.role == 'admin' %}admin{% else %}user{% endif %}">
+                                {{ user.role }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="status-indicator">
+                                <i class="fas fa-circle status-dot-{{ user.status|lower }}"></i>
+                                <span>{{ user.status|title }}</span>
+                            </div>
+                        </td>
+                        <td>{{ user.joined_at|date:"M d, Y" }}</td>
+                        <td class="text-end">
+                            {% if user.user != request.user %}
+                            <div class="dropdown">
+                                <button class="action-trigger" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end apple-shadow">
+                                    {% if user.status == 'pending' %}
+                                        <li><a class="dropdown-item success-hover" href="{% url 'update_membership_status' user.id 'approve' %}"><i class="fas fa-check"></i> Approve</a></li>
+                                    {% elif user.status == 'active' %}
+                                        <li><a class="dropdown-item warning-hover" href="{% url 'update_membership_status' user.id 'non-active' %}"><i class="fas fa-ban"></i> Deactivate</a></li>
+                                    {% elif user.status == 'Non-active' %}
+                                        <li><a class="dropdown-item success-hover" href="{% url 'update_membership_status' user.id 'approve' %}"><i class="fas fa-redo"></i> Reactivate</a></li>
                                     {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-
-                    {% else %}
-                        
-                        {% for user in organization_users %}
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="user-avatar">{{ user.user.username|slice:":1"|upper }}</div>
-                                        <div>
-                                            <div class="fw-bold text-dark">{{ user.user.username }}</div>
-                                            <div class="small text-muted">{{ user.user.email }}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td><span class="role-badge {% if user.role == 'admin' %}role-admin{% else %}role-member{% endif %}">{{ user.role|title }}</span></td>
-                                <td>
-                                    <div class="d-flex align-items-center small text-dark fw-medium">
-                                        <i class="fas fa-circle me-2 text-{% if user.status == 'active' %}success{% elif user.status == 'pending' %}warning{% else %}secondary{% endif %}" style="font-size: 6px;"></i> 
-                                        {{ user.status|default:"active"|title }}
-                                    </div>
-                                </td>
-                                <td class="text-muted small">{{ user.joined_at|date:"M d, Y" }}</td>
-                                <td class="text-end">
-                                    {% if user.user != request.user %}
-                                    <div class="dropdown">
-                                        <a href="#" class="text-muted" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-h"></i>
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                            
-                                            {% if user.status == 'pending' %}
-                                                <li>
-                                                    <a class="dropdown-item text-success" href="{% url 'update_membership_status' user.id 'approve' %}">
-                                                        <i class="fas fa-check me-2"></i>Approve
-                                                    </a>
-                                                </li>
-                                            
-                                            {% elif user.status == 'active' %}
-                                                <li>
-                                                    <a class="dropdown-item text-warning" href="{% url 'update_membership_status' user.id 'non-active' %}">
-                                                        <i class="fas fa-ban me-2"></i>Set Non-active
-                                                    </a>
-                                                </li>
-
-                                            {% elif user.status == 'Non-active' %}
-                                                <li>
-                                                    <a class="dropdown-item text-success" href="{% url 'update_membership_status' user.id 'approve' %}">
-                                                        <i class="fas fa-redo me-2"></i>Re-activate
-                                                    </a>
-                                                </li>
-                                            {% endif %}
-
-                                            <li><hr class="dropdown-divider"></li>
-                                            <li>
-                                                <a class="dropdown-item text-danger" href="{% url 'update_membership_status' user.id 'kick' %}" onclick="return confirm('Are you sure you want to remove this user?');">
-                                                    <i class="fas fa-trash-alt me-2"></i>Remove User
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    {% endif %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item danger-hover" href="{% url 'update_membership_status' user.id 'kick' %}"><i class="fas fa-user-minus"></i> Remove</a></li>
+                                </ul>
+                            </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
-    </div>
+    </section>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -3,42 +3,129 @@
 /* --- Utilities --- */
 .hidden { display: none !important; }
 
-/* --- Hero Section --- */
+/* --- Revamped & Tall Hero Section --- */
 .about-section {
     position: relative;
-    padding: 100px 20px;
+    /* Use min-height to fill the screen and flex to center content */
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    padding: 20px;
     margin: 0px;
     border-radius: 0px;
-    /* Apple-style Purple Gradient */
     background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 50%, #9c27b0 100%);
-    box-shadow: 0 20px 40px rgba(74, 20, 140, 0.2);
     overflow: hidden;
     text-align: center;
 }
 
+/* Background Animation Blobs */
+.hero-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    z-index: 1;
+    opacity: 0.4;
+    animation: drift 15s infinite alternate ease-in-out;
+}
+
+.blob-1 {
+    width: 500px;
+    height: 500px;
+    background: #ce93d8;
+    top: -100px;
+    left: -100px;
+}
+
+.blob-2 {
+    width: 450px;
+    height: 450px;
+    background: #ba68c8;
+    bottom: -100px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+@keyframes drift {
+    from { transform: translate(0, 0) scale(1); }
+    to { transform: translate(60px, 40px) scale(1.1); }
+}
+
 .hero-container {
-    max-width: 800px !important;
+    position: relative;
+    z-index: 2;
+    max-width: 900px !important;
     margin: 0 auto;
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    padding: 40px;
-    border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    padding: 80px 40px;
+    border-radius: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.hero-headline {
+    font-size: 4rem; /* Slightly larger for the tall layout */
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 25px;
+    letter-spacing: -2px;
+    line-height: 1.1;
 }
 
 .about-text {
-    font-size: 1.8rem;
-    font-weight: 600;
-    line-height: 1.4;
-    color: #ffffff;
-    margin: 0;
-    letter-spacing: -0.02em;
+    font-size: 1.35rem;
+    font-weight: 500;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0 auto 40px auto;
+    max-width: 650px;
 }
+
+/* Hero CTA Buttons */
+.hero-cta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+}
+
+.glass-btn-hero {
+    background: #ffffff;
+    color: #6a1b9a;
+    padding: 18px 36px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1.15rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+.glass-btn-hero:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.link-btn-hero {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.05rem;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.link-btn-hero:hover { opacity: 0.8; }
 
 /* --- Events Grid --- */
 .events-section {
-    padding: 40px 20px;
+    padding: 80px 20px;
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -46,7 +133,7 @@
 .section-title {
     font-size: 2.2rem;
     font-weight: 700;
-    margin-bottom: 35px;
+    margin-bottom: 40px;
     color: var(--primary-text);
     letter-spacing: -0.5px;
 }
@@ -94,9 +181,7 @@
 }
 
 .event-content { padding: 24px; flex-grow: 1; }
-
 .event-title { margin: 0 0 10px 0; font-size: 1.5rem; color: var(--primary-text); }
-
 .event-date {
     display: block;
     font-size: 0.8rem;
@@ -105,7 +190,6 @@
     font-weight: 700;
     margin-bottom: 12px;
 }
-
 .event-desc { font-size: 0.95rem; color: #48484a; line-height: 1.5; }
 
 /* --- Ticket Tiers --- */
@@ -116,28 +200,20 @@
 }
 
 .ticket-tiers h4 { margin: 0 0 15px 0; font-size: 0.85rem; color: #8e8e93; text-transform: uppercase; }
-
 .ticket-tier {
     margin-bottom: 20px;
     padding-bottom: 15px;
     border-bottom: 1px solid rgba(0,0,0,0.05);
 }
-
 .ticket-tier:last-child { border-bottom: none; }
-
 .tier-top-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; }
-
 .tier-name { font-weight: 700; font-size: 1.1rem; }
-
 .tier-price { font-size: 1.1rem; color: #6a1b9a; font-weight: 700; }
-
 .qty-available { font-size: 0.75rem; background: #f3e5f5; color: #7b1fa2; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
-
 .sold-out-badge { font-size: 0.75rem; background: #f2f2f7; color: #8e8e93; padding: 4px 10px; border-radius: 20px; }
 
 /* --- Buttons & Actions --- */
 .ticket-actions { display: flex; flex-direction: column; gap: 10px; }
-
 .btn-ticket {
     width: 100%;
     padding: 12px;
@@ -148,17 +224,8 @@
     transition: all 0.2s;
     font-size: 0.95rem;
 }
-
 .btn-buy { background-color: #6a1b9a; color: white; }
-.btn-buy:hover { background-color: #4a148c; transform: scale(1.02); }
-
-.btn-buy-outline { 
-    background-color: transparent; 
-    color: #6a1b9a; 
-    border: 1.5px solid #6a1b9a; 
-}
-.btn-buy-outline:hover { background-color: rgba(106, 27, 154, 0.05); }
-
+.btn-buy-outline { background-color: transparent; color: #6a1b9a; border: 1.5px solid #6a1b9a; }
 .btn-confirm { background-color: #007aff; color: white; margin-top: 5px; }
 
 .quantity-selector {
@@ -179,7 +246,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 .no-tickets-inline { font-size: 0.85rem; color: #8e8e93; font-style: italic; }

@@ -1,23 +1,23 @@
 {% extends "base.html" %}
 {% block title %}Customer Dashboard{% endblock %}
 {% load static %}
-{% block content %}
-    <link rel="stylesheet" href="{% static 'customer_dashboard.css' %}">
-    
 
-    <div class="dashboard-container">
+{% block content %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'customer_dashboard.css' %}">
+
+    <div class="dashboard-container animate-fade-in">
         
         <aside class="dashboard-sidebar">
             <div class="user-profile-card">
                 <div class="user-avatar">{{ Customer.first_name.0 }}{{ Customer.last_name.0 }}</div>
                 <h3 class="user-name">{{ Customer.first_name }} {{ Customer.last_name }}</h3>
-                
+                <p class="user-badge">Customer</p>
             </div>
             
             <ul class="sidebar-menu">
-                <li><a href="#" class="active-item">Overview</a></li>
-                <li><a href="{% url 'cart' %}">My Tickets</a></li> 
-               
+                <li><a href="#" class="active-item peaking-tab"><i class="fas fa-th-large me-2"></i> Overview</a></li>
+                <li><a href="{% url 'cart' %}"><i class="fas fa-ticket-alt me-2"></i> My Tickets</a></li> 
             </ul>
         </aside>
 
@@ -37,23 +37,25 @@
                     <span class="stat-label">Total Expenses</span>
                     <span class="stat-int">${{ Total_expenses|floatformat:2 }}</span>
                 </div>
-                <div class="stat-card">
-                    <span class="stat-label">Contact Info </span>
-                    <span class="stat-number">{{ Customer.email }}</span>
-                    <span class="stat-number">{{ Customer.address }}</span>
-                    <span class="stat-number">{{ Customer.phone }}</span>"
+                <div class="stat-card contact-card">
+                    <span class="stat-label">Contact Info</span>
+                    <div class="contact-list">
+                        <span class="contact-item"><i class="fas fa-envelope"></i> {{ Customer.email }}</span>
+                        <span class="contact-item"><i class="fas fa-map-marker-alt"></i> {{ Customer.address }}</span>
+                        <span class="contact-item"><i class="fas fa-phone"></i> {{ Customer.phone }}</span>
+                    </div>
                 </div>
             </section>
 
             <section class="recent-activity">
                 <h3 class="section-header">Orders</h3>
                 <div class="table-responsive">
-                    <table class="clean-table">
+                    <table class="clean-table stretched-table">
                         <thead>
                             <tr>
-                                <th style="width: 10%;">Order ID</th>
-                                <th style="width: 70%;">Ticket Details</th>
-                                <th style="width: 20%; text-align: right;">Total Amount</th>
+                                <th class="col-id">Order ID</th>
+                                <th class="col-details">Ticket Details</th>
+                                <th class="col-amount text-end">Total Amount</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -68,14 +70,17 @@
                                         {% for ticket in order.ticket.all %}
                                         <div class="ticket-item">
                                             <span class="ticket-icon">🎟️</span>
-                                            <span class="ticket-name">{{ ticket.tier.event.title }}/{{ticket.tier.type }} Ticket</span>
-                                            <span class="ticket-date">${{ ticket.tier.price }}/{{ ticket.tier.event.date|date:"M d, Y" }}</span>
+                                            <div class="ticket-meta">
+                                                <span class="ticket-name">{{ ticket.tier.event.title }}</span>
+                                                <span class="ticket-sub">{{ ticket.tier.type }} • {{ ticket.tier.event.date|date:"M d, Y" }}</span>
+                                            </div>
+                                            <span class="ticket-price-badge">${{ ticket.tier.price }}</span>
                                         </div>
                                         {% endfor %}
                                     </div>
                                 </td>
             
-                                <td class="align-top" style="text-align: right;">
+                                <td class="align-top text-end">
                                     <span class="order-price">${{ order.total_price|floatformat:2 }}</span>
                                 </td>
                             </tr>
@@ -87,6 +92,4 @@
 
         </main>
     </div>
-
-
 {% endblock %}
