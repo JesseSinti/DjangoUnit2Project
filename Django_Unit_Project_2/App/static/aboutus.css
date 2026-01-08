@@ -16,7 +16,7 @@ body {
     background-color: var(--white);
 }
 
-/* Hero Section */
+
 .hero {
     background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
     color: white;
@@ -36,7 +36,7 @@ body {
     opacity: 0.9;
 }
 
-/* Content Sections */
+
 .container {
     max-width: 1000px;
     margin: 0 auto;
@@ -57,7 +57,7 @@ body {
     margin-bottom: 20px;
 }
 
-/* Feature Cards */
+
 .features {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -81,7 +81,7 @@ body {
     margin-top: 0;
 }
 
-/* Stats Section */
+
 .stats-bar {
     background: var(--text-main);
     color: white;
@@ -103,6 +103,11 @@ body {
     text-align: center;
     padding: 80px 20px;
     background-color: var(--bg-light);
+}
+
+.iconimg {
+    height:fit-content;
+    width: fit-content;
 }
 
 .btn {
