@@ -12,10 +12,10 @@
     
     <div class="nav flex-column mt-3">
         <a href="#" class="nav-link active">
-            <i class="fas fa-house"></i> Home
+            <i class="fas fa-house" id="t_icon"></i> Home
         </a>
         <a href="#my-events" class="nav-link">
-            <i class="fas fa-calendar-days"></i> My Events
+            <i class="fas fa-calendar-days" id="t_icon"></i> My Events
         </a>
     </div>
     
@@ -98,9 +98,6 @@
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <div class="event-icon-box" style="background: #f0f4ff; color: #5c7cfa;">
-                                            <i class="fas fa-calendar-star"></i>
-                                        </div>
                                         <div>
                                             <div class="fw-bold">{{ event.title }}</div>
                                             <div class="text-muted small text-truncate" style="max-width: 180px;">{{ event.description }}</div>
