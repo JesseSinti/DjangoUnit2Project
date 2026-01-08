@@ -1,333 +1,271 @@
 /* =========================================
-   1. GLOBAL VARIABLES & RESET
+   1. VARIABLES & RESET
    ========================================= */
 :root {
-    /* Apple/Glass Palette */
     --glass-bg: rgba(255, 255, 255, 0.85);
-    --glass-border: 1px solid rgba(0, 0, 0, 0.1);
+    --glass-border: 1px solid rgba(0, 0, 0, 0.08);
     --primary-blue: #007aff;
     --primary-text: #1d1d1f;
-    --secondary-text: #000000;
-    --pill-bg: #f5f5f7;
-    
-    /* SHARED HERO GRADIENT */
+    --secondary-text: #515154;
+    --pill-bg: #f2f2f5;
     --hero-gradient: linear-gradient(135deg, #4a148c 0%, #6a1b9a 50%, #9c27b0 100%);
-    
-    /* Navbar Dimensions */
-    --peek-height: 70px;
-    --open-height: 210px;
-    --info-open-height: 450px;
-    
-    /* Sidebar Dimensions */
-    --sidebar-peek: 30px;
-    --sidebar-open-width: 250px;
-    
-    /* Animations */
-    --anim-speed: 0.5s;
-    --anim-curve: cubic-bezier(0.25, 1, 0.5, 1);
+    --nav-height: 130px; /* Tall enough for two comfy rows */
 }
 
 body {
     margin: 0;
-    padding-top: var(--peek-height);
+    padding-top: var(--nav-height);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     color: var(--primary-text);
     background: linear-gradient(135deg, rgba(230, 230, 255, 0.5) 0%, rgba(255, 255, 255, 0.2) 100%); 
 }
 
 /* =========================================
-   2. NAVBAR STRUCTURE (Scoped with #navbar)
+   2. NAVBAR CONTAINER
    ========================================= */
 #navbar {
     position: fixed;
-    top: 0;
-    left: 0;
+    top: 0; left: 0;
     width: 100%;
-    height: var(--peek-height);
+    height: var(--nav-height);
     z-index: 1000;
-    
     background-color: var(--glass-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: var(--glass-border);
-    
-    overflow: hidden; 
-    transition: height var(--anim-speed) var(--anim-curve), 
-                box-shadow 0.3s ease, 
-                background 0.4s ease, 
-                border-bottom 0.4s ease;
+    transition: all 0.4s ease;
 }
 
-#navbar:hover {
-    height: var(--open-height);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+#navbar-content {
+    max-width: 1400px;
+    height: 100%;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-#navbar:hover:has(#options-details[open]) {
-    height: var(--info-open-height); 
+/* =========================================
+   3. TOP ROW (Logo & Search)
+   ========================================= */
+#navbar-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px; /* Fixed height for top layer */
+    margin-bottom: 5px;
 }
 
-/* --- SCROLLED STATE (Purple Gradient) --- */
+.logo-link { text-decoration: none; }
+.logo-container { display: flex; align-items: center; gap: 12px; }
+
+.logo-icon {
+    width: 42px;
+    height: auto;
+}
+
+.navbar-logo {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--primary-text);
+    letter-spacing: -0.5px;
+}
+
+/* Search Area */
+#search-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+#search-form {
+    display: flex;
+    align-items: center;
+    background-color: var(--pill-bg);
+    border-radius: 50px;
+    padding: 8px 16px;
+    width: 320px; /* Fixed width for stability */
+    transition: background 0.3s ease;
+}
+
+#search-form:focus-within {
+    background: #ffffff;
+    box-shadow: 0 0 0 2px var(--primary-blue);
+}
+
+.search-icon { color: #86868b; margin-right: 10px; font-size: 0.9rem; }
+
+#search-form input {
+    border: none;
+    background: transparent;
+    flex-grow: 1;
+    outline: none;
+    font-size: 0.95rem;
+    color: var(--primary-text);
+}
+
+.filter-trigger-btn {
+    background: var(--pill-bg);
+    border: 1px solid rgba(0,0,0,0.02);
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: var(--primary-text);
+    transition: all 0.2s ease;
+}
+
+.filter-trigger-btn:hover { background: #e5e5e8; }
+
+/* =========================================
+   4. BOTTOM ROW (Nav Links)
+   ========================================= */
+#navbar-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px; /* Fixed height for bottom layer */
+    border-top: 1px solid rgba(0,0,0,0.06); /* Subtle divider */
+    padding-top: 10px;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    padding: 0; margin: 0;
+    gap: 20px;
+}
+
+.nav-item a {
+    text-decoration: none;
+    color: var(--secondary-text);
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.nav-item a:hover { color: var(--primary-blue); }
+
+.options-button {
+    list-style: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--primary-text);
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.options-button:hover { background: rgba(0,0,0,0.05); }
+
+/* Dropdown */
+#options-details { position: relative; }
+#options-dropdown {
+    position: absolute;
+    top: 40px; right: 0;
+    width: max-content;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    gap: 40px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+    border: var(--glass-border);
+    z-index: 1010;
+}
+.info-group h4 { margin: 0 0 12px 0; color: #86868b; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+.info-group p { margin: 8px 0; font-size: 0.9rem; cursor: pointer; color: var(--primary-text); }
+.info-group p:hover { color: var(--primary-blue); }
+
+/* =========================================
+   5. SCROLLED STATE (The Purple Mode)
+   ========================================= */
 #navbar.scrolled {
     background: var(--hero-gradient);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 20px rgba(74, 20, 140, 0.3);
+    border-bottom: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
 
 #navbar.scrolled .navbar-logo,
 #navbar.scrolled .nav-item a,
-#navbar.scrolled .search-btn,
-#navbar.scrolled .options-button {
-    color: #ffffff !important;
+#navbar.scrolled .options-button,
+#navbar.scrolled .filter-trigger-btn {
+    color: white !important;
 }
 
-#navbar.scrolled #searchbar-container form {
-    background-color: rgba(255, 255, 255, 0.2);
+#navbar.scrolled #search-form {
+    background: rgba(255,255,255,0.2);
 }
+#navbar.scrolled #search-form input { color: white; }
+#navbar.scrolled #search-form input::placeholder { color: rgba(255,255,255,0.7); }
+#navbar.scrolled .search-icon { color: rgba(255,255,255,0.7); }
 
-#navbar.scrolled #searchbar-container input {
-    color: #ffffff !important;
-}
-
-#navbar.scrolled .nav-links {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-#navbar.scrolled .options-button {
-    background-color: rgba(255, 255, 255, 0.15);
-}
-
-#navbar.scrolled .options-button:hover {
-    background-color: rgba(255, 255, 255, 0.25);
-}
-
-/* Content Scoping */
-#navbar #navbar-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-#navbar #navbar-header {
-    height: var(--peek-height);
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-}
-
-#navbar .navbar-logo {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--primary-text);
-    text-decoration: none;
-    letter-spacing: -0.5px;
-    transition: color 0.4s ease;
-    margin-top: 26px;
-}
-
-#navbar #searchbar-container {
-    flex-grow: 1;
-    max-width: 450px;
-}
-
-#navbar #searchbar-container form {
-    display: flex;
-    align-items: center;
-    background-color: var(--pill-bg);
-    border-radius: 50px;
-    padding: 6px 16px;
-    transition: all 0.4s ease;
-}
-
-#navbar #searchbar-container input {
+#navbar.scrolled .filter-trigger-btn {
+    background: rgba(255,255,255,0.2);
     border: none;
-    background: transparent;
-    flex-grow: 1;
-    font-size: 0.95rem;
-    outline: none;
-    color: var(--primary-text);
 }
 
-#navbar .search-btn {
-    border: none;
-    background: none;
-    cursor: pointer;
-    color: var(--secondary-text);
-    padding: 4px;
+#navbar.scrolled #navbar-bottom {
+    border-top: 1px solid rgba(255,255,255,0.15);
 }
 
 /* =========================================
-   4. HIDDEN LINKS (Scoped)
+   6. FILTER MODAL
    ========================================= */
-#navbar .nav-links {
-    list-style: none;
-    padding: 20px 0 0 0;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    border-top: var(--glass-border);
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: opacity 0.3s ease, transform 0.3s ease, border-top 0.4s ease;
+.modal-overlay {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(8px);
+    display: none;
+    justify-content: center; align-items: center;
+    z-index: 2000;
+}
+.modal-overlay.active { display: flex; }
+
+.modal-content {
+    background: white;
+    width: 550px;
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
 }
 
-#navbar:hover .nav-links {
-    opacity: 1;
-    transform: translateY(0);
+.modal-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 30px;
 }
+.close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #86868b; }
 
-#navbar .nav-item a {
-    text-decoration: none;
-    color: var(--secondary-text);
-    font-weight: 500;
-    font-size: 0.95rem;
-    padding: 8px 12px;
-    border-radius: 8px;
-    transition: all 0.2s;
-}
+.modal-grid { display: flex; flex-direction: column; gap: 20px; }
 
-#navbar .nav-item a:hover {
-    color: var(--primary-blue);
-    background-color: rgba(0, 122, 255, 0.08);
-}
-
-/* =========================================
-   5. VERTICAL FILTER SIDEBAR
-   ========================================= */
-#filter-sidebar {
-    position: fixed;
-    top: var(--peek-height); 
-    right: 0;
-    z-index: 999;
-    width: var(--sidebar-open-width);
-    transform: translateX(calc(var(--sidebar-open-width) - var(--sidebar-peek))); 
-    transition: transform var(--anim-speed) var(--anim-curve), top var(--anim-speed) var(--anim-curve); 
-}
-
-#navbar:hover ~ #filter-sidebar {
-    top: var(--open-height);
-}
-
-#filter-sidebar[open] { transform: translateX(0); }
-
-#filter-sidebar .filter-tab-button {
-    position: absolute;
-    top: 25px; 
-    left: calc(var(--sidebar-peek) * -1); 
-    width: calc(var(--sidebar-peek) + 40px);
-    height: 100px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
-    background: var(--glass-bg);
-    backdrop-filter: blur(15px);
-    border-left: var(--glass-border);
-    border-top-left-radius: 12px;
-    border-bottom-left-radius: 12px;
-    cursor: pointer;
-}
-
-#filter-sidebar #filter-dropdown {
-    width: var(--sidebar-open-width);
-    margin-top: 15px;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(20px);
-    border-left: var(--glass-border);
-    border-top-left-radius: 12px;
-    border-bottom-left-radius: 12px;
-    display: flex;
-    flex-direction: column; 
-    gap: 20px;
-}
-
-.filter-form-group {
-    background: rgba(255, 255, 255, 0.7);
-    border-radius: 12px;
-    border: var(--glass-border);
+.filter-form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: var(--secondary-text); }
+.filter-form-group input {
+    width: 100%;
     padding: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-/* =========================================
-   6. INFORMATION DROPDOWN
-   ========================================= */
-#navbar #options-details {
-    margin-top: 20px;
-    padding-bottom: 20px;
-    opacity: 0;
-    transition: opacity 0.4s ease 0.2s;
-}
-
-#navbar:hover #options-details { opacity: 1; }
-
-#navbar .options-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--primary-text);
-    font-weight: 600;
-    font-size: 0.95rem;
-    cursor: pointer;
-    padding: 6px 14px;
+    background: #f5f5f7;
+    border: 1px solid transparent;
     border-radius: 12px;
-    background-color: var(--pill-bg);
-    transition: all 0.4s ease;
+    font-size: 1rem;
+    box-sizing: border-box; /* Fixes padding overflow */
 }
+.filter-form-group input:focus { background: white; border-color: var(--primary-blue); outline: none; }
 
-#navbar .options-button::after {
-    content: '\25BC';
-    font-size: 0.5rem;
-    margin-left: 4px;
+.price-inputs { display: flex; gap: 15px; }
+.input-wrap { flex: 1; }
+
+.modal-footer {
+    margin-top: 30px;
+    display: flex; justify-content: flex-end; align-items: center; gap: 20px;
 }
-
-#navbar #options-dropdown { display: flex; gap: 40px; padding: 0; margin-top: 15px;}
-
-.info-group {
-    width: 250px; 
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(15px);
-    border-radius: 12px;
-    border: var(--glass-border);
-    padding: 15px;
+.apply-btn {
+    background: var(--primary-blue);
+    color: white; border: none;
+    padding: 12px 30px; border-radius: 50px;
+    font-weight: 600; cursor: pointer;
 }
-
-/* =========================================
-   7. VERSATILE ASSETS
-   ========================================= */
-.glass-btn {
-    padding: 10px 20px;
-    font-weight: 600;
-    border-radius: 50px;
-    border: var(--glass-border);
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(10px);
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.glass-btn:hover { background: rgba(255, 255, 255, 0.9); }
-
-.logo-icon {
-    width: 9%;
-    margin: 0;
-    background-color: rgba(255, 255, 255, 0);
-    border-radius: 15px;
-    padding: 0px;
-}
-
-.logo {
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 12px;
-}
+.clear-btn { text-decoration: none; color: #86868b; font-size: 0.9rem; }
