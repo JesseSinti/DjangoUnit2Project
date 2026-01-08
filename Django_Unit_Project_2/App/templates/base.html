@@ -21,7 +21,7 @@
         <div id="navbar-top">
             <a href="{% url 'home_page' %}" class='logo-link'>
                 <div class='logo-container'>
-                    <img src="media/icons/logo.png" class='logo-icon' alt="The Rift Logo">
+                    <img src="{% static 'icons/logo.png' %}" class='logo-icon' alt="The Rift Logo">
                     <span class='navbar-logo'>The Rift</span>
                 </div>
             </a>
@@ -141,16 +141,24 @@
 
 <script>
     // Scroll Effect
+    const currentUrl = window.location.href;
+    let urlList = currentUrl.split('/');
+    let view = urlList[3];
+
+    console.log(view);
     window.onscroll = function() {
         const navbar = document.getElementById('navbar');
         const hero = document.querySelector('.about-section'); // Adjust selector if needed
         // Fallback: if no hero, trigger scroll effect after 50px
         const triggerPoint = hero ? (hero.offsetTop + hero.offsetHeight - 120) : 50;
-        
-        if (window.pageYOffset > triggerPoint) {
-            navbar.classList.add('scrolled');
+        if (view === '') {
+            if (window.pageYOffset > triggerPoint) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
         } else {
-            navbar.classList.remove('scrolled');
+            navbar.classList.remove('scrolled')
         }
     };
 
