@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<head>
+    <link rel="stylesheet" href="{% static 'FAQ.css' %}">
+    <title>Support Center | TicketHub</title>
+        
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>How can we help?</h1>
+        <p class="toptxt">Find answers for attendees and event organizers.</p>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showSection('attendee')">For Attendees</button>
+        <button class="tab-btn" onclick="showSection('organizer')">For Organizations</button>
+    </div>
+
+    <div id="attendee" class="faq-section active">
+        <div class="faq-item">
+            <button class="faq-question">
+                How do I manage items in my cart?
+                <span class="icon">▼</span>
+            </button>
+            <div class="faq-answer">
+                <div class="answer-content">
+                    On the home page, you can add tickets to your cart. To change quantities or remove an item, click the profile icon in the top right and click on "My Tickets". You can adjust the quantity for each event or remove a ticket entirely before proceeding to checkout.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">
+                What does "Joining an Organization" mean?
+                <span class="icon">▼</span>
+            </button>
+            <div class="faq-answer">
+                <div class="answer-content">
+                    Joining an organization allows you to add events under that organization, view sales, and see what other memebers have been doing.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">
+                Where are my purchased tickets stored?
+                <span class="icon">▼</span>
+            </button>
+            <div class="faq-answer">
+                <div class="answer-content">
+                    Once purchased, your tickets are emailed to you instantly, from your email you can screenshot the qr code or print it off.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="organizer" class="faq-section">
+        <div class="faq-item">
+            <button class="faq-question">
+                How do I start selling tickets?
+                <span class="icon">▼</span>
+            </button>
+            <div class="faq-answer">
+                <div class="answer-content">
+                    First, create an Organization Profile via the "Create Organization" button. Once approved, you can create events, set ticket tiers (VIP, General, and Basic admissions), and set your available quantities.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">
+                How do I receive my payouts?
+                <span class="icon">▼</span>
+            </button>
+            <div class="faq-answer">
+                <div class="answer-content">
+                    Payouts are processed automatically to your linked bank account. Standard payout timing is 5-7 business days after your event has successfully concluded.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">
+                Can I track ticket sales in real-time?
+                <span class="icon">▼</span>
+            </button>
+            <div class="faq-answer">
+                <div class="answer-content">
+                    Yes! Your Organization Dashboard provides a live view of tickets sales for all events, how many/kind of ticket has been sold for each event and what is remaining.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Logic for Tab Switching
+    function showSection(sectionId) {
+        // Hide all sections
+        document.querySelectorAll('.faq-section').forEach(section => {
+            section.classList.remove('active');
+        });
+        // Remove active class from buttons
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        // Show selected section and activate button
+        document.getElementById(sectionId).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    // Logic for Accordion Toggling
+    document.querySelectorAll('.faq-question').forEach(button => {
+        button.addEventListener('click', () => {
+            const faqItem = button.parentElement;
+            const answer = button.nextElementSibling;
+
+            // Close other open items (Optional, remove if you want multiple open)
+            /*
+            document.querySelectorAll('.faq-answer').forEach(el => {
+                if (el !== answer) {
+                    el.style.maxHeight = null;
+                    el.parentElement.classList.remove('active');
+                }
+            });
+            */
+
+            faqItem.classList.toggle('active');
+
+            if (faqItem.classList.contains('active')) {
+                answer.style.maxHeight = answer.scrollHeight + "px";
+            } else {
+                answer.style.maxHeight = null;
+            }
+        });
+    });
+</script>
+
+</body>
+{% endblock content %}

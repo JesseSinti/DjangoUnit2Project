@@ -178,6 +178,11 @@ def search_view(request):
         events = events.filter(Q(title__icontains=query))
     return render(request,'home.html', {'Events' : events, 'SearchActive' : bool(request.GET)})
 
+def FAQ_View(request):
+    return render(request, 'FAQ.html')
+
+def About_Us(request):
+    return render(request, 'aboutus.html')
 
 # =============================================================================================================
 #                                       4. DASHBOARDS (Admin, User, Customer)
@@ -401,7 +406,7 @@ def update_membership_status(request, membership_id, action):
 
 @login_required
 def non_active_view(request):
-    return render(request,'non_active_goon.html')
+    return render(request,'non_active.html')
 
 
 # ==============================================================================================================

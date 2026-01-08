@@ -21,6 +21,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path('About Us', v.About_Us, name='aboutus'),
+    path('FAQ/Page', v.FAQ_View, name='faqview'),
     path('admin/', admin.site.urls),
     path('checkout-cart', v.Checkout_Cart, name='checkoutcart'),
     path('<int:pk>/remove_ticket/', v.Remove_Ticket_Cart, name='remove_ticket'),
