@@ -1,20 +1,18 @@
 from rest_framework import serializers
 from App.models import *
 
+# Converts json data to data for the organization model and adds it to the models
+# if it passes the checks
 class OrganizationSerializers(serializers.ModelSerializer):
     class Meta:
         model = Organization
         fields = ['id','name','created_at']
         
-    def create(self, validated_data):
-        org, created = Organization.objects.get_or_create(
-            name=validated_data['name'],
-            defaults=validated_data
-        )
-        return org
-
+# Converts json data to data for the event model if it passes checks
 class EventSerializer(serializers.ModelSerializer):
+    # reads the data from the organizaitons (read only specifies it to only read the data not store it)
     organization = OrganizationSerializers(read_only=True)
+    # collects all the ids in the Organization model and checks the data the serializer got as the source
     organization_id = serializers.PrimaryKeyRelatedField(
         queryset = Organization.objects.all(),
         source = 'organization',
@@ -36,6 +34,9 @@ class EventSerializer(serializers.ModelSerializer):
             'organization_id'
         ]
 
+
+# converts the json data to data that can be added to the TicketTier Model
+# as long as it passes all the checks
 class TicketTierSerializer(serializers.ModelSerializer):
     tickets_remaining = serializers.SerializerMethodField()
 
@@ -51,7 +52,8 @@ class TicketTierSerializer(serializers.ModelSerializer):
         
     def get_tickets_remaining(self, obj):
         return obj.tickets_remaining()
-    
+
+# converts the json data for the events and includes the data from each events tickettiers too
 class EventDetailSerializer(serializers.ModelSerializer):
     ticket_tiers = TicketTierSerializer(many=True, read_only=True)
 

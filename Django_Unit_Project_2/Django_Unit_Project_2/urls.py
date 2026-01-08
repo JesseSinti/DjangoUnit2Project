@@ -21,6 +21,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path('customer-service', v.Customer_Service, name='customer-service'),
+    path('Terms of Service', v.Terms_of_Service, name='termsofservice'),
+    path('privacypolicy', v.Privacy_Policy, name='privacypolicy'),
+    path('refund/return policy', v.Return_Refund, name='refund'),
     path('About Us', v.About_Us, name='aboutus'),
     path('FAQ/Page', v.FAQ_View, name='faqview'),
     path('admin/', admin.site.urls),

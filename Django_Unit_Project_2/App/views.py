@@ -184,6 +184,18 @@ def FAQ_View(request):
 def About_Us(request):
     return render(request, 'aboutus.html')
 
+def Return_Refund(request):
+    return render(request, 'refund.html')
+
+def Privacy_Policy(request):
+    return render(request, 'privacy.html')
+
+def Terms_of_Service(request):
+    return render(request, 'termsofservice.html')
+
+def Customer_Service(request):
+    return render(request, 'customer_service.html')
+
 # =============================================================================================================
 #                                       4. DASHBOARDS (Admin, User, Customer)
 # =============================================================================================================

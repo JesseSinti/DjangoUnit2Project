@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <head>
+        
+        <title>Refund & Return Policy | The Rift</title>
+        <link rel="stylesheet" href="{% static 'refund.css' %}">
+    </head>
+    
+    <body>
+    
+        <main class="policy-container">
+            <header class="policy-header">
+                <h1>Refund & Return Policy</h1>
+                <p>Last Updated: Janurary 2026</p>
+            </header>
+    
+            <section class="policy-intro">
+                <p>Thank you for shopping at <strong>The Rift</strong>. We want you to be completely satisfied
+                    with your purchase. If you are not entirely happy with your order, we’re here to help.</p>
+            </section>
+    
+            <section>
+                <h2>1. Returns</h2>
+                <p>You have <strong>[30]</strong> calendar days to return an item from the date you received it. To be
+                    eligible for a return, your item must be:</p>
+                <ul>
+                    <li>Ticket's qr code is unscanned.</li>
+                    <li>Accompanied by the receipt or proof of purchase.</li>
+                </ul>
+            </section>
+    
+            <section>
+                <h2>2. Non-Returnable Items</h2>
+                <p>Certain conditions prevent tickets from being returned, such as:</p>
+                <ul>
+                    <li>Expired Tickets (Returning after a event is already passed)</li>
+                    <li>No Recipt (Recipts are required for returns)</li>
+                    <li>Not your ticket (Cannot return a ticket with someone else's name)</li>
+                    
+                </ul>
+            </section>
+    
+            <section class="callout">
+                <p><strong>Note:</strong> If the return is due to our error (incorrect or defective item), <strong>[Your
+                        Company Name]</strong> will cover the return shipping costs.</p>
+            </section>
+    
+            <section>
+                <h2>3. Quick Reference</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Policy Detail</th>
+                                <th>Condition</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Return Window</td>
+                                <td>[30] Days</td>
+                            </tr>
+                            <tr>
+                                <td>Restocking Fee</td>
+                                <td>None</td>
+                            </tr>
+                            <tr>
+                                <td>Refund Method</td>
+                                <td>Original Payment</td>
+                            </tr>
+                            <tr>
+                                <td>Return Shipping</td>
+                                <td>Paid by Customer</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+    
+            <section class="contact-info">
+                <h2>4. Contact Us</h2>
+                <p>If you have any questions on how to return your item, contact us at:</p>
+                <ul>
+                    <li><strong>Email:</strong>  jmossberg26@basecampcodingacademy.org</li>
+                    <li><strong>Phone:</strong> +1 (662) 607-9142</li>
+                </ul>
+            </section>
+        </main>
+    
+    </body>
+{% endblock content %}
