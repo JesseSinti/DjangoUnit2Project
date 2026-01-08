@@ -5,6 +5,7 @@ from django.core.management.base import BaseCommand
 from django.core.files import File
 import os 
 
+# sets the path for default image to be added
 default_banner_path = os.path.join(settings.BASE_DIR, 'media/event_images/default_eventimage.png')
 
 class Command(BaseCommand):
@@ -18,16 +19,19 @@ class Command(BaseCommand):
 
         with open(json_file, 'r') as f:
             data = json.load(f)
-
+# This specifies that all information regarding the organizations goes to the organization serializer only 
         orgs_data = data.get('organizations', [])
         org_serializer = OrganizationSerializers(data=orgs_data, many=True)
         if org_serializer.is_valid():
+            # saves the data onces its succesful
             org_serializer.save()
+            # tells which one was saved and successful
             self.stdout.write(self.style.SUCCESS(f"Saved {len(orgs_data)} organizations"))
         else:
+            # tells which ones weren't valid and errored
             self.stdout.write(self.style.ERROR(f"Organizationerrors: {org_serializer.errors}"))
         
-
+# sends all data regarding events to the event serializer so it can convert the data
         events_data = data.get('events', [])
 
         for event in events_data:
@@ -50,6 +54,7 @@ class Command(BaseCommand):
             else:
                 self.stdout.write(self.style.ERROR(f"Event Errors: {serializer.errors}"))
 
+# sends all tickettier data to the ticket tier serializer to convert
         ticket_data = data.get('ticket_tiers', [])
         for ticket in ticket_data:
             try:
