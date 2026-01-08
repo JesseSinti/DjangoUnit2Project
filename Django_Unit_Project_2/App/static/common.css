@@ -127,6 +127,7 @@ body {
     text-decoration: none;
     letter-spacing: -0.5px;
     transition: color 0.4s ease;
+    margin-top: 26px;
 }
 
 #navbar #searchbar-container {
@@ -316,3 +317,17 @@ body {
 }
 
 .glass-btn:hover { background: rgba(255, 255, 255, 0.9); }
+
+.logo-icon {
+    width: 9%;
+    margin: 0;
+    background-color: rgba(255, 255, 255, 0);
+    border-radius: 15px;
+    padding: 0px;
+}
+
+.logo {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 12px;
+}

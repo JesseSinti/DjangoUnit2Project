@@ -18,7 +18,10 @@
 <nav id='navbar'>
     <div id='navbar-content'>
         <header id="navbar-header">
-            <a href="{% url 'home_page' %}" class='navbar-logo'>Event Finder</a>
+            <div class='logo'>
+                <img src="media/icons/logo.png" class='logo-icon'></img>
+                <a href="{% url 'home_page' %}" class='navbar-logo'>The Rift</a>
+            </div>
             
             {% if request.resolver_match.url_name == 'home_page' or request.resolver_match.url_name == 'Search_query' %}
             <div id='searchbar-container'>
