@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<head>
+    <link rel="stylesheet" href="{% static 'aboutus.css' %}">
+</head>
+<body>
+
+    <section class="hero">
+        <h1>Connecting Communities Through Events</h1>
+        <p>Whether you’re a fan looking for your next core memory or an organization building a movement, we make the
+            process seamless.</p>
+    </section>
+
+    <div class="container">
+        <div class="mission-grid">
+            <div class="mission-text">
+                <h2>Our Mission</h2>
+                <p>We believe that getting tickets to your favorite events shouldn't be a headache. We built this
+                    platform to give organizers the tools they need to grow, while giving fans a modern, intuitive way
+                    to discover and purchase experiences.</p>
+                <p>From local workshops to massive festivals, our platform is designed to handle it all with speed and
+                    security.</p>
+            </div>
+            <div class="mission-image">
+                <div>
+                   
+                    <img src="media/icons/logo.png" class="iconimg">
+                </div>
+            </div>
+        </div>
+
+        <h2 style="text-align: center; color: var(--secondary-color);">Why Choose Us?</h2>
+
+        <div class="features">
+            <div class="card">
+                <h3>For the Fans</h3>
+                <p>No more jumping through hoops. Use our <strong>Universal Cart</strong> to grab tickets from multiple
+                    organizers at once. Adjust quantities right from the home page and keep all your passes in one
+                    secure digital wallet. Seamless Recipts emailed to you instantly.</p>
+            </div>
+
+            <div class="card">
+                <h3>For the Creators</h3>
+                <p>Build your brand, not just an event. Create your own <strong>Organization Profile</strong>, allow
+                    others to join your team, and gain access to real-time data to help you sell out every single
+                    time.</p>
+            </div>
+        </div>
+    </div>
+
+    <section class="stats-bar">
+        <div class="stat-item">
+            <h4>100%</h4>
+            <p>Secure Payments</p>
+        </div>
+        <div class="stat-item">
+            <h4>24/7</h4>
+            <p>Organizer Support</p>
+        </div>
+        <div class="stat-item">
+            <h4>0</h4>
+            <p>Hidden Buyer Fees</p>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <h2>Ready to join the party?</h2>
+        <p>Create an account to start buying tickets or set up your organization today.</p>
+        <div style="margin-top: 30px;">
+            <a href="{% url 'customer-signup' %}" class="btn">Get Started Now</a>
+        </div>
+    </section>
+
+</body>
+{% endblock content %}
