@@ -5,37 +5,56 @@
     --glass-bg: rgba(255, 255, 255, 0.85);
     --glass-border: 1px solid rgba(0, 0, 0, 0.08);
     --primary-blue: #007aff;
-    --primary-text: #1d1d1f;
-    --secondary-text: #515154;
+    --primary-text: #0d0d0e;
+    --secondary-text: #181616;
     --pill-bg: #f2f2f5;
     --hero-gradient: linear-gradient(135deg, #4a148c 0%, #6a1b9a 50%, #9c27b0 100%);
     
-    /* Increased height to accommodate larger logo */
-    --nav-height: 150px; 
+    /* Dimensions for Dropdown Animation */
+    --peek-height: 90px;       /* Only Top Row Visible */
+    --open-height: 165px;      /* Both Rows Visible */
+    --info-open-height: 480px; /* Expanded for Info Dropdown */
 }
 
 body {
     margin: 0;
-    padding-top: var(--nav-height);
+    /* Only pad for the peek height so content sits correctly */
+    padding-top: var(--peek-height); 
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     color: var(--primary-text);
     background: linear-gradient(135deg, rgba(230, 230, 255, 0.5) 0%, rgba(255, 255, 255, 0.2) 100%); 
 }
 
 /* =========================================
-   2. NAVBAR CONTAINER
+   2. NAVBAR CONTAINER (Animated)
    ========================================= */
 #navbar {
     position: fixed;
     top: 0; left: 0;
     width: 100%;
-    height: var(--nav-height);
+    height: var(--peek-height); /* Default to collapsed */
     z-index: 1000;
     background-color: var(--glass-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: var(--glass-border);
-    transition: all 0.4s ease;
+    overflow: hidden; /* Hides the bottom row when collapsed */
+    
+    /* Smooth height transition */
+    transition: height 0.5s cubic-bezier(0.25, 1, 0.5, 1), 
+                background 0.4s ease, 
+                box-shadow 0.3s ease;
+}
+
+/* Expand on Hover */
+#navbar:hover {
+    height: var(--open-height);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+}
+
+/* Keep open if Information dropdown is clicked */
+#navbar:has(#options-details[open]) {
+    height: var(--info-open-height);
 }
 
 #navbar-content {
@@ -45,31 +64,32 @@ body {
     padding: 0 40px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start; /* Aligns content to top */
 }
 
 /* =========================================
-   3. TOP ROW (Logo & Search)
+   3. TOP ROW (Always Visible)
    ========================================= */
 #navbar-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 80px; /* Increased height for larger logo */
-    margin-bottom: 5px;
+    height: 80px; /* Matches the top part of the open navbar */
+    flex-shrink: 0;
+    margin-top: 5px;
 }
 
 .logo-link { text-decoration: none; }
 .logo-container { display: flex; align-items: center; gap: 16px; }
 
-/* UPDATED LOGO SIZES */
+/* LOGO SIZES */
 .logo-icon {
-    width: 90px; /* Much bigger */
+    width: 90px;
     height: auto;
 }
 
 .navbar-logo {
-    font-size: 2.2rem; /* Much bigger */
+    font-size: 2.2rem;
     font-weight: 800;
     color: var(--primary-text);
     letter-spacing: -1px;
@@ -124,7 +144,7 @@ body {
 .filter-trigger-btn:hover { background: #e5e5e8; }
 
 /* =========================================
-   4. BOTTOM ROW (Nav Links)
+   4. BOTTOM ROW (Hidden by Default)
    ========================================= */
 #navbar-bottom {
     display: flex;
@@ -134,7 +154,21 @@ body {
     border-top: 1px solid rgba(0,0,0,0.06);
     padding-top: 10px;
     margin-left: 30px;
-    margin-bottom:17px;
+    margin-bottom: 17px;
+    
+    /* Animation state: Hidden */
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none; /* Cannot click when hidden */
+}
+
+/* Animation state: Visible (on hover or if details open) */
+#navbar:hover #navbar-bottom,
+#navbar:has(#options-details[open]) #navbar-bottom {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
 }
 
 .nav-links {
@@ -188,7 +222,7 @@ body {
 .info-group p:hover { color: var(--primary-blue); }
 
 /* =========================================
-   5. SCROLLED STATE (The Purple Mode)
+   5. SCROLLED STATE
    ========================================= */
 #navbar.scrolled {
     background: var(--hero-gradient);
@@ -243,11 +277,11 @@ body {
 
 .modal-header {
     display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 0;
 }
 .close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #86868b; }
 
-.modal-grid { display: flex; flex-direction: column; gap: 20px; }
+.modal-grid { display: flex; flex-direction: column; gap: 10px; }
 
 .filter-form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: var(--secondary-text); }
 .filter-form-group input {
