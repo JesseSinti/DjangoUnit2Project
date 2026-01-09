@@ -91,19 +91,7 @@
                         <a href="{% url 'customer-service' %}"><p>Customer Service</p></a>
                     </div>
                 </div>
-                <div class="info-group">
-                    <h4>Contact</h4>
-                    <p>Phone: 662-327-459</p>
-                    <p>Email: fakestop@gmail.com</p>
-                    <p>Location: Water Valley, MS</p>
-                </div>
-                <div class="info-group">
-                    <h4>Navigation</h4>
-                    <a href="{% url 'aboutus' %}"><p>About Us</p></a>
-                    <a href="{% url 'faqview' %}"><p>FAQ</p></a>
-                    <p>Customer Service</p>
-                </div>
-            </div>
+               
         </details>
     </div>
 </nav>
@@ -114,7 +102,7 @@
             <h3>Refine Search</h3>
             <button type="button" id="close-filters" class="close-modal">&times;</button>
         </div>
-        <form method="get" action="{% url 'Search_query' %}" id="modal-filter-form">
+        <form method="get"  id="modal-filter-form">
             <div class="modal-grid">
                 <div class="filter-form-group">
                     <h4>Location</h4>
