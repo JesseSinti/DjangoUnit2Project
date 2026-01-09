@@ -176,7 +176,7 @@ def search_view(request):
     events = Event.objects.all().prefetch_related('ticket_tiers')
     if query:
         events = events.filter(Q(title__icontains=query))
-    return render(request,'home.html', {'Events' : events, 'SearchActive' : bool(request.GET)})
+    return render(request,'home.html', {'Event' : events, 'SearchActive' : bool(request.GET)})
 
 def FAQ_View(request):
     return render(request, 'FAQ.html')

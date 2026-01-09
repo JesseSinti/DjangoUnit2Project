@@ -12,12 +12,208 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        /* =========================================
+           VARIABLE SCOPING (Fixes :root leaks)
+           ========================================= */
+        #navbar {
+            /* Variables are moved here so they don't affect or get affected by :root */
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: 1px solid rgba(0, 0, 0, 0.08);
+            --primary-blue: #007aff;
+            --primary-text: #0d0d0e;
+            --secondary-text: #181616;
+            --pill-bg: #f2f2f5;
+            --hero-gradient: linear-gradient(135deg, #4a148c 0%, #6a1b9a 50%, #9c27b0 100%);
+            
+            --peek-height: 90px;      
+            --open-height: 165px;     
+            --info-open-height: 480px;
+
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: var(--peek-height);
+            z-index: 1000;
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: var(--glass-border);
+            overflow: hidden;
+            transition: height 0.5s cubic-bezier(0.25, 1, 0.5, 1), background 0.4s ease, box-shadow 0.3s ease;
+            
+            /* Apply font to the container */
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        /* Target specific text elements only. This ensures icons (<i>) 
+           keep their Font Awesome font and don't disappear. */
+        #navbar a, #navbar span, #navbar p, #navbar input, 
+        #navbar button, #navbar summary, #navbar h4 {
+            font-family: 'Inter', sans-serif !important;
+        }
+
+        body {
+            margin: 0;
+            padding-top: 90px; 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #0d0d0e;
+        }
+
+        #navbar:hover {
+            height: var(--open-height);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        }
+
+        #navbar:has(#options-details[open]) {
+            height: var(--info-open-height);
+        }
+
+        #navbar-content {
+            max-width: 1400px;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        #navbar-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+
+        .logo-link { text-decoration: none; }
+        .logo-container { display: flex; align-items: center; gap: 16px; }
+        .logo-icon { width: 90px; height: auto; }
+        .navbar-logo {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary-text);
+            letter-spacing: -1px;
+            transform: translate(-30px);
+        }
+
+        #search-section { display: flex; align-items: center; gap: 15px; }
+        #search-form {
+            display: flex;
+            align-items: center;
+            background-color: var(--pill-bg);
+            border-radius: 50px;
+            padding: 10px 20px;
+            width: 340px; 
+            transition: background 0.3s ease;
+        }
+
+        #search-form:focus-within {
+            background: #ffffff;
+            box-shadow: 0 0 0 2px var(--primary-blue);
+        }
+
+        .search-icon { color: #86868b; margin-right: 12px; font-size: 1rem; }
+        #search-form input { border: none; background: transparent; flex-grow: 1; outline: none; font-size: 1rem; color: var(--primary-text); }
+
+        .filter-trigger-btn {
+            background: var(--pill-bg);
+            border: 1px solid rgba(0,0,0,0.02);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            color: var(--primary-text);
+            transition: all 0.2s ease;
+        }
+
+        #navbar-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 45px;
+            border-top: 1px solid rgba(0,0,0,0.06);
+            padding-top: 10px;
+            margin-left: 30px;
+            margin-bottom: 17px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+        }
+
+        #navbar:hover #navbar-bottom,
+        #navbar:has(#options-details[open]) #navbar-bottom {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .nav-links { display: flex; list-style: none; padding: 0; margin: 0; gap: 25px; }
+        .nav-item a { text-decoration: none; color: var(--secondary-text); font-weight: 500; font-size: 0.95rem; transition: color 0.2s; }
+        .nav-item a:hover { color: var(--primary-blue); }
+
+        #options-details { position: relative; display: inline-block; }
+        .options-button {
+            list-style: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--primary-text);
+            padding: 8px 16px;
+            border-radius: 12px;
+            transition: background 0.2s;
+        }
+        .options-button::-webkit-details-marker { display: none; }
+
+        #options-dropdown {
+            position: absolute;
+            top: 45px; 
+            right: 0;
+            width: max-content;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            gap: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            border: var(--glass-border);
+            z-index: 1010;
+        }
+
+        .info-group h4 { margin: 0 0 12px 0; color: #86868b; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+        .info-group p { margin: 8px 0; font-size: 0.9rem; cursor: pointer; color: var(--primary-text); }
+        .info-group p:hover { color: var(--primary-blue); }
+
+        #navbar.scrolled { background: var(--hero-gradient); border-bottom: none; }
+        #navbar.scrolled .navbar-logo,
+        #navbar.scrolled .nav-item a,
+        #navbar.scrolled .options-button,
+        #navbar.scrolled .filter-trigger-btn {
+            color: white !important;
+        }
+        #navbar.scrolled .search-icon { color: white; }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(8px);
+            display: none; justify-content: center; align-items: center; z-index: 2000;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background: white; width: 550px; padding: 40px; border-radius: 24px; }
+    </style>
 </head>
+
 <body id="body">
 
 <nav id='navbar'>
     <div id='navbar-content'>
-        
         <div id="navbar-top">
             <a href="{% url 'home_page' %}" class='logo-link'>
                 <div class='logo-container'>
@@ -30,7 +226,7 @@
             <div id='search-section'>
                 <form method="get" action="{% url 'Search_query' %}" id="search-form">
                     <i class="fas fa-search search-icon"></i>
-                    <input type='text' name='query' placeholder='Search events...' value="" {{ query }}>
+                    <input type='text' name='query' placeholder='Search events...' value="{{ query }}">
                 </form>
                 <button type="button" id="open-filters" class="filter-trigger-btn">
                     <i class="fas fa-sliders-h"></i> Filters
@@ -42,7 +238,6 @@
         <div id="navbar-bottom">
             <ul class="nav-links">
                 <li class="nav-item"><a href="{% url 'home_page' %}">Home</a></li>
-
                 {% if request.user.is_authenticated %}
                     <li class="nav-item"><a href='{% url "logout" %}'>Logout</a></li>
                 {% else %}
@@ -51,7 +246,7 @@
                     <li class="nav-item"><a href="{% url 'join_organization' %}">Join Organization</a></li>
                     <li class="nav-item"><a href='{% url "org-signup" %}'>Register Organization</a></li>
                 {% endif %}
-                
+
                 {% if status == 1 %}
                     <li class="nav-item"><a href="{% url 'addevent'%}">Create Event</a></li>
                     <li class="nav-item"><a href="{% url 'admin_dashboard' membership.organization.id %}">Admin Dashboard</a></li>
@@ -91,20 +286,8 @@
                         <a href="{% url 'customer-service' %}"><p>Customer Service</p></a>
                     </div>
                 </div>
-                <div class="info-group">
-                    <h4>Contact</h4>
-                    <p>Phone: 662-327-459</p>
-                    <p>Email: fakestop@gmail.com</p>
-                    <p>Location: Water Valley, MS</p>
-                </div>
-                <div class="info-group">
-                    <h4>Navigation</h4>
-                    <a href="{% url 'aboutus' %}"><p>About Us</p></a>
-                    <a href="{% url 'faqview' %}"><p>FAQ</p></a>
-                    <p>Customer Service</p>
-                </div>
-            </div>
-        </details>
+            </details>
+        </div>
     </div>
 </nav>
 
@@ -119,7 +302,12 @@
                 <div class="filter-form-group">
                     <h4>Location</h4>
                     <label>City/State</label>
-                    <input type="text" name="location" placeholder="e.g. Mississippi" onchange="this.form.submit()">
+                    <input type="text" name="location" placeholder="e.g. Mississippi">
+                </div>
+                <div class="filter-form-group">
+                    <h4>Time</h4>
+                    <label>Date/Time</label>
+                    <input type="datetime-local" name="date">
                 </div>
                 <div class="filter-form-group">
                     <h4>Price Range</h4>
@@ -130,14 +318,9 @@
                         </div>
                         <div class="input-wrap">
                             <label>Max</label>
-                            <input type="number" name="max_price" max="999999" placeholder="$Max">
+                            <input type="number" name="max_price" placeholder="$Max">
                         </div>
                     </div>
-                </div>
-                <div class="filter-form-group">
-                    <h4>Time</h4>
-                    <label>Start Time</label>
-                    <input type="text" name="start_time" placeholder="Anytime">
                 </div>
             </div>
             <div class="modal-footer">
@@ -151,29 +334,26 @@
 {% block content %} {% endblock content %}
 
 <script>
-    // Scroll Effect
     const currentUrl = window.location.href;
     let urlList = currentUrl.split('/');
     let view = urlList[3];
 
-    console.log(view);
     window.onscroll = function() {
         const navbar = document.getElementById('navbar');
-        const hero = document.querySelector('.about-section'); // Adjust selector if needed
-        // Fallback: if no hero, trigger scroll effect after 50px
+        const hero = document.querySelector('.about-section');
         const triggerPoint = hero ? (hero.offsetTop + hero.offsetHeight - 120) : 50;
+
         if (view === '') {
             if (window.pageYOffset > triggerPoint) {
                 navbar.classList.add('scrolled');
             } else {
                 navbar.classList.remove('scrolled');
             }
-        } else {
-            navbar.classList.remove('scrolled')
+        } else {            
+            navbar.classList.remove('scrolled');
         }
     };
 
-    // Modal Logic
     const modal = document.getElementById('filter-modal');
     const openBtn = document.getElementById('open-filters');
     const closeBtn = document.getElementById('close-filters');
