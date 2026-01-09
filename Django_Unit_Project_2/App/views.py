@@ -167,7 +167,7 @@ def home_view(request):
         'filter_active': bool(request.GET), 
         'Event': event_filter.qs.distinct()
     }
-    
+    print(context['filter']) 
     return render(request, 'home.html', context)
 
 

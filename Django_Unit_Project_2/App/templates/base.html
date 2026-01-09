@@ -297,7 +297,7 @@
             <h3>Refine Search</h3>
             <button type="button" id="close-filters" class="close-modal">&times;</button>
         </div>
-        <form method="get"  id="modal-filter-form">
+        <form method="get" id="modal-filter-form">
             <div class="modal-grid">
                 <div class="filter-form-group">
                     <h4>Location</h4>
@@ -338,12 +338,14 @@
     let urlList = currentUrl.split('/');
     let view = urlList[3];
 
+    console.log(view);
+
     window.onscroll = function() {
         const navbar = document.getElementById('navbar');
         const hero = document.querySelector('.about-section');
         const triggerPoint = hero ? (hero.offsetTop + hero.offsetHeight - 120) : 50;
 
-        if (view === '') {
+        if (true) {
             if (window.pageYOffset > triggerPoint) {
                 navbar.classList.add('scrolled');
             } else {

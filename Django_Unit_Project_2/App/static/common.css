@@ -13,7 +13,7 @@
     /* Dimensions for Dropdown Animation */
     --peek-height: 90px;       /* Only Top Row Visible */
     --open-height: 165px;      /* Both Rows Visible */
-    --info-open-height: 480px; /* Expanded for Info Dropdown */
+    --info-open-height: 1000px; /* Expanded for Info Dropdown */
 }
 
 body {
