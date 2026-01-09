@@ -28,9 +28,9 @@
             
             {% if request.resolver_match.url_name == 'home_page' or request.resolver_match.url_name == 'Search_query' %}
             <div id='search-section'>
-                <form method="get" action="{% url 'Search_query' %}" id="search-form">
+                <form method="get" action="{% url 'home_page' %}" id="search-form">
                     <i class="fas fa-search search-icon"></i>
-                    <input type='text' name='query' placeholder='Search events...' value="" {{ query }}>
+                    <input type='text' name='query' placeholder='Search events...' value="{{ query }}" >
                 </form>
                 <button type="button" id="open-filters" class="filter-trigger-btn">
                     <i class="fas fa-sliders-h"></i> Filters
@@ -102,7 +102,8 @@
             <h3>Refine Search</h3>
             <button type="button" id="close-filters" class="close-modal">&times;</button>
         </div>
-        <form method="get"  id="modal-filter-form">
+        <form method="get" id="modal-filter-form">
+            <input type="hidden" name="query" value="{{ request.GET.query }}">
             <div class="modal-grid">
                 <div class="filter-form-group">
                     <h4>Location</h4>

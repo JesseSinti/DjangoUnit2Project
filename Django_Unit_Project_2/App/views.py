@@ -160,23 +160,20 @@ def home_view(request):
         Prefetch('ticket_tiers', queryset=annotated_tiers)
     ).order_by('date')
 
+    query = request.GET.get('query', '')
+    if query:
+        events_with_stats = events_with_stats.filter(Q(title__icontains=query))
     event_filter = EventFilter(request.GET, queryset=events_with_stats)
     
     context = {
         'filter': event_filter, 
         'filter_active': bool(request.GET), 
-        'Event': event_filter.qs.distinct()
+        'Event': event_filter.qs.distinct(),
+        'SearchActive' : bool(request.GET)
     }
     
     return render(request, 'home.html', context)
 
-
-def search_view(request):
-    query = request.GET.get('query', '')
-    events = Event.objects.all().prefetch_related('ticket_tiers')
-    if query:
-        events = events.filter(Q(title__icontains=query))
-    return render(request,'home.html', {'Events' : events, 'SearchActive' : bool(request.GET)})
 
 def FAQ_View(request):
     return render(request, 'FAQ.html')
