@@ -144,3 +144,7 @@ EMAIL_HOST_PASSWORD = "ered fzhn xqdj mijm"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]

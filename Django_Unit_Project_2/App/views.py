@@ -539,7 +539,7 @@ def CheckoutView(request, pk):
         'quantity' : quantity
     },
     mode='payment',
-    success_url = "http://127.0.0.1:8000/payment/success/?session_id={CHECKOUT_SESSION_ID}",
+    success_url = MY_DOMAIN + "/payment/success/?session_id={CHECKOUT_SESSION_ID}",
 
     cancel_url=MY_DOMAIN + f'/pricing/{pk}',
     )
